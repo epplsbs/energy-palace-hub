@@ -10,72 +10,23 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Coffee, Clock, Star, ShoppingCart, Plus, Minus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-interface MenuItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  image: string;
-  rating: number;
-  prepTime: string;
-  available: boolean;
-}
+import { 
+  getMenuCategories, 
+  getMenuItems, 
+  createOrder,
+  type MenuCategory, 
+  type MenuItem 
+} from '@/services/contentService';
 
 interface CartItem extends MenuItem {
   quantity: number;
+  menu_categories?: { name: string } | null;
 }
 
 const Restaurant = () => {
   const { toast } = useToast();
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([
-    {
-      id: '1',
-      name: 'Artisan Coffee Blend',
-      description: 'Freshly roasted premium coffee beans with notes of chocolate and caramel',
-      price: 4.50,
-      category: 'coffee',
-      image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&h=200&fit=crop',
-      rating: 4.8,
-      prepTime: '5 min',
-      available: true
-    },
-    {
-      id: '2',
-      name: 'Gourmet Sandwich',
-      description: 'Fresh ingredients with artisan bread, perfect for a quick meal',
-      price: 12.99,
-      category: 'food',
-      image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=300&h=200&fit=crop',
-      rating: 4.6,
-      prepTime: '15 min',
-      available: true
-    },
-    {
-      id: '3',
-      name: 'Cappuccino Deluxe',
-      description: 'Rich espresso with perfectly steamed milk and foam art',
-      price: 5.25,
-      category: 'coffee',
-      image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=200&fit=crop',
-      rating: 4.9,
-      prepTime: '7 min',
-      available: true
-    },
-    {
-      id: '4',
-      name: 'Caesar Salad',
-      description: 'Fresh romaine lettuce with house-made dressing and croutons',
-      price: 9.99,
-      category: 'food',
-      image: 'https://images.unsplash.com/photo-1551248429-40975aa4de74?w=300&h=200&fit=crop',
-      rating: 4.4,
-      prepTime: '10 min',
-      available: true
-    }
-  ]);
-
+  const [categories, setCategories] = useState<MenuCategory[]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
@@ -84,18 +35,39 @@ const Restaurant = () => {
     phone: '',
     notes: ''
   });
-
-  const categories = [
-    { id: 'all', name: 'All Items', icon: '🍽️' },
-    { id: 'coffee', name: 'Coffee', icon: '☕' },
-    { id: 'food', name: 'Food', icon: '🥗' }
-  ];
-
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadMenuData = async () => {
+      try {
+        const [categoriesData, itemsData] = await Promise.all([
+          getMenuCategories(),
+          getMenuItems()
+        ]);
+        setCategories(categoriesData);
+        setMenuItems(itemsData);
+      } catch (error) {
+        console.error('Error loading menu data:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load menu data",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadMenuData();
+  }, [toast]);
 
   const filteredItems = selectedCategory === 'all' 
     ? menuItems 
-    : menuItems.filter(item => item.category === selectedCategory);
+    : menuItems.filter(item => {
+        const category = categories.find(c => c.id === item.category_id);
+        return category?.name.toLowerCase().includes(selectedCategory);
+      });
 
   const addToCart = (item: MenuItem) => {
     setCart(prevCart => {
@@ -133,14 +105,14 @@ const Restaurant = () => {
   };
 
   const getTotalPrice = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return cart.reduce((total, item) => total + (Number(item.price) * item.quantity), 0);
   };
 
   const getTotalItems = () => {
     return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     if (cart.length === 0) {
       toast({
         title: "Cart is empty",
@@ -159,24 +131,48 @@ const Restaurant = () => {
       return;
     }
 
-    // Here you would send the order to Google Sheets
-    console.log('Order submitted:', {
-      customer: customerInfo,
-      items: cart,
-      total: getTotalPrice(),
-      timestamp: new Date().toISOString()
-    });
+    try {
+      await createOrder({
+        customer_name: customerInfo.name,
+        customer_email: customerInfo.email,
+        customer_phone: customerInfo.phone,
+        items: cart,
+        total_amount: getTotalPrice(),
+        notes: customerInfo.notes || null,
+        status: 'pending'
+      });
 
-    toast({
-      title: "Order placed successfully!",
-      description: "We'll prepare your order and notify you when it's ready.",
-    });
+      toast({
+        title: "Order placed successfully!",
+        description: "We'll prepare your order and notify you when it's ready.",
+      });
 
-    // Reset form
-    setCart([]);
-    setCustomerInfo({ name: '', email: '', phone: '', notes: '' });
-    setIsOrderDialogOpen(false);
+      // Reset form
+      setCart([]);
+      setCustomerInfo({ name: '', email: '', phone: '', notes: '' });
+      setIsOrderDialogOpen(false);
+    } catch (error) {
+      console.error('Error placing order:', error);
+      toast({
+        title: "Error",
+        description: "Failed to place order. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
+
+  if (isLoading) {
+    return (
+      <section id="restaurant" className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading menu...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="restaurant" className="py-20 bg-white">
@@ -196,74 +192,65 @@ const Restaurant = () => {
 
         {/* Menu Categories */}
         <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="mb-12">
-          <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto">
+          <TabsList className="grid w-full max-w-md mx-auto" style={{ gridTemplateColumns: `repeat(${categories.length + 1}, 1fr)` }}>
+            <TabsTrigger value="all">All Items</TabsTrigger>
             {categories.map(category => (
-              <TabsTrigger key={category.id} value={category.id} className="flex items-center space-x-2">
-                <span>{category.icon}</span>
-                <span>{category.name}</span>
+              <TabsTrigger key={category.id} value={category.name.toLowerCase()}>
+                {category.name}
               </TabsTrigger>
             ))}
           </TabsList>
 
-          {categories.map(category => (
-            <TabsContent key={category.id} value={category.id}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(category.id === 'all' ? menuItems : filteredItems).map((item) => (
-                  <Card key={item.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+          <TabsContent value={selectedCategory}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredItems.map((item) => (
+                <Card key={item.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                  {item.image_url && (
                     <div className="aspect-video overflow-hidden">
                       <img 
-                        src={item.image} 
+                        src={item.image_url} 
                         alt={item.name}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <CardHeader className="pb-4">
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-lg font-bold text-gray-900">
-                          {item.name}
-                        </CardTitle>
-                        <Badge 
-                          className={`${item.available ? 'bg-emerald-500' : 'bg-red-500'} text-white border-0 ml-2`}
-                        >
-                          {item.available ? 'Available' : 'Sold Out'}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
+                  )}
+                  <CardHeader className="pb-4">
+                    <div className="flex items-start justify-between">
+                      <CardTitle className="text-lg font-bold text-gray-900">
+                        {item.name}
+                      </CardTitle>
+                      <Badge 
+                        className={`${item.is_available ? 'bg-emerald-500' : 'bg-red-500'} text-white border-0 ml-2`}
+                      >
+                        {item.is_available ? 'Available' : 'Sold Out'}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {item.description && (
                       <p className="text-gray-600 text-sm leading-relaxed">
                         {item.description}
                       </p>
-                      
-                      <div className="flex items-center space-x-4 text-sm text-gray-600">
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                          <span>{item.rating}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Clock className="h-4 w-4" />
-                          <span>{item.prepTime}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-2xl font-bold text-emerald-600">
-                          ${item.price.toFixed(2)}
-                        </span>
-                        <Button
-                          onClick={() => addToCart(item)}
-                          disabled={!item.available}
-                          className="bg-emerald-500 hover:bg-emerald-600 text-white"
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add to Cart
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-          ))}
+                    )}
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl font-bold text-emerald-600">
+                        ${Number(item.price).toFixed(2)}
+                      </span>
+                      <Button
+                        onClick={() => addToCart(item)}
+                        disabled={!item.is_available}
+                        className="bg-emerald-500 hover:bg-emerald-600 text-white"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add to Cart
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
         </Tabs>
 
         {/* Cart Summary */}
@@ -289,14 +276,16 @@ const Restaurant = () => {
                   <div className="space-y-4">
                     {cart.map((item) => (
                       <div key={item.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                        <img 
-                          src={item.image} 
-                          alt={item.name}
-                          className="w-16 h-16 object-cover rounded-lg"
-                        />
+                        {item.image_url && (
+                          <img 
+                            src={item.image_url} 
+                            alt={item.name}
+                            className="w-16 h-16 object-cover rounded-lg"
+                          />
+                        )}
                         <div className="flex-1">
                           <h4 className="font-semibold">{item.name}</h4>
-                          <p className="text-gray-600">${item.price.toFixed(2)}</p>
+                          <p className="text-gray-600">${Number(item.price).toFixed(2)}</p>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Button
@@ -316,7 +305,7 @@ const Restaurant = () => {
                           </Button>
                         </div>
                         <div className="font-semibold">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ${(Number(item.price) * item.quantity).toFixed(2)}
                         </div>
                       </div>
                     ))}

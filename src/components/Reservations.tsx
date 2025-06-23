@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, Clock, Users, Phone, Mail, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { createReservation } from '@/services/contentService';
 
 interface ReservationData {
   name: string;
@@ -16,7 +16,6 @@ interface ReservationData {
   date: string;
   time: string;
   guests: string;
-  occasion: string;
   specialRequests: string;
 }
 
@@ -29,7 +28,6 @@ const Reservations = () => {
     date: '',
     time: '',
     guests: '',
-    occasion: '',
     specialRequests: ''
   });
 
@@ -43,15 +41,6 @@ const Reservations = () => {
   ];
 
   const guestOptions = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10+'];
-
-  const occasions = [
-    'Business Meeting',
-    'Casual Dining',
-    'Date Night',
-    'Family Gathering',
-    'Celebration',
-    'Other'
-  ];
 
   const handleInputChange = (field: keyof ReservationData, value: string) => {
     setReservationData(prev => ({
@@ -77,10 +66,14 @@ const Reservations = () => {
     setIsSubmitting(true);
 
     try {
-      // Here you would submit to Google Sheets
-      console.log('Reservation submitted:', {
-        ...reservationData,
-        timestamp: new Date().toISOString(),
+      await createReservation({
+        customer_name: reservationData.name,
+        customer_email: reservationData.email,
+        customer_phone: reservationData.phone,
+        date: reservationData.date,
+        time: reservationData.time,
+        guests: parseInt(reservationData.guests),
+        special_requests: reservationData.specialRequests || null,
         status: 'pending'
       });
 
@@ -97,11 +90,11 @@ const Reservations = () => {
         date: '',
         time: '',
         guests: '',
-        occasion: '',
         specialRequests: ''
       });
 
     } catch (error) {
+      console.error('Error submitting reservation:', error);
       toast({
         title: "Error",
         description: "There was an error submitting your reservation. Please try again.",
@@ -222,23 +215,6 @@ const Reservations = () => {
                           </SelectContent>
                         </Select>
                       </div>
-                    </div>
-
-                    {/* Occasion */}
-                    <div>
-                      <Label htmlFor="occasion">Occasion</Label>
-                      <Select onValueChange={(value) => handleInputChange('occasion', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select occasion (optional)" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {occasions.map(occasion => (
-                            <SelectItem key={occasion} value={occasion}>
-                              {occasion}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
                     </div>
 
                     {/* Special Requests */}

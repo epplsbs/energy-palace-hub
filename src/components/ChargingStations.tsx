@@ -3,23 +3,33 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Zap, Car, Clock } from 'lucide-react';
-
-interface ChargingStation {
-  id: string;
-  type: string;
-  power: string;
-  status: 'available' | 'occupied' | 'maintenance';
-  connector: string;
-  estimatedTime?: string;
-}
+import { getChargingStations, type ChargingStation } from '@/services/contentService';
+import { useToast } from '@/hooks/use-toast';
 
 const ChargingStations = () => {
-  const [stations, setStations] = useState<ChargingStation[]>([
-    { id: 'CCS2-01', type: 'CCS2', power: '60KW', status: 'available', connector: 'CCS2' },
-    { id: 'CCS2-02', type: 'CCS2', power: '60KW', status: 'occupied', connector: 'CCS2', estimatedTime: '25 min' },
-    { id: 'GBT-01', type: 'GBT', power: '80KW', status: 'available', connector: 'GBT' },
-    { id: 'GBT-02', type: 'GBT', power: '80KW', status: 'maintenance', connector: 'GBT' },
-  ]);
+  const { toast } = useToast();
+  const [stations, setStations] = useState<ChargingStation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadStations = async () => {
+      try {
+        const data = await getChargingStations();
+        setStations(data);
+      } catch (error) {
+        console.error('Error loading charging stations:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load charging stations",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadStations();
+  }, [toast]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -47,6 +57,30 @@ const ChargingStations = () => {
     }
   };
 
+  const getTotalPower = () => {
+    return stations.reduce((total, station) => {
+      const power = parseInt(station.power.replace('KW', ''));
+      return total + power;
+    }, 0);
+  };
+
+  const getAvailableCount = () => {
+    return stations.filter(station => station.status === 'available').length;
+  };
+
+  if (isLoading) {
+    return (
+      <section id="charging" className="py-20 bg-gradient-to-br from-gray-50 to-emerald-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading charging stations...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="charging" className="py-20 bg-gradient-to-br from-gray-50 to-emerald-50">
       <div className="container mx-auto px-4">
@@ -70,14 +104,14 @@ const ChargingStations = () => {
               <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="h-8 w-8 text-emerald-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">140KW</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-1">{getTotalPower()}KW</h3>
               <p className="text-gray-600">Total Power</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Car className="h-8 w-8 text-blue-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">2/4</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-1">{getAvailableCount()}/{stations.length}</h3>
               <p className="text-gray-600">Available</p>
             </div>
             <div className="text-center">
@@ -104,7 +138,7 @@ const ChargingStations = () => {
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg font-bold text-gray-900">
-                    {station.id}
+                    {station.station_id}
                   </CardTitle>
                   <div className={`w-3 h-3 rounded-full ${getStatusColor(station.status)}`}></div>
                 </div>
@@ -133,11 +167,11 @@ const ChargingStations = () => {
                   </Badge>
                 </div>
 
-                {station.estimatedTime && (
+                {station.estimated_time && (
                   <div className="flex items-center space-x-2">
                     <Clock className="h-4 w-4 text-gray-600" />
                     <span className="text-sm text-gray-600">Est. time:</span>
-                    <span className="font-semibold text-orange-600">{station.estimatedTime}</span>
+                    <span className="font-semibold text-orange-600">{station.estimated_time}</span>
                   </div>
                 )}
               </CardContent>
