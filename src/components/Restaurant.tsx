@@ -132,11 +132,21 @@ const Restaurant = () => {
     }
 
     try {
+      // Convert cart items to a format that matches Json type
+      const orderItems = cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: Number(item.price),
+        quantity: item.quantity,
+        description: item.description || null,
+        image_url: item.image_url || null
+      }));
+
       await createOrder({
         customer_name: customerInfo.name,
         customer_email: customerInfo.email,
         customer_phone: customerInfo.phone,
-        items: cart,
+        items: orderItems,
         total_amount: getTotalPrice(),
         notes: customerInfo.notes || null,
         status: 'pending'
