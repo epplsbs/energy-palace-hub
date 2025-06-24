@@ -178,10 +178,6 @@ const ChargingStations = () => {
             </Card>
           ))}
         </div>
-
-        
-          
-        </div>
       </div>
     </section>
   );
