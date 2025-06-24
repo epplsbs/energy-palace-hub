@@ -292,10 +292,7 @@ const Reservations = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm text-gray-600">
-                  <p>• Reservations are held for 15 minutes past the scheduled time</p>
-                  <p>• Cancellations accepted up to 2 hours before reservation</p>
-                  <p>• Large parties (8+) may require a deposit</p>
-                  <p>• Special dietary requirements can be accommodated with advance notice</p>
+                  <p>• Reservations are held for 15 minutes past the scheduled time. Cancellations accepted up to 2 hours before reservation. Large parties (8+) may require a deposit</p>
                 </CardContent>
               </Card>
             </div>
