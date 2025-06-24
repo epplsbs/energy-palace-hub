@@ -253,8 +253,16 @@ const Reservations = () => {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Sunday - Saturday</span>
-                    <span className="font-semibold">24 hours</span>
+                    <span className="text-gray-600">Monday - Friday</span>
+                    <span className="font-semibold">8:00 AM - 9:00 PM</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Saturday</span>
+                    <span className="font-semibold">8:00 AM - 10:00 PM</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Sunday</span>
+                    <span className="font-semibold">9:00 AM - 8:00 PM</span>
                   </div>
                 </CardContent>
               </Card>
@@ -270,15 +278,15 @@ const Reservations = () => {
                 <CardContent className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <Phone className="h-4 w-4 text-gray-600" />
-                    <span>+9779841426598</span>
+                    <span>+1 (234) 567-890</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Mail className="h-4 w-4 text-gray-600" />
-                    <span>energypalacepvtltd@gmail.com</span>
+                    <span>reservations@energypalace.com</span>
                   </div>
                   <div className="flex items-start space-x-3">
                     <MapPin className="h-4 w-4 text-gray-600 mt-1" />
-                    <span>Bhiman, Sindhuli, Nepal</span>
+                    <span>123 Energy Street, Electric City, EC 12345</span>
                   </div>
                 </CardContent>
               </Card>
@@ -292,7 +300,10 @@ const Reservations = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm text-gray-600">
-                  <p>• Reservations are held for 15 minutes past the scheduled time. Cancellations accepted up to 2 hours before reservation. Large parties (8+) may require a deposit</p>
+                  <p>• Reservations are held for 15 minutes past the scheduled time</p>
+                  <p>• Cancellations accepted up to 2 hours before reservation</p>
+                  <p>• Large parties (8+) may require a deposit</p>
+                  <p>• Special dietary requirements can be accommodated with advance notice</p>
                 </CardContent>
               </Card>
             </div>

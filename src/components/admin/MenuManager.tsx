@@ -344,7 +344,7 @@ const MenuManager = () => {
                     <p className="text-gray-600 text-sm mb-2">{item.description}</p>
                     
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-xl font-bold text-green-600">Rs.{Number(item.price).toFixed(2)}</span>
+                      <span className="text-xl font-bold text-green-600">${Number(item.price).toFixed(2)}</span>
                       <Badge className={getCategoryName(item.category_id || '')}>
                         {getCategoryName(item.category_id || '')}
                       </Badge>

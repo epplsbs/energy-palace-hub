@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -100,29 +101,29 @@ const ChargingStations = () => {
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-4 w-4 text-emerald-600" />
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8 text-emerald-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-1">{getTotalPower()}KW</h3>
               <p className="text-gray-600">Total Power</p>
             </div>
             <div className="text-center">
-              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Car className="h-4 w-4 text-blue-600" />
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Car className="h-8 w-8 text-blue-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-1">{getAvailableCount()}/{stations.length}</h3>
               <p className="text-gray-600">Available</p>
             </div>
             <div className="text-center">
-              <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="h-4 w-4 text-orange-600" />
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="h-8 w-8 text-orange-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-1">~25</h3>
               <p className="text-gray-600">Avg. Time (min)</p>
             </div>
             <div className="text-center">
-              <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-4 w-4 text-purple-600" />
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8 text-purple-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-1">24/7</h3>
               <p className="text-gray-600">Available</p>
@@ -139,7 +140,7 @@ const ChargingStations = () => {
                   <CardTitle className="text-lg font-bold text-gray-900">
                     {station.station_id}
                   </CardTitle>
-                  <div className={w-3 h-3 rounded-full ${getStatusColor(station.status)}}></div>
+                  <div className={`w-3 h-3 rounded-full ${getStatusColor(station.status)}`}></div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -160,7 +161,7 @@ const ChargingStations = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Status:</span>
                   <Badge 
-                    className={${getStatusColor(station.status)} text-white border-0}
+                    className={`${getStatusColor(station.status)} text-white border-0`}
                   >
                     {getStatusText(station.status)}
                   </Badge>
@@ -176,6 +177,30 @@ const ChargingStations = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Additional Info */}
+        <div className="mt-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl p-8 text-white">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold mb-4">Ready to Charge?</h3>
+            <p className="text-lg mb-6 opacity-90">
+              Simply plug in your vehicle and enjoy our premium amenities while you charge
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+              <div>
+                <h4 className="font-semibold mb-2">Step 1</h4>
+                <p className="opacity-80">Connect your EV to available charging station</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Step 2</h4>
+                <p className="opacity-80">Visit our restaurant while your car charges</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Step 3</h4>
+                <p className="opacity-80">Receive notification when charging is complete</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
