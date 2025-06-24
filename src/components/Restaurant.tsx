@@ -85,7 +85,7 @@ const Restaurant = () => {
 
     toast({
       title: "Added to cart",
-      description: `${item.name} has been added to your cart`,
+      description: `Rs.{item.name} has been added to your cart`,
     });
   };
 
@@ -202,7 +202,7 @@ const Restaurant = () => {
 
         {/* Menu Categories */}
         <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="mb-12">
-          <TabsList className="grid w-full max-w-md mx-auto" style={{ gridTemplateColumns: `repeat(${categories.length + 1}, 1fr)` }}>
+          <TabsList className="grid w-full max-w-md mx-auto" style={{ gridTemplateColumns: `repeat(Rs.{categories.length + 1}, 1fr)` }}>
             <TabsTrigger value="all">All Items</TabsTrigger>
             {categories.map(category => (
               <TabsTrigger key={category.id} value={category.name.toLowerCase()}>
@@ -230,7 +230,7 @@ const Restaurant = () => {
                         {item.name}
                       </CardTitle>
                       <Badge 
-                        className={`${item.is_available ? 'bg-emerald-500' : 'bg-red-500'} text-white border-0 ml-2`}
+                        className={`Rs.{item.is_available ? 'bg-emerald-500' : 'bg-red-500'} text-white border-0 ml-2`}
                       >
                         {item.is_available ? 'Available' : 'Sold Out'}
                       </Badge>
@@ -245,7 +245,7 @@ const Restaurant = () => {
                     
                     <div className="flex items-center justify-between">
                       <span className="text-2xl font-bold text-emerald-600">
-                        ${Number(item.price).toFixed(2)}
+                        Rs.{Number(item.price).toFixed(2)}
                       </span>
                       <Button
                         onClick={() => addToCart(item)}
@@ -270,7 +270,7 @@ const Restaurant = () => {
               <DialogTrigger asChild>
                 <Button className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg rounded-full px-6 py-3">
                   <ShoppingCart className="h-5 w-5 mr-2" />
-                  Cart ({getTotalItems()}) - ${getTotalPrice().toFixed(2)}
+                  Cart ({getTotalItems()}) - Rs.{getTotalPrice().toFixed(2)}
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
@@ -295,7 +295,7 @@ const Restaurant = () => {
                         )}
                         <div className="flex-1">
                           <h4 className="font-semibold">{item.name}</h4>
-                          <p className="text-gray-600">${Number(item.price).toFixed(2)}</p>
+                          <p className="text-gray-600">Rs.{Number(item.price).toFixed(2)}</p>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Button
@@ -315,7 +315,7 @@ const Restaurant = () => {
                           </Button>
                         </div>
                         <div className="font-semibold">
-                          ${(Number(item.price) * item.quantity).toFixed(2)}
+                          Rs.{(Number(item.price) * item.quantity).toFixed(2)}
                         </div>
                       </div>
                     ))}
@@ -368,7 +368,7 @@ const Restaurant = () => {
                   {/* Order Summary */}
                   <div className="border-t pt-4">
                     <div className="flex justify-between items-center text-xl font-bold">
-                      <span>Total: ${getTotalPrice().toFixed(2)}</span>
+                      <span>Total: Rs.{getTotalPrice().toFixed(2)}</span>
                       <Button onClick={handleOrder} className="bg-emerald-500 hover:bg-emerald-600 text-white">
                         Place Order
                       </Button>
