@@ -70,6 +70,37 @@ export const getMenuItemsByCategory = async (categoryId: string) => {
   return data;
 };
 
+export const createMenuItem = async (item: Omit<MenuItem, 'id' | 'created_at'>) => {
+  const { data, error } = await supabase
+    .from('menu_items')
+    .insert(item)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateMenuItem = async (id: string, updates: Partial<MenuItem>) => {
+  const { data, error } = await supabase
+    .from('menu_items')
+    .update(updates)
+    .eq('id', id)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const deleteMenuItem = async (id: string) => {
+  const { data, error } = await supabase
+    .from('menu_items')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+  return data;
+};
+
 // Gallery
 export const getGalleryItems = async () => {
   const { data, error } = await supabase
@@ -77,6 +108,37 @@ export const getGalleryItems = async () => {
     .select('*')
     .eq('is_active', true)
     .order('display_order');
+  
+  if (error) throw error;
+  return data;
+};
+
+export const createGalleryItem = async (item: Omit<GalleryItem, 'id' | 'created_at'>) => {
+  const { data, error } = await supabase
+    .from('gallery_items')
+    .insert(item)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateGalleryItem = async (id: string, updates: Partial<GalleryItem>) => {
+  const { data, error } = await supabase
+    .from('gallery_items')
+    .update(updates)
+    .eq('id', id)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const deleteGalleryItem = async (id: string) => {
+  const { data, error } = await supabase
+    .from('gallery_items')
+    .delete()
+    .eq('id', id);
   
   if (error) throw error;
   return data;
@@ -157,6 +219,16 @@ export const updateReservation = async (id: string, updates: Partial<Reservation
   return data;
 };
 
+export const deleteReservation = async (id: string) => {
+  const { data, error } = await supabase
+    .from('reservations')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+  return data;
+};
+
 // Orders
 export const createOrder = async (order: Omit<Order, 'id' | 'created_at'>) => {
   const { data, error } = await supabase
@@ -184,6 +256,16 @@ export const updateOrder = async (id: string, updates: Partial<Order>) => {
     .update(updates)
     .eq('id', id)
     .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const deleteOrder = async (id: string) => {
+  const { data, error } = await supabase
+    .from('orders')
+    .delete()
+    .eq('id', id);
   
   if (error) throw error;
   return data;
