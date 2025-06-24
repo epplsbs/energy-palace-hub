@@ -179,28 +179,8 @@ const ChargingStations = () => {
           ))}
         </div>
 
-        {/* Additional Info */}
-        <div className="mt-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl p-8 text-white">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4">Ready to Charge?</h3>
-            <p className="text-lg mb-6 opacity-90">
-              Simply plug in your vehicle and enjoy our premium amenities while you charge
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-              <div>
-                <h4 className="font-semibold mb-2">Step 1</h4>
-                <p className="opacity-80">Connect your EV to available charging station</p>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Step 2</h4>
-                <p className="opacity-80">Visit our restaurant while your car charges</p>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Step 3</h4>
-                <p className="opacity-80">Receive notification when charging is complete</p>
-              </div>
-            </div>
-          </div>
+        
+          
         </div>
       </div>
     </section>
