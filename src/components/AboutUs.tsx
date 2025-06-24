@@ -17,35 +17,27 @@ const AboutUs = () => {
   const [employees, setEmployees] = useState<Employee[]>([
     {
       id: '1',
-      name: 'Sarah Johnson',
-      designation: 'General Manager',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=300&h=300&fit=crop&crop=face',
-      bio: 'With over 10 years in hospitality management, Sarah leads our team with passion for excellence.',
+      name: 'Sujan Nepal',
+      designation: 'Founding Managing Director',
+      image: 'https://media.licdn.com/dms/image/v2/C5603AQGQ5J7HN3MfUg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1650214326462?e=1756339200&v=beta&t=acE9sY1V1Obh6Xkto8wE61R1-aOHQWmFw2XbhkPtYf4',
+      bio: 'With over 10 years in hospitality management, Sujan leads our team with passion for excellence.',
       specialties: ['Leadership', 'Operations', 'Customer Service']
     },
     {
       id: '2',
-      name: 'Michael Chen',
-      designation: 'Head Chef',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
-      bio: 'Micheal brings 15 years of culinary expertise, crafting exceptional meals for our guests.',
+      name: 'Sujit Karki',
+      designation: 'Founding Director/Head Chef',
+      image: 'https://media.licdn.com/dms/image/v2/D4D03AQESz7RWU-rbUg/profile-displayphoto-shrink_800_800/B4DZUI.X5GG4Ac-/0/1739612323935?e=1756339200&v=beta&t=_KaNTDqcROr8XKDdPy4Rbvqv7NEGs-LZifYHwh74itY',
+      bio: 'Sujit brings 5 years of culinary expertise, crafting exceptional meals for our guests.',
       specialties: ['Culinary Arts', 'Menu Development', 'Sustainability']
     },
     {
       id: '3',
-      name: 'Emily Rodriguez',
-      designation: 'EV Technical Specialist',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face',
-      bio: 'Emily ensures our charging infrastructure operates at peak performance 24/7.',
+      name: 'Bishnu Pokhrel',
+      designation: 'Founding Director/EV Technical Specialist',
+      image: 'https://drive.google.com/file/d/1l8a_UKInF5fO0aV9d9ub_2pC6zEtNCx5/view?usp=sharing',
+      bio: 'Bishnu ensures our charging infrastructure operates at peak performance 24/7.',
       specialties: ['EV Technology', 'Electrical Systems', 'Innovation']
-    },
-    {
-      id: '4',
-      name: 'David Kim',
-      designation: 'Customer Experience Manager',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face',
-      bio: 'David focuses on creating memorable experiences for every guest who visits Energy Palace.',
-      specialties: ['Customer Relations', 'Service Excellence', 'Process Improvement']
     }
   ]);
 
