@@ -38,7 +38,7 @@ const Hero = () => {
           <div className="mb-8">
             <div className="inline-flex items-center px-4 py-2 bg-emerald-100/80 backdrop-blur-sm rounded-full border border-emerald-200 mb-6">
               <Zap className="h-4 w-4 text-emerald-600 mr-2" />
-              <span className="text-emerald-800 text-sm font-medium">Premium EV Charging & Dining Experience</span>
+              <span className="text-emerald-800 text-sm font-medium"></span>
             </div>
           </div>
 
@@ -60,7 +60,7 @@ const Hero = () => {
               <div className="flex items-center justify-center mb-3">
                 <Zap className="h-8 w-8 text-emerald-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-1">140KW</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-1">200KW</h3>
               <p className="text-gray-600">Total Charging Power</p>
             </div>
             <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/40 shadow-lg">
