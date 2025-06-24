@@ -153,12 +153,6 @@ const AboutUs = () => {
         {/* Mission Statement */}
         <div className="text-center">
           <div className="bg-gray-50 rounded-2xl p-8 md:p-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h3>
-            <p className="text-xl text-gray-700 leading-relaxed max-w-4xl mx-auto">
-              To accelerate the adoption of sustainable transportation by providing world-class EV charging 
-              infrastructure paired with exceptional hospitality experiences. We believe that the future of 
-              travel should be both environmentally responsible and genuinely enjoyable.
-            </p>
           </div>
         </div>
       </div>
