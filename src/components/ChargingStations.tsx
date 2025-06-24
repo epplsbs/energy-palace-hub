@@ -76,7 +76,7 @@ const ChargingStations = () => {
             <p className="text-gray-600">Loading charging stations...</p>
           </div>
         </div>
-      </section> {/* ✅ Fixed closing tag */}
+      </section>
     );
   }
 
@@ -139,7 +139,7 @@ const ChargingStations = () => {
                   <CardTitle className="text-lg font-bold text-gray-900">
                     {station.station_id}
                   </CardTitle>
-                  <div className={`w-3 h-3 rounded-full ${getStatusColor(station.status)}`}></div>
+                  <div className={w-3 h-3 rounded-full ${getStatusColor(station.status)}}></div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -160,7 +160,7 @@ const ChargingStations = () => {
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Status:</span>
                   <Badge 
-                    className={`${getStatusColor(station.status)} text-white border-0`}
+                    className={${getStatusColor(station.status)} text-white border-0}
                   >
                     {getStatusText(station.status)}
                   </Badge>
