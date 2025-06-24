@@ -253,16 +253,8 @@ const Reservations = () => {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Monday - Friday</span>
-                    <span className="font-semibold">8:00 AM - 9:00 PM</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Saturday</span>
-                    <span className="font-semibold">8:00 AM - 10:00 PM</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Sunday</span>
-                    <span className="font-semibold">9:00 AM - 8:00 PM</span>
+                    <span className="text-gray-600">Sunday - Saturday</span>
+                    <span className="font-semibold">24 hours</span>
                   </div>
                 </CardContent>
               </Card>
@@ -278,15 +270,15 @@ const Reservations = () => {
                 <CardContent className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <Phone className="h-4 w-4 text-gray-600" />
-                    <span>+1 (234) 567-890</span>
+                    <span>+9779841426598</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Mail className="h-4 w-4 text-gray-600" />
-                    <span>reservations@energypalace.com</span>
+                    <span>energypalacepvtltd@gmail.com</span>
                   </div>
                   <div className="flex items-start space-x-3">
                     <MapPin className="h-4 w-4 text-gray-600 mt-1" />
-                    <span>123 Energy Street, Electric City, EC 12345</span>
+                    <span>Bhiman, Sindhuli, Nepal</span>
                   </div>
                 </CardContent>
               </Card>
