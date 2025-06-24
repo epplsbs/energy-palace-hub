@@ -17,35 +17,27 @@ const AboutUs = () => {
   const [employees, setEmployees] = useState<Employee[]>([
     {
       id: '1',
-      name: 'Sarah Johnson',
-      designation: 'General Manager',
+      name: 'Sujan Nepal',
+      designation: 'Founding President/ Managing Director',
       image: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=300&h=300&fit=crop&crop=face',
-      bio: 'With over 10 years in hospitality management, Sarah leads our team with passion for excellence.',
+      bio: 'With over 10 years in hospitality management, Sujan leads our team with passion for excellence.',
       specialties: ['Leadership', 'Operations', 'Customer Service']
     },
     {
       id: '2',
-      name: 'Michael Chen',
-      designation: 'Head Chef',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
-      bio: 'Micheal brings 15 years of culinary expertise, crafting exceptional meals for our guests.',
+      name: 'Sujit Karki',
+      designation: 'Founding Director/Head Chef',
+      image: 'https://media.licdn.com/dms/image/v2/D4D03AQGukxlKl7IIZQ/profile-displayphoto-crop_800_800/B4DZeib9TlHAAQ-/0/1750776929344?e=1756339200&v=beta&t=xIF7LCiPuNoFMNPGwQd26Sb2d_nBysMvVI-ZTGnulfY',
+      bio: 'Sujit brings 15 years of culinary expertise, crafting exceptional meals for our guests.',
       specialties: ['Culinary Arts', 'Menu Development', 'Sustainability']
     },
     {
       id: '3',
-      name: 'Emily Rodriguez',
+      name: 'Founding Director/Bishnu Pokhrel',
       designation: 'EV Technical Specialist',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face',
-      bio: 'Emily ensures our charging infrastructure operates at peak performance 24/7.',
+      image: 'https://media.licdn.com/dms/image/v2/D5603AQECXrE0cdzRhw/profile-displayphoto-shrink_800_800/B56ZUY3oKtGUAk-/0/1739878991507?e=1756339200&v=beta&t=Rirdu4rr0xzR_Oaq3BNSjdyFVUNmwcYiOR8alqcZR-Y',
+      bio: 'Bishnu ensures our charging infrastructure operates at peak performance 24/7.',
       specialties: ['EV Technology', 'Electrical Systems', 'Innovation']
-    },
-    {
-      id: '4',
-      name: 'David Kim',
-      designation: 'Customer Experience Manager',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face',
-      bio: 'David focuses on creating memorable experiences for every guest who visits Energy Palace.',
-      specialties: ['Customer Relations', 'Service Excellence', 'Process Improvement']
     }
   ]);
 
