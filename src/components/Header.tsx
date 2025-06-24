@@ -67,11 +67,11 @@ const Header = () => {
           {/* Contact Info */}
           <div className="hidden lg:flex items-center space-x-4">
             <a
-              href="tel:+1234567890"
+              href="tel:+9779841426598"
               className="flex items-center space-x-1 text-gray-600 hover:text-emerald-600 transition-colors"
             >
               <Phone className="h-4 w-4" />
-              <span className="text-sm">+1 (234) 567-890</span>
+              <span className="text-sm">++9779851053261/+9779841426598</span>
             </a>
             <a
               href="mailto:info@energypalace.com"
@@ -106,18 +106,18 @@ const Header = () => {
               ))}
               <div className="px-4 py-3 border-t mt-2">
                 <a
-                  href="tel:+1234567890"
+                  href="tel:+9779851053261"
                   className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 py-2"
                 >
                   <Phone className="h-4 w-4" />
-                  <span>+1 (234) 567-890</span>
+                  <span>++9779851053261/+9779841426598</span>
                 </a>
                 <a
                   href="mailto:info@energypalace.com"
                   className="flex items-center space-x-2 text-gray-600 hover:text-emerald-600 py-2"
                 >
                   <Mail className="h-4 w-4" />
-                  <span>info@energypalace.com</span>
+                  <span>energypalacepvtltd@gmail.com</span>
                 </a>
               </div>
             </nav>
