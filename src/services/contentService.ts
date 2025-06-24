@@ -94,6 +94,37 @@ export const getEmployees = async () => {
   return data;
 };
 
+export const updateEmployee = async (id: string, updates: Partial<Employee>) => {
+  const { data, error } = await supabase
+    .from('employees')
+    .update(updates)
+    .eq('id', id)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const createEmployee = async (employee: Omit<Employee, 'id' | 'created_at'>) => {
+  const { data, error } = await supabase
+    .from('employees')
+    .insert(employee)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const deleteEmployee = async (id: string) => {
+  const { data, error } = await supabase
+    .from('employees')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+  return data;
+};
+
 // Reservations
 export const createReservation = async (reservation: Omit<Reservation, 'id' | 'created_at'>) => {
   const { data, error } = await supabase
@@ -105,11 +136,53 @@ export const createReservation = async (reservation: Omit<Reservation, 'id' | 'c
   return data;
 };
 
+export const getReservations = async () => {
+  const { data, error } = await supabase
+    .from('reservations')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateReservation = async (id: string, updates: Partial<Reservation>) => {
+  const { data, error } = await supabase
+    .from('reservations')
+    .update(updates)
+    .eq('id', id)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
 // Orders
 export const createOrder = async (order: Omit<Order, 'id' | 'created_at'>) => {
   const { data, error } = await supabase
     .from('orders')
     .insert(order)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const getOrders = async () => {
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateOrder = async (id: string, updates: Partial<Order>) => {
+  const { data, error } = await supabase
+    .from('orders')
+    .update(updates)
+    .eq('id', id)
     .select();
   
   if (error) throw error;
