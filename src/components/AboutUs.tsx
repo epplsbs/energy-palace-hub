@@ -19,7 +19,7 @@ const AboutUs = () => {
       id: '1',
       name: 'Sujan Nepal',
       designation: 'Founding President/ Managing Director',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=300&h=300&fit=crop&crop=face',
+      image: 'https://media.licdn.com/dms/image/v2/C5603AQGQ5J7HN3MfUg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1650214326462?e=1756339200&v=beta&t=acE9sY1V1Obh6Xkto8wE61R1-aOHQWmFw2XbhkPtYf4',
       bio: 'With over 10 years in hospitality management, Sujan leads our team with passion for excellence.',
       specialties: ['Leadership', 'Operations', 'Customer Service']
     },
