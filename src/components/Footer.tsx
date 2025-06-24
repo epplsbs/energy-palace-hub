@@ -51,7 +51,7 @@ const Footer = () => {
                 <Zap className="h-6 w-6 text-white" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
-                Energy Palace
+                Energy Palace 
               </span>
             </div>
             <p className="text-gray-300 mb-6 leading-relaxed">
@@ -63,15 +63,15 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <MapPin className="h-4 w-4 text-emerald-400" />
-                <span className="text-gray-300 text-sm">123 Energy Street, Electric City, EC 12345</span>
+                <span className="text-gray-300 text-sm">Bhiman, Sindhuli</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-emerald-400" />
-                <span className="text-gray-300 text-sm">+1 (234) 567-890</span>
+                <span className="text-gray-300 text-sm">+9779843351320</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-emerald-400" />
-                <span className="text-gray-300 text-sm">info@energypalace.com</span>
+                <span className="text-gray-300 text-sm">energypalacepvtltd@gmail.com</span>
               </div>
             </div>
           </div>
@@ -122,16 +122,8 @@ const Footer = () => {
               </div>
               <div className="space-y-1 text-sm text-gray-300">
                 <div className="flex justify-between">
-                  <span>Mon - Fri</span>
-                  <span>8AM - 9PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Saturday</span>
-                  <span>8AM - 10PM</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Sunday</span>
-                  <span>9AM - 8PM</span>
+                  <span>Sunday - Saturday</span>
+                  <span>24 hours</span>
                 </div>
               </div>
             </div>
