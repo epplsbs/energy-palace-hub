@@ -33,8 +33,8 @@ const AboutUs = () => {
     },
     {
       id: '3',
-      name: 'Founding Director/Bishnu Pokhrel',
-      designation: 'EV Technical Specialist',
+      name: 'Bishnu Pokhrel',
+      designation: 'Founding Director/EV Technical Specialist',
       image: 'https://media.licdn.com/dms/image/v2/D5603AQECXrE0cdzRhw/profile-displayphoto-shrink_800_800/B56ZUY3oKtGUAk-/0/1739878991507?e=1756339200&v=beta&t=Rirdu4rr0xzR_Oaq3BNSjdyFVUNmwcYiOR8alqcZR-Y',
       bio: 'Bishnu ensures our charging infrastructure operates at peak performance 24/7.',
       specialties: ['EV Technology', 'Electrical Systems', 'Innovation']
