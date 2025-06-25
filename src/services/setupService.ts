@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 
 export const createPOSUser = async () => {
@@ -24,6 +23,7 @@ export const createPOSUser = async () => {
         auth_user_id: authData.user.id,
         full_name: 'Sujan Nepal',
         username: 'sujan1nepal@gmail.com',
+        email: 'sujan1nepal@gmail.com', // <-- Added this line
         role: 'admin',
         is_active: true
       }, {
