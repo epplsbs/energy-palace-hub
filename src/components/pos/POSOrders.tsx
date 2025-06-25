@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -118,12 +117,14 @@ const POSOrders = ({ user }: POSOrdersProps) => {
     try {
       const { subtotal, vatAmount, total } = calculateOrderTotal();
       
-      // Create order
+      // Create order with all required properties
       const orderData = {
         ...currentOrder,
         cashier_id: user.posUser.id,
+        waiter_id: null, // Add required waiter_id
         subtotal,
         vat_amount: vatAmount,
+        discount_amount: 0, // Add required discount_amount
         total_amount: total,
         order_status: 'pending',
         payment_status: 'pending'
@@ -131,7 +132,7 @@ const POSOrders = ({ user }: POSOrdersProps) => {
 
       const [order] = await createPosOrder(orderData);
 
-      // Create order items
+      // Create order items with notes property
       const orderItems = cartItems.map(item => ({
         order_id: order.id,
         menu_item_id: item.id,
@@ -142,7 +143,8 @@ const POSOrders = ({ user }: POSOrdersProps) => {
         vat_amount: item.vat_inclusive 
           ? (item.price * item.vat_rate / (100 + item.vat_rate)) * item.quantity
           : (item.price * item.vat_rate / 100) * item.quantity,
-        total_amount: (item.vat_inclusive ? item.price : item.price * (1 + item.vat_rate / 100)) * item.quantity
+        total_amount: (item.vat_inclusive ? item.price : item.price * (1 + item.vat_rate / 100)) * item.quantity,
+        notes: null // Add required notes property
       }));
 
       await createPosOrderItems(orderItems);

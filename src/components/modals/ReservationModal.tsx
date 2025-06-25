@@ -1,11 +1,11 @@
+
 import React, { useState } from 'react';
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalCloseButton,
-} from "@/components/ui/modal"
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -104,12 +104,11 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
   };
 
   return (
-    <Modal open={isOpen} onOpenChange={onClose}>
-      <ModalContent className="max-w-4xl">
-        <ModalHeader>
-          Make a Reservation
-        </ModalHeader>
-        <ModalCloseButton />
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>Make a Reservation</DialogTitle>
+        </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -180,14 +179,15 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
               placeholder="Any special requests?"
             />
           </div>
-          <ModalFooter>
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? 'Submitting...' : 'Submit Reservation'}
             </Button>
-          </ModalFooter>
+          </div>
         </form>
-      </ModalContent>
-    </Modal>
+      </DialogContent>
+    </Dialog>
   );
 };
 
