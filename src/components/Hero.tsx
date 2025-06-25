@@ -1,5 +1,5 @@
 
-import { ArrowDown, Zap, Car, Users, Calendar, MapPin } from 'lucide-react';
+import { ArrowDown, Zap, Car, Users, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import MenuModal from './modals/MenuModal';
@@ -20,7 +20,7 @@ const Hero = () => {
 
   return (
     <>
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
         {/* Brighter Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-100">
           <div className="absolute inset-0 bg-white/30"></div>
@@ -35,56 +35,55 @@ const Hero = () => {
 
         {/* Content */}
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-          <div className="mb-8">
-            <div className="inline-flex items-center px-4 py-2 bg-emerald-100/80 backdrop-blur-sm rounded-full border border-emerald-200 mb-6">
+          <div className="mb-6">
+            <div className="inline-flex items-center px-4 py-2 bg-emerald-100/80 backdrop-blur-sm rounded-full border border-emerald-200 mb-4">
               <Zap className="h-4 w-4 text-emerald-600 mr-2" />
               <span className="text-emerald-800 text-sm font-medium">Premium EV Charging & Dining Experience</span>
             </div>
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-800 mb-6 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4 leading-tight">
             Welcome to{' '}
             <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
               Energy Palace
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Where sustainable energy meets exceptional hospitality. Charge your EV while enjoying premium dining 
-            in our state-of-the-art facility.
+          <p className="text-lg md:text-xl text-gray-700 mb-6 max-w-2xl mx-auto">
+            Where sustainable energy meets exceptional hospitality. Charge your EV while enjoying premium dining.
           </p>
 
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 max-w-3xl mx-auto">
-            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/40 shadow-lg">
-              <div className="flex items-center justify-center mb-3">
-                <Zap className="h-8 w-8 text-emerald-600" />
+          {/* Compact Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 max-w-2xl mx-auto">
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-white/40 shadow-lg">
+              <div className="flex items-center justify-center mb-2">
+                <Zap className="h-6 w-6 text-emerald-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-1">140KW</h3>
-              <p className="text-gray-600">Total Charging Power</p>
+              <h3 className="text-xl font-bold text-gray-800 mb-1">140KW</h3>
+              <p className="text-sm text-gray-600">Total Power</p>
             </div>
-            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/40 shadow-lg">
-              <div className="flex items-center justify-center mb-3">
-                <Car className="h-8 w-8 text-blue-600" />
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-white/40 shadow-lg">
+              <div className="flex items-center justify-center mb-2">
+                <Car className="h-6 w-6 text-blue-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-1">4</h3>
-              <p className="text-gray-600">Charging Stations</p>
+              <h3 className="text-xl font-bold text-gray-800 mb-1">4</h3>
+              <p className="text-sm text-gray-600">Charging Stations</p>
             </div>
-            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/40 shadow-lg">
-              <div className="flex items-center justify-center mb-3">
-                <Users className="h-8 w-8 text-purple-600" />
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-4 border border-white/40 shadow-lg">
+              <div className="flex items-center justify-center mb-2">
+                <Users className="h-6 w-6 text-purple-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-1">50+</h3>
-              <p className="text-gray-600">Dining Seats</p>
+              <h3 className="text-xl font-bold text-gray-800 mb-1">50+</h3>
+              <p className="text-sm text-gray-600">Dining Seats</p>
             </div>
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
             <Button
               onClick={() => setIsMenuModalOpen(true)}
               size="lg"
-              className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white border-0 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105"
+              className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white border-0 px-6 py-2 text-base font-semibold rounded-full transition-all duration-300 hover:scale-105"
             >
               View Menu
             </Button>
@@ -92,7 +91,7 @@ const Hero = () => {
               onClick={() => setIsChargingModalOpen(true)}
               variant="outline"
               size="lg"
-              className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105"
+              className="border-emerald-600 text-emerald-700 hover:bg-emerald-50 px-6 py-2 text-base font-semibold rounded-full transition-all duration-300 hover:scale-105"
             >
               Charging Status
             </Button>
@@ -100,10 +99,10 @@ const Hero = () => {
               onClick={() => setIsReservationModalOpen(true)}
               variant="outline"
               size="lg"
-              className="border-blue-600 text-blue-700 hover:bg-blue-50 px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105"
+              className="border-blue-600 text-blue-700 hover:bg-blue-50 px-6 py-2 text-base font-semibold rounded-full transition-all duration-300 hover:scale-105"
             >
-              <Calendar className="h-5 w-5 mr-2" />
-              Make Reservation
+              <Calendar className="h-4 w-4 mr-2" />
+              Reserve Table
             </Button>
           </div>
 

@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Zap, Battery, Clock, Car } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Zap, Battery, Clock, Car, X } from 'lucide-react';
 import { getChargingStations } from '@/services/contentService';
 import type { ChargingStation } from '@/services/contentService';
 
@@ -61,7 +62,20 @@ const ChargingStatusModal = ({ isOpen, onClose }: ChargingStatusModalProps) => {
   if (loading) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <div className="flex items-center justify-between">
+              <DialogTitle>Charging Station Status</DialogTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="h-6 w-6 p-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </DialogHeader>
           <div className="flex items-center justify-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
           </div>
@@ -72,12 +86,22 @@ const ChargingStatusModal = ({ isOpen, onClose }: ChargingStatusModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2">
-            <Zap className="h-6 w-6 text-emerald-600" />
-            Charging Station Status
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+              <Zap className="h-6 w-6 text-emerald-600" />
+              Charging Station Status
+            </DialogTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="h-6 w-6 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </DialogHeader>
         
         <div className="grid gap-4">

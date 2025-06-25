@@ -6,7 +6,6 @@ import ChargingStations from '../components/ChargingStations';
 import Restaurant from '../components/Restaurant';
 import Gallery from '../components/Gallery';
 import Reservations from '../components/Reservations';
-import AboutUs from '../components/AboutUs';
 import Footer from '../components/Footer';
 import { googleSheetsService } from '../services/googleSheetsService';
 
@@ -49,7 +48,6 @@ const Index = () => {
         <Restaurant />
         <Gallery />
         <Reservations />
-        <AboutUs />
       </main>
       <Footer />
     </div>
