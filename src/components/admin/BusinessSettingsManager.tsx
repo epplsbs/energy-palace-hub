@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Edit, Save, Phone, Mail, MapPin, Building } from 'lucide-react';
+import { Edit, Save, Phone, Mail, MapPin, Building, Loader2 } from 'lucide-react';
 
 interface BusinessSetting {
   id: string;
@@ -27,32 +27,38 @@ const BusinessSettingsManager = () => {
     {
       setting_key: 'contact_phone',
       setting_value: '+977-1-4567890',
-      description: 'Primary contact phone number'
+      description: 'Primary contact phone number',
+      setting_type: 'text'
     },
     {
       setting_key: 'contact_email',
       setting_value: 'info@energypalace.com',
-      description: 'Primary contact email address'
+      description: 'Primary contact email address',
+      setting_type: 'text'
     },
     {
       setting_key: 'business_address',
       setting_value: 'Kathmandu, Nepal',
-      description: 'Business location address'
+      description: 'Business location address',
+      setting_type: 'text'
     },
     {
       setting_key: 'business_name',
       setting_value: 'Energy Palace',
-      description: 'Business name displayed on website'
+      description: 'Business name displayed on website',
+      setting_type: 'text'
     },
     {
       setting_key: 'business_tagline',
       setting_value: 'Premium EV Charging & Dining Experience',
-      description: 'Business tagline or slogan'
+      description: 'Business tagline or slogan',
+      setting_type: 'text'
     },
     {
       setting_key: 'opening_hours',
       setting_value: '24/7',
-      description: 'Business operating hours'
+      description: 'Business operating hours',
+      setting_type: 'text'
     }
   ];
 
@@ -62,15 +68,22 @@ const BusinessSettingsManager = () => {
 
   const loadSettings = async () => {
     try {
+      console.log('Loading business settings...');
       const { data, error } = await supabase
         .from('pos_settings')
         .select('*')
         .in('setting_key', defaultSettings.map(s => s.setting_key));
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading settings:', error);
+        throw error;
+      }
+
+      console.log('Loaded settings:', data);
 
       // If no settings exist, create default ones
       if (!data || data.length === 0) {
+        console.log('No settings found, creating defaults...');
         await createDefaultSettings();
         return;
       }
@@ -84,11 +97,11 @@ const BusinessSettingsManager = () => {
       });
       setEditingSettings(editingState);
 
-    } catch (error) {
-      console.error('Error loading settings:', error);
+    } catch (error: any) {
+      console.error('Error in loadSettings:', error);
       toast({
         title: "Error",
-        description: "Failed to load business settings",
+        description: `Failed to load business settings: ${error.message}`,
         variant: "destructive",
       });
     } finally {
@@ -98,16 +111,18 @@ const BusinessSettingsManager = () => {
 
   const createDefaultSettings = async () => {
     try {
+      console.log('Creating default settings...');
       const { data, error } = await supabase
         .from('pos_settings')
-        .insert(defaultSettings.map(setting => ({
-          ...setting,
-          setting_type: 'text'
-        })))
+        .insert(defaultSettings)
         .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error creating default settings:', error);
+        throw error;
+      }
 
+      console.log('Created default settings:', data);
       setSettings(data || []);
       
       // Initialize editing state
@@ -117,11 +132,16 @@ const BusinessSettingsManager = () => {
       });
       setEditingSettings(editingState);
 
-    } catch (error) {
+      toast({
+        title: "Success",
+        description: "Default business settings created successfully",
+      });
+
+    } catch (error: any) {
       console.error('Error creating default settings:', error);
       toast({
         title: "Error",
-        description: "Failed to create default settings",
+        description: `Failed to create default settings: ${error.message}`,
         variant: "destructive",
       });
     }
@@ -130,6 +150,8 @@ const BusinessSettingsManager = () => {
   const updateSetting = async (settingKey: string) => {
     setIsSaving(true);
     try {
+      console.log(`Updating setting ${settingKey} with value:`, editingSettings[settingKey]);
+      
       const { error } = await supabase
         .from('pos_settings')
         .update({ 
@@ -138,7 +160,10 @@ const BusinessSettingsManager = () => {
         })
         .eq('setting_key', settingKey);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating setting:', error);
+        throw error;
+      }
 
       // Update local state
       setSettings(prev => prev.map(setting => 
@@ -152,11 +177,11 @@ const BusinessSettingsManager = () => {
         description: "Setting updated successfully",
       });
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating setting:', error);
       toast({
         title: "Error",
-        description: "Failed to update setting",
+        description: `Failed to update setting: ${error.message}`,
         variant: "destructive",
       });
     } finally {
@@ -199,7 +224,12 @@ const BusinessSettingsManager = () => {
   };
 
   if (isLoading) {
-    return <div className="text-center py-8">Loading business settings...</div>;
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+        <span className="ml-2 text-gray-600">Loading business settings...</span>
+      </div>
+    );
   }
 
   return (
@@ -213,7 +243,7 @@ const BusinessSettingsManager = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {settings.map(setting => (
-          <Card key={setting.id}>
+          <Card key={setting.id} className="hover:shadow-lg transition-shadow">
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 {getSettingIcon(setting.setting_key)}
@@ -233,6 +263,7 @@ const BusinessSettingsManager = () => {
                     }))}
                     placeholder="Enter value"
                     rows={3}
+                    className="mt-1"
                   />
                 ) : (
                   <Input
@@ -243,6 +274,7 @@ const BusinessSettingsManager = () => {
                       [setting.setting_key]: e.target.value
                     }))}
                     placeholder="Enter value"
+                    className="mt-1"
                   />
                 )}
               </div>
@@ -255,7 +287,11 @@ const BusinessSettingsManager = () => {
                 size="sm"
                 className="flex items-center gap-2"
               >
-                <Save className="h-4 w-4" />
+                {isSaving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
                 {isSaving ? 'Saving...' : 'Update'}
               </Button>
             </CardContent>

@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -143,6 +143,29 @@
     @apply bg-white/10 backdrop-blur-md border border-white/20;
   }
 
+  /* Futuristic animations */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  /* Neon glow effects */
+  .neon-glow {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+
+  .neon-glow-green {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+  }
+
   /* Line clamp utilities */
   .line-clamp-2 {
     display: -webkit-box;
@@ -160,20 +183,6 @@
 }
 
 @layer utilities {
-  /* Animation utilities */
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-20px);
-    }
-  }
-
   /* Focus utilities */
   .focus-ring {
     @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2;
@@ -195,6 +204,10 @@
 
   .bg-gradient-secondary {
     @apply bg-gradient-to-r from-purple-500 to-pink-500;
+  }
+
+  .bg-gradient-futuristic {
+    @apply bg-gradient-to-br from-slate-900 via-blue-900 to-emerald-900;
   }
 
   /* Loading states */
