@@ -1,0 +1,408 @@
+
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  getPosOrders, 
+  createPosOrder, 
+  createPosOrderItems, 
+  getPosMenuItems,
+  updatePosOrder
+} from '@/services/posService';
+import { Plus, Minus, ShoppingCart, Receipt } from 'lucide-react';
+
+interface POSOrdersProps {
+  user: any;
+}
+
+const POSOrders = ({ user }: POSOrdersProps) => {
+  const { toast } = useToast();
+  const [orders, setOrders] = useState<any[]>([]);
+  const [menuItems, setMenuItems] = useState<any[]>([]);
+  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [currentOrder, setCurrentOrder] = useState({
+    customer_name: '',
+    customer_phone: '',
+    customer_email: '',
+    order_type: 'dine_in',
+    table_number: '',
+    payment_method: 'cash',
+    notes: ''
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [ordersData, menuData] = await Promise.all([
+        getPosOrders(),
+        getPosMenuItems()
+      ]);
+      setOrders(ordersData);
+      setMenuItems(menuData);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load orders data",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const addToCart = (item: any) => {
+    const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
+    if (existingItem) {
+      setCartItems(cartItems.map(cartItem => 
+        cartItem.id === item.id 
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
+      ));
+    } else {
+      setCartItems([...cartItems, { ...item, quantity: 1 }]);
+    }
+  };
+
+  const removeFromCart = (itemId: string) => {
+    setCartItems(cartItems.filter(item => item.id !== itemId));
+  };
+
+  const updateQuantity = (itemId: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(itemId);
+    } else {
+      setCartItems(cartItems.map(item => 
+        item.id === itemId ? { ...item, quantity } : item
+      ));
+    }
+  };
+
+  const calculateOrderTotal = () => {
+    const subtotal = cartItems.reduce((sum, item) => {
+      const price = item.vat_inclusive ? item.price : item.price * (1 + item.vat_rate / 100);
+      return sum + (price * item.quantity);
+    }, 0);
+    
+    const vatAmount = cartItems.reduce((sum, item) => {
+      const vatAmount = item.vat_inclusive 
+        ? (item.price * item.vat_rate / (100 + item.vat_rate)) * item.quantity
+        : (item.price * item.vat_rate / 100) * item.quantity;
+      return sum + vatAmount;
+    }, 0);
+
+    return { subtotal, vatAmount, total: subtotal };
+  };
+
+  const createOrder = async () => {
+    if (cartItems.length === 0) {
+      toast({
+        title: "Error",
+        description: "Please add items to the cart",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsCreatingOrder(true);
+    try {
+      const { subtotal, vatAmount, total } = calculateOrderTotal();
+      
+      // Create order
+      const orderData = {
+        ...currentOrder,
+        cashier_id: user.posUser.id,
+        subtotal,
+        vat_amount: vatAmount,
+        total_amount: total,
+        order_status: 'pending',
+        payment_status: 'pending'
+      };
+
+      const [order] = await createPosOrder(orderData);
+
+      // Create order items
+      const orderItems = cartItems.map(item => ({
+        order_id: order.id,
+        menu_item_id: item.id,
+        item_name: item.name,
+        quantity: item.quantity,
+        unit_price: item.price,
+        vat_rate: item.vat_rate,
+        vat_amount: item.vat_inclusive 
+          ? (item.price * item.vat_rate / (100 + item.vat_rate)) * item.quantity
+          : (item.price * item.vat_rate / 100) * item.quantity,
+        total_amount: (item.vat_inclusive ? item.price : item.price * (1 + item.vat_rate / 100)) * item.quantity
+      }));
+
+      await createPosOrderItems(orderItems);
+
+      toast({
+        title: "Order Created",
+        description: `Order ${order.order_number} created successfully`,
+      });
+
+      // Reset form
+      setCartItems([]);
+      setCurrentOrder({
+        customer_name: '',
+        customer_phone: '',
+        customer_email: '',
+        order_type: 'dine_in',
+        table_number: '',
+        payment_method: 'cash',
+        notes: ''
+      });
+
+      loadData();
+    } catch (error) {
+      console.error('Error creating order:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create order",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCreatingOrder(false);
+    }
+  };
+
+  const updateOrderStatus = async (orderId: string, status: string) => {
+    try {
+      await updatePosOrder(orderId, { 
+        order_status: status,
+        ...(status === 'completed' && { completed_at: new Date().toISOString() })
+      });
+      toast({
+        title: "Order Updated",
+        description: "Order status updated successfully",
+      });
+      loadData();
+    } catch (error) {
+      console.error('Error updating order:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update order status",
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (isLoading) {
+    return <div className="text-center py-8">Loading orders...</div>;
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Restaurant Orders</h2>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Menu Items */}
+        <div className="lg:col-span-2 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Menu Items</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {menuItems.map(item => (
+                  <Card key={item.id} className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => addToCart(item)}>
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h3 className="font-semibold">{item.name}</h3>
+                          <p className="text-sm text-gray-600">{item.description}</p>
+                          <p className="text-lg font-bold text-emerald-600 mt-2">
+                            Rs. {item.price}
+                            {item.vat_inclusive && <span className="text-xs text-gray-500"> (VAT incl.)</span>}
+                          </p>
+                        </div>
+                        <Button size="sm" onClick={(e) => { e.stopPropagation(); addToCart(item); }}>
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Cart & Order Form */}
+        <div className="space-y-4">
+          {/* Cart */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                Cart ({cartItems.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {cartItems.length === 0 ? (
+                <p className="text-gray-500 text-center py-4">Cart is empty</p>
+              ) : (
+                <div className="space-y-2">
+                  {cartItems.map(item => (
+                    <div key={item.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <div className="flex-1">
+                        <p className="font-medium text-sm">{item.name}</p>
+                        <p className="text-xs text-gray-600">Rs. {item.price} each</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button size="sm" variant="outline" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <span className="w-8 text-center">{item.quantity}</span>
+                        <Button size="sm" variant="outline" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => removeFromCart(item.id)}>
+                          ×
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="border-t pt-2 mt-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Subtotal:</span>
+                      <span>Rs. {calculateOrderTotal().subtotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>VAT:</span>
+                      <span>Rs. {calculateOrderTotal().vatAmount.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between font-bold">
+                      <span>Total:</span>
+                      <span>Rs. {calculateOrderTotal().total.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Order Form */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Order Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="customer_name">Customer Name</Label>
+                <Input
+                  id="customer_name"
+                  value={currentOrder.customer_name}
+                  onChange={(e) => setCurrentOrder({...currentOrder, customer_name: e.target.value})}
+                  placeholder="Customer name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="customer_phone">Phone</Label>
+                <Input
+                  id="customer_phone"
+                  value={currentOrder.customer_phone}
+                  onChange={(e) => setCurrentOrder({...currentOrder, customer_phone: e.target.value})}
+                  placeholder="Phone number"
+                />
+              </div>
+              <div>
+                <Label htmlFor="order_type">Order Type</Label>
+                <Select value={currentOrder.order_type} onValueChange={(value) => setCurrentOrder({...currentOrder, order_type: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="dine_in">Dine In</SelectItem>
+                    <SelectItem value="takeaway">Takeaway</SelectItem>
+                    <SelectItem value="delivery">Delivery</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {currentOrder.order_type === 'dine_in' && (
+                <div>
+                  <Label htmlFor="table_number">Table Number</Label>
+                  <Input
+                    id="table_number"
+                    value={currentOrder.table_number}
+                    onChange={(e) => setCurrentOrder({...currentOrder, table_number: e.target.value})}
+                    placeholder="Table number"
+                  />
+                </div>
+              )}
+              <div>
+                <Label htmlFor="payment_method">Payment Method</Label>
+                <Select value={currentOrder.payment_method} onValueChange={(value) => setCurrentOrder({...currentOrder, payment_method: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cash">Cash</SelectItem>
+                    <SelectItem value="card">Card</SelectItem>
+                    <SelectItem value="qr">QR Payment</SelectItem>
+                    <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button
+                onClick={createOrder}
+                disabled={isCreatingOrder || cartItems.length === 0}
+                className="w-full bg-emerald-600 hover:bg-emerald-700"
+              >
+                {isCreatingOrder ? 'Creating Order...' : 'Create Order'}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Recent Orders */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Orders</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {orders.slice(0, 10).map(order => (
+              <div key={order.id} className="flex items-center justify-between p-4 bg-gray-50 rounded">
+                <div>
+                  <p className="font-medium">#{order.order_number}</p>
+                  <p className="text-sm text-gray-600">{order.customer_name || 'Walk-in'}</p>
+                  <p className="text-sm text-gray-600">Rs. {order.total_amount}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Badge variant={order.order_status === 'completed' ? 'default' : 'secondary'}>
+                    {order.order_status}
+                  </Badge>
+                  {order.order_status !== 'completed' && order.order_status !== 'cancelled' && (
+                    <Button
+                      size="sm"
+                      onClick={() => updateOrderStatus(order.id, order.order_status === 'pending' ? 'preparing' : 'completed')}
+                    >
+                      {order.order_status === 'pending' ? 'Start' : 'Complete'}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default POSOrders;
