@@ -1,192 +1,193 @@
-
-import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Calendar, Clock, Users } from 'lucide-react';
-import { createReservation } from '@/services/contentService';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState } from 'react';
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalCloseButton,
+} from "@/components/ui/modal"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
+import { Calendar } from "@/components/ui/calendar"
+import { CalendarIcon } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import { supabase } from '@/integrations/supabase/client';
 
 interface ReservationModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+interface FormData {
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  date: string;
+  time: string;
+  guests: string;
+  specialRequests: string;
+}
+
 const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
-  const [formData, setFormData] = useState({
-    customer_name: '',
-    customer_email: '',
-    customer_phone: '',
+  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    customerName: '',
+    customerEmail: '',
+    customerPhone: '',
     date: '',
     time: '',
-    guests: 2,
-    special_requests: ''
+    guests: '2',
+    specialRequests: ''
   });
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
+  const [date, setDate] = React.useState<Date | undefined>(new Date())
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      await createReservation(formData);
-      toast({
-        title: "Reservation Confirmed!",
-        description: "Your table has been reserved. We'll send you a confirmation email shortly.",
-      });
-      setFormData({
-        customer_name: '',
-        customer_email: '',
-        customer_phone: '',
-        date: '',
-        time: '',
-        guests: 2,
-        special_requests: ''
-      });
-      onClose();
-    } catch (error) {
-      console.error('Error creating reservation:', error);
-      toast({
-        title: "Error",
-        description: "Failed to create reservation. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'guests' ? Number(value) : value
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [id]: value
     }));
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const reservationData = {
+        customer_name: formData.customerName,
+        customer_email: formData.customerEmail,
+        customer_phone: formData.customerPhone,
+        date: formData.date,
+        time: formData.time,
+        guests: parseInt(formData.guests),
+        special_requests: formData.specialRequests,
+        status: 'pending'
+      };
+
+      const { error } = await supabase
+        .from('reservations')
+        .insert([reservationData]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Reservation Confirmed!",
+        description: "We'll contact you shortly to confirm your reservation.",
+      });
+
+      onClose();
+      setFormData({
+        customerName: '',
+        customerEmail: '',
+        customerPhone: '',
+        date: '',
+        time: '',
+        guests: '2',
+        specialRequests: ''
+      });
+    } catch (error: any) {
+      console.error('Error creating reservation:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create reservation. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2">
-            <Calendar className="h-6 w-6 text-emerald-600" />
-            Make Reservation
-          </DialogTitle>
-        </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="customer_name">Full Name</Label>
-            <Input
-              id="customer_name"
-              name="customer_name"
-              value={formData.customer_name}
-              onChange={handleInputChange}
-              placeholder="Enter your full name"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="customer_email">Email</Label>
-            <Input
-              id="customer_email"
-              name="customer_email"
-              type="email"
-              value={formData.customer_email}
-              onChange={handleInputChange}
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="customer_phone">Phone Number</Label>
-            <Input
-              id="customer_phone"
-              name="customer_phone"
-              type="tel"
-              value={formData.customer_phone}
-              onChange={handleInputChange}
-              placeholder="Enter your phone number"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="date" className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                Date
-              </Label>
-              <Input
-                id="date"
-                name="date"
-                type="date"
-                value={formData.date}
-                onChange={handleInputChange}
-                min={new Date().toISOString().split('T')[0]}
-                required
-              />
+    <Modal open={isOpen} onOpenChange={onClose}>
+      <ModalContent className="max-w-4xl">
+        <ModalHeader>
+          Make a Reservation
+        </ModalHeader>
+        <ModalCloseButton />
+        <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="customerName">Name</Label>
+              <Input type="text" id="customerName" value={formData.customerName} onChange={handleChange} required />
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="time" className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                Time
-              </Label>
-              <Input
-                id="time"
-                name="time"
-                type="time"
-                value={formData.time}
-                onChange={handleInputChange}
-                required
-              />
+            <div>
+              <Label htmlFor="customerEmail">Email</Label>
+              <Input type="email" id="customerEmail" value={formData.customerEmail} onChange={handleChange} required />
             </div>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="guests" className="flex items-center gap-1">
-              <Users className="h-4 w-4" />
-              Number of Guests
-            </Label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="customerPhone">Phone</Label>
+              <Input type="tel" id="customerPhone" value={formData.customerPhone} onChange={handleChange} />
+            </div>
+            <div>
+              <Label htmlFor="guests">Guests</Label>
+              <Input type="number" id="guests" value={formData.guests} onChange={handleChange} min="1" required />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="date">Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[240px] justify-start text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={(date) => {
+                      setDate(date)
+                      setFormData(prevData => ({
+                        ...prevData,
+                        date: date?.toISOString().split('T')[0] || ''
+                      }));
+                    }}
+                    disabled={(date) =>
+                      date < new Date()
+                    }
+                    className="rounded-md border"
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div>
+              <Label htmlFor="time">Time</Label>
+              <Input type="time" id="time" value={formData.time} onChange={handleChange} required />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="specialRequests">Special Requests</Label>
             <Input
-              id="guests"
-              name="guests"
-              type="number"
-              min="1"
-              max="12"
-              value={formData.guests}
-              onChange={handleInputChange}
-              required
+              id="specialRequests"
+              value={formData.specialRequests}
+              onChange={handleChange}
+              placeholder="Any special requests?"
             />
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="special_requests">Special Requests (Optional)</Label>
-            <Textarea
-              id="special_requests"
-              name="special_requests"
-              value={formData.special_requests}
-              onChange={handleInputChange}
-              placeholder="Any special dietary requirements or requests..."
-              rows={3}
-            />
-          </div>
-
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-emerald-500 hover:bg-emerald-600"
-          >
-            {loading ? 'Creating Reservation...' : 'Confirm Reservation'}
-          </Button>
+          <ModalFooter>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? 'Submitting...' : 'Submit Reservation'}
+            </Button>
+          </ModalFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </ModalContent>
+    </Modal>
   );
 };
 

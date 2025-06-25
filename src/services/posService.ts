@@ -124,10 +124,15 @@ export const getPosOrders = async (dateRange?: { start: string; end: string }) =
   return data;
 };
 
-export const createPosOrder = async (order: Omit<PosOrder, 'id' | 'created_at' | 'order_number'>) => {
+export const createPosOrder = async (order: Omit<PosOrder, 'id' | 'created_at' | 'order_number' | 'completed_at'>) => {
   const { data, error } = await supabase
     .from('pos_orders')
-    .insert(order)
+    .insert({
+      ...order,
+      waiter_id: order.waiter_id || null,
+      discount_amount: order.discount_amount || 0,
+      completed_at: null
+    })
     .select();
   
   if (error) throw error;
@@ -147,9 +152,14 @@ export const updatePosOrder = async (id: string, updates: Partial<PosOrder>) => 
 
 // POS Order Items
 export const createPosOrderItems = async (items: Omit<PosOrderItem, 'id' | 'created_at'>[]) => {
+  const itemsWithNotes = items.map(item => ({
+    ...item,
+    notes: item.notes || null
+  }));
+
   const { data, error } = await supabase
     .from('pos_order_items')
-    .insert(items)
+    .insert(itemsWithNotes)
     .select();
   
   if (error) throw error;
