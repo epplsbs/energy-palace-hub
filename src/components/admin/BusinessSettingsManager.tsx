@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Edit, Save, Phone, Mail, MapPin, Building, Loader2 } from 'lucide-react';
+import { Edit, Save, Phone, Mail, MapPin, Building, Loader2, Clock, Tag } from 'lucide-react';
 
 interface BusinessSetting {
   id: string;
@@ -81,9 +81,26 @@ const BusinessSettingsManager = () => {
 
       console.log('Loaded settings:', data);
 
-      // If no settings exist, create default ones
+      // If no settings exist, use defaults and try to create them
       if (!data || data.length === 0) {
-        console.log('No settings found, creating defaults...');
+        console.log('No settings found, using defaults...');
+        const defaultSettingsData = defaultSettings.map(setting => ({
+          id: crypto.randomUUID(),
+          setting_key: setting.setting_key,
+          setting_value: setting.setting_value,
+          description: setting.description
+        }));
+        
+        setSettings(defaultSettingsData);
+        
+        // Initialize editing state with default values
+        const editingState: Record<string, string> = {};
+        defaultSettingsData.forEach(setting => {
+          editingState[setting.setting_key] = setting.setting_value;
+        });
+        setEditingSettings(editingState);
+        
+        // Try to create settings in database
         await createDefaultSettings();
         return;
       }
@@ -99,9 +116,26 @@ const BusinessSettingsManager = () => {
 
     } catch (error: any) {
       console.error('Error in loadSettings:', error);
+      
+      // If there's an error, still show the defaults for editing
+      const defaultSettingsData = defaultSettings.map(setting => ({
+        id: crypto.randomUUID(),
+        setting_key: setting.setting_key,
+        setting_value: setting.setting_value,
+        description: setting.description
+      }));
+      
+      setSettings(defaultSettingsData);
+      
+      const editingState: Record<string, string> = {};
+      defaultSettingsData.forEach(setting => {
+        editingState[setting.setting_key] = setting.setting_value;
+      });
+      setEditingSettings(editingState);
+      
       toast({
-        title: "Error",
-        description: `Failed to load business settings: ${error.message}`,
+        title: "Warning",
+        description: "Using default settings. Changes may not be saved until database is properly configured.",
         variant: "destructive",
       });
     } finally {
@@ -114,23 +148,20 @@ const BusinessSettingsManager = () => {
       console.log('Creating default settings...');
       const { data, error } = await supabase
         .from('pos_settings')
-        .insert(defaultSettings)
+        .insert(defaultSettings.map(setting => ({
+          setting_key: setting.setting_key,
+          setting_value: setting.setting_value,
+          description: setting.description,
+          setting_type: setting.setting_type
+        })))
         .select();
 
       if (error) {
         console.error('Error creating default settings:', error);
-        throw error;
+        return; // Don't throw error, just log it
       }
 
       console.log('Created default settings:', data);
-      setSettings(data || []);
-      
-      // Initialize editing state
-      const editingState: Record<string, string> = {};
-      defaultSettings.forEach(setting => {
-        editingState[setting.setting_key] = setting.setting_value;
-      });
-      setEditingSettings(editingState);
 
       toast({
         title: "Success",
@@ -139,30 +170,69 @@ const BusinessSettingsManager = () => {
 
     } catch (error: any) {
       console.error('Error creating default settings:', error);
-      toast({
-        title: "Error",
-        description: `Failed to create default settings: ${error.message}`,
-        variant: "destructive",
-      });
+      // Don't show error toast as this is optional
     }
   };
 
   const updateSetting = async (settingKey: string) => {
+    if (!editingSettings[settingKey]) {
+      toast({
+        title: "Error",
+        description: "Please enter a value before saving",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSaving(true);
     try {
       console.log(`Updating setting ${settingKey} with value:`, editingSettings[settingKey]);
       
-      const { error } = await supabase
+      // Try to update existing setting
+      const { data: existingData, error: selectError } = await supabase
         .from('pos_settings')
-        .update({ 
-          setting_value: editingSettings[settingKey],
-          updated_at: new Date().toISOString()
-        })
-        .eq('setting_key', settingKey);
+        .select('*')
+        .eq('setting_key', settingKey)
+        .single();
 
-      if (error) {
-        console.error('Error updating setting:', error);
-        throw error;
+      if (selectError && selectError.code !== 'PGRST116') {
+        console.error('Error checking existing setting:', selectError);
+        throw selectError;
+      }
+
+      let result;
+      if (existingData) {
+        // Update existing setting
+        const { data, error } = await supabase
+          .from('pos_settings')
+          .update({ 
+            setting_value: editingSettings[settingKey],
+            updated_at: new Date().toISOString()
+          })
+          .eq('setting_key', settingKey)
+          .select();
+
+        result = { data, error };
+      } else {
+        // Insert new setting
+        const settingInfo = defaultSettings.find(s => s.setting_key === settingKey);
+        const { data, error } = await supabase
+          .from('pos_settings')
+          .insert({
+            setting_key: settingKey,
+            setting_value: editingSettings[settingKey],
+            description: settingInfo?.description,
+            setting_type: settingInfo?.setting_type || 'text',
+            updated_at: new Date().toISOString()
+          })
+          .select();
+
+        result = { data, error };
+      }
+
+      if (result.error) {
+        console.error('Error saving setting:', result.error);
+        throw result.error;
       }
 
       // Update local state
@@ -199,6 +269,10 @@ const BusinessSettingsManager = () => {
         return <MapPin className="h-5 w-5 text-red-600" />;
       case 'business_name':
         return <Building className="h-5 w-5 text-purple-600" />;
+      case 'business_tagline':
+        return <Tag className="h-5 w-5 text-pink-600" />;
+      case 'opening_hours':
+        return <Clock className="h-5 w-5 text-orange-600" />;
       default:
         return <Edit className="h-5 w-5 text-gray-600" />;
     }
@@ -235,7 +309,7 @@ const BusinessSettingsManager = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold flex items-center">
+        <h2 className="text-2xl font-bold flex items-center text-gray-900">
           <Edit className="h-6 w-6 mr-2" />
           Business Settings
         </h2>
@@ -243,8 +317,8 @@ const BusinessSettingsManager = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {settings.map(setting => (
-          <Card key={setting.id} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
+          <Card key={setting.setting_key} className="hover:shadow-lg transition-shadow border-gray-200">
+            <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 {getSettingIcon(setting.setting_key)}
                 {getSettingLabel(setting.setting_key)}
@@ -252,7 +326,7 @@ const BusinessSettingsManager = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor={setting.setting_key}>Value</Label>
+                <Label htmlFor={setting.setting_key} className="text-gray-700 font-medium">Value</Label>
                 {setting.setting_key === 'business_tagline' ? (
                   <Textarea
                     id={setting.setting_key}
@@ -263,7 +337,7 @@ const BusinessSettingsManager = () => {
                     }))}
                     placeholder="Enter value"
                     rows={3}
-                    className="mt-1"
+                    className="mt-1 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
                   />
                 ) : (
                   <Input
@@ -274,7 +348,7 @@ const BusinessSettingsManager = () => {
                       [setting.setting_key]: e.target.value
                     }))}
                     placeholder="Enter value"
-                    className="mt-1"
+                    className="mt-1 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
                   />
                 )}
               </div>
@@ -285,7 +359,7 @@ const BusinessSettingsManager = () => {
                 onClick={() => updateSetting(setting.setting_key)}
                 disabled={isSaving || editingSettings[setting.setting_key] === setting.setting_value}
                 size="sm"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700"
               >
                 {isSaving ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -299,9 +373,9 @@ const BusinessSettingsManager = () => {
         ))}
       </div>
 
-      <Card>
+      <Card className="border-gray-200">
         <CardHeader>
-          <CardTitle>Usage Instructions</CardTitle>
+          <CardTitle className="text-gray-900">Usage Instructions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2 text-sm text-gray-600">
