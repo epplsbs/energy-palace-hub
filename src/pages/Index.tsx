@@ -210,7 +210,7 @@ const Index = () => {
         onClose={() => setIsMenuModalOpen(false)} 
       />
       <ReservationModal 
-        isOpen={isIsReservationModalOpen} 
+        isOpen={isReservationModalOpen} 
         onClose={() => setIsReservationModalOpen(false)} 
       />
     </div>
