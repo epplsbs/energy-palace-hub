@@ -9,6 +9,45 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      ai_content_suggestions: {
+        Row: {
+          content: string
+          content_type: string
+          created_at: string | null
+          id: string
+          keywords: string[] | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          target_audience: string | null
+          title: string
+        }
+        Insert: {
+          content: string
+          content_type: string
+          created_at?: string | null
+          id?: string
+          keywords?: string[] | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          target_audience?: string | null
+          title: string
+        }
+        Update: {
+          content?: string
+          content_type?: string
+          created_at?: string | null
+          id?: string
+          keywords?: string[] | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          target_audience?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       charging_stations: {
         Row: {
           connector: string
@@ -42,6 +81,45 @@ export type Database = {
           status?: string
           type?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          created_at: string | null
+          department: string | null
+          display_order: number | null
+          email: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          phone: string | null
+          position: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          department?: string | null
+          display_order?: number | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          phone?: string | null
+          position?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          department?: string | null
+          display_order?: number | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          phone?: string | null
+          position?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -191,6 +269,7 @@ export type Database = {
           id: string
           items: Json
           notes: string | null
+          order_source: string | null
           status: string | null
           total_amount: number
         }
@@ -202,6 +281,7 @@ export type Database = {
           id?: string
           items: Json
           notes?: string | null
+          order_source?: string | null
           status?: string | null
           total_amount: number
         }
@@ -213,6 +293,7 @@ export type Database = {
           id?: string
           items?: Json
           notes?: string | null
+          order_source?: string | null
           status?: string | null
           total_amount?: number
         }
@@ -735,6 +816,57 @@ export type Database = {
           special_requests?: string | null
           status?: string | null
           time?: string
+        }
+        Relationships: []
+      }
+      seo_settings: {
+        Row: {
+          canonical_url: string | null
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          meta_description: string | null
+          meta_keywords: string | null
+          meta_title: string | null
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
+          page_path: string
+          robots_directives: string | null
+          schema_markup: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          canonical_url?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          meta_description?: string | null
+          meta_keywords?: string | null
+          meta_title?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_path: string
+          robots_directives?: string | null
+          schema_markup?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          canonical_url?: string | null
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          meta_description?: string | null
+          meta_keywords?: string | null
+          meta_title?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          page_path?: string
+          robots_directives?: string | null
+          schema_markup?: Json | null
+          updated_at?: string | null
         }
         Relationships: []
       }

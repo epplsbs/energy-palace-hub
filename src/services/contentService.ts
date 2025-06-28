@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import type { Tables } from '@/integrations/supabase/types';
 
@@ -266,6 +265,114 @@ export const deleteOrder = async (id: string) => {
     .from('orders')
     .delete()
     .eq('id', id);
+  
+  if (error) throw error;
+  return data;
+};
+
+// Contacts Management
+export const getContacts = async () => {
+  const { data, error } = await supabase
+    .from('contacts')
+    .select('*')
+    .eq('is_active', true)
+    .order('display_order');
+  
+  if (error) throw error;
+  return data;
+};
+
+export const createContact = async (contact: Omit<typeof contact, 'id' | 'created_at'>) => {
+  const { data, error } = await supabase
+    .from('contacts')
+    .insert(contact)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateContact = async (id: string, updates: any) => {
+  const { data, error } = await supabase
+    .from('contacts')
+    .update(updates)
+    .eq('id', id)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const deleteContact = async (id: string) => {
+  const { data, error } = await supabase
+    .from('contacts')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+  return data;
+};
+
+// SEO Settings Management
+export const getSEOSettings = async () => {
+  const { data, error } = await supabase
+    .from('seo_settings')
+    .select('*')
+    .eq('is_active', true)
+    .order('page_path');
+  
+  if (error) throw error;
+  return data;
+};
+
+export const createSEOSetting = async (setting: any) => {
+  const { data, error } = await supabase
+    .from('seo_settings')
+    .insert(setting)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateSEOSetting = async (id: string, updates: any) => {
+  const { data, error } = await supabase
+    .from('seo_settings')
+    .update(updates)
+    .eq('id', id)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+// AI Content Suggestions
+export const getAIContentSuggestions = async () => {
+  const { data, error } = await supabase
+    .from('ai_content_suggestions')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (error) throw error;
+  return data;
+};
+
+export const createAIContentSuggestion = async (suggestion: any) => {
+  const { data, error } = await supabase
+    .from('ai_content_suggestions')
+    .insert(suggestion)
+    .select();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateAIContentSuggestion = async (id: string, updates: any) => {
+  const { data, error } = await supabase
+    .from('ai_content_suggestions')
+    .update(updates)
+    .eq('id', id)
+    .select();
   
   if (error) throw error;
   return data;
