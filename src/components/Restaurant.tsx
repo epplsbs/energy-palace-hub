@@ -149,7 +149,8 @@ const Restaurant = () => {
         items: orderItems,
         total_amount: getTotalPrice(),
         notes: customerInfo.notes || null,
-        status: 'pending'
+        status: 'pending',
+        order_source: 'website'
       });
 
       toast({

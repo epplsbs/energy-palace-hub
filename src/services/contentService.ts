@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import type { Tables } from '@/integrations/supabase/types';
 
@@ -282,7 +283,14 @@ export const getContacts = async () => {
   return data;
 };
 
-export const createContact = async (contact: Omit<typeof contact, 'id' | 'created_at'>) => {
+export const createContact = async (contact: {
+  name: string;
+  position?: string;
+  email?: string;
+  phone?: string;
+  department?: string;
+  display_order?: number;
+}) => {
   const { data, error } = await supabase
     .from('contacts')
     .insert(contact)
@@ -292,7 +300,15 @@ export const createContact = async (contact: Omit<typeof contact, 'id' | 'create
   return data;
 };
 
-export const updateContact = async (id: string, updates: any) => {
+export const updateContact = async (id: string, updates: {
+  name?: string;
+  position?: string;
+  email?: string;
+  phone?: string;
+  department?: string;
+  is_active?: boolean;
+  display_order?: number;
+}) => {
   const { data, error } = await supabase
     .from('contacts')
     .update(updates)
@@ -325,7 +341,18 @@ export const getSEOSettings = async () => {
   return data;
 };
 
-export const createSEOSetting = async (setting: any) => {
+export const createSEOSetting = async (setting: {
+  page_path: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
+  og_title?: string;
+  og_description?: string;
+  og_image?: string;
+  canonical_url?: string;
+  robots_directives?: string;
+  schema_markup?: any;
+}) => {
   const { data, error } = await supabase
     .from('seo_settings')
     .insert(setting)
@@ -335,7 +362,19 @@ export const createSEOSetting = async (setting: any) => {
   return data;
 };
 
-export const updateSEOSetting = async (id: string, updates: any) => {
+export const updateSEOSetting = async (id: string, updates: {
+  page_path?: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
+  og_title?: string;
+  og_description?: string;
+  og_image?: string;
+  canonical_url?: string;
+  robots_directives?: string;
+  schema_markup?: any;
+  is_active?: boolean;
+}) => {
   const { data, error } = await supabase
     .from('seo_settings')
     .update(updates)
@@ -357,7 +396,13 @@ export const getAIContentSuggestions = async () => {
   return data;
 };
 
-export const createAIContentSuggestion = async (suggestion: any) => {
+export const createAIContentSuggestion = async (suggestion: {
+  content_type: string;
+  title: string;
+  content: string;
+  keywords?: string[];
+  target_audience?: string;
+}) => {
   const { data, error } = await supabase
     .from('ai_content_suggestions')
     .insert(suggestion)
@@ -367,7 +412,16 @@ export const createAIContentSuggestion = async (suggestion: any) => {
   return data;
 };
 
-export const updateAIContentSuggestion = async (id: string, updates: any) => {
+export const updateAIContentSuggestion = async (id: string, updates: {
+  content_type?: string;
+  title?: string;
+  content?: string;
+  keywords?: string[];
+  target_audience?: string;
+  status?: string;
+  reviewed_at?: string;
+  reviewed_by?: string;
+}) => {
   const { data, error } = await supabase
     .from('ai_content_suggestions')
     .update(updates)
