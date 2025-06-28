@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase } from '@/integrations/supabase/client';
+import { getContacts } from '@/services/contentService';
 import { Phone, Mail, MapPin, Clock, User, Building, Zap } from 'lucide-react';
 
 interface Contact {
@@ -25,13 +25,7 @@ const Contacts = () => {
 
   const fetchContacts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('contacts')
-        .select('*')
-        .eq('is_active', true)
-        .order('display_order');
-
-      if (error) throw error;
+      const data = await getContacts();
       setContacts(data || []);
     } catch (error) {
       console.error('Error fetching contacts:', error);

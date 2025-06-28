@@ -2,44 +2,50 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Users, Award, Target, Heart } from 'lucide-react';
+import { Users, Award, Target, Heart, Sparkles } from 'lucide-react';
+import { getEmployees, getAIContentSuggestions } from '@/services/contentService';
 
 interface Employee {
   id: string;
   name: string;
   designation: string;
-  image: string;
+  image_url: string;
   bio: string;
   specialties: string[];
 }
 
+interface AIContent {
+  id: string;
+  title: string;
+  content: string;
+  keywords: string[];
+  status: string;
+}
+
 const AboutUs = () => {
-  const [employees, setEmployees] = useState<Employee[]>([
-    {
-      id: '1',
-      name: 'Sujan Nepal',
-      designation: 'Founding President/ Managing Director',
-      image: 'https://media.licdn.com/dms/image/v2/C5603AQGQ5J7HN3MfUg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1650214326462?e=1756339200&v=beta&t=acE9sY1V1Obh6Xkto8wE61R1-aOHQWmFw2XbhkPtYf4',
-      bio: 'With over 10 years in hospitality management, Sujan leads our team with passion for excellence.',
-      specialties: ['Leadership', 'Operations', 'Customer Service']
-    },
-    {
-      id: '2',
-      name: 'Sujit Karki',
-      designation: 'Founding Director/Head Chef',
-      image: 'https://media.licdn.com/dms/image/v2/D4D03AQGukxlKl7IIZQ/profile-displayphoto-crop_800_800/B4DZeib9TlHAAQ-/0/1750776929344?e=1756339200&v=beta&t=xIF7LCiPuNoFMNPGwQd26Sb2d_nBysMvVI-ZTGnulfY',
-      bio: 'Sujit brings 15 years of culinary expertise, crafting exceptional meals for our guests.',
-      specialties: ['Culinary Arts', 'Menu Development', 'Sustainability']
-    },
-    {
-      id: '3',
-      name: 'Bishnu Pokhrel',
-      designation: 'Founding Director/EV Technical Specialist',
-      image: 'https://media.licdn.com/dms/image/v2/D5603AQECXrE0cdzRhw/profile-displayphoto-shrink_800_800/B56ZUY3oKtGUAk-/0/1739878991507?e=1756339200&v=beta&t=Rirdu4rr0xzR_Oaq3BNSjdyFVUNmwcYiOR8alqcZR-Y',
-      bio: 'Bishnu ensures our charging infrastructure operates at peak performance 24/7.',
-      specialties: ['EV Technology', 'Electrical Systems', 'Innovation']
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [aiContent, setAIContent] = useState<AIContent[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [employeesData, aiContentData] = await Promise.all([
+        getEmployees(),
+        getAIContentSuggestions()
+      ]);
+      
+      setEmployees(employeesData || []);
+      setAIContent(aiContentData?.filter(content => content.status === 'approved') || []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
 
   const companyValues = [
     {
@@ -113,6 +119,42 @@ const AboutUs = () => {
           </div>
         </div>
 
+        {/* AI Generated Content */}
+        {aiContent.length > 0 && (
+          <div className="mb-16">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center px-4 py-2 bg-purple-100 rounded-full mb-6">
+                <Sparkles className="h-4 w-4 text-purple-600 mr-2" />
+                <span className="text-purple-800 text-sm font-medium">AI Insights</span>
+              </div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Latest Insights</h3>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Discover the latest insights and content about Energy Palace and the EV industry
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              {aiContent.slice(0, 4).map((content) => (
+                <Card key={content.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-6">
+                    <h4 className="text-xl font-bold text-gray-900 mb-3">{content.title}</h4>
+                    <p className="text-gray-600 leading-relaxed mb-4">{content.content.substring(0, 200)}...</p>
+                    {content.keywords && content.keywords.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {content.keywords.slice(0, 3).map((keyword, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {keyword}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Team Section */}
         <div className="mb-16">
           <div className="text-center mb-12">
@@ -127,7 +169,7 @@ const AboutUs = () => {
               <Card key={employee.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
                 <div className="aspect-square overflow-hidden">
                   <img 
-                    src={employee.image} 
+                    src={employee.image_url} 
                     alt={employee.name}
                     className="w-full h-full object-cover"
                   />
@@ -138,7 +180,7 @@ const AboutUs = () => {
                   <p className="text-gray-600 text-sm leading-relaxed mb-4">{employee.bio}</p>
                   
                   <div className="flex flex-wrap gap-2">
-                    {employee.specialties.map((specialty, index) => (
+                    {employee.specialties?.map((specialty, index) => (
                       <Badge key={index} variant="outline" className="text-xs">
                         {specialty}
                       </Badge>

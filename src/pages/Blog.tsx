@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { supabase } from '@/integrations/supabase/client';
+import { getGalleryItems } from '@/services/contentService';
 import { Zap, ArrowLeft, Calendar, Tag } from 'lucide-react';
 
 interface GalleryItem {
@@ -23,13 +23,7 @@ const Blog = () => {
 
   const fetchGalleryItems = async () => {
     try {
-      const { data, error } = await supabase
-        .from('gallery_items')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
+      const data = await getGalleryItems();
       setGalleryItems(data || []);
     } catch (error) {
       console.error('Error fetching gallery items:', error);

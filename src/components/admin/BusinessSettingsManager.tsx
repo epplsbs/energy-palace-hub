@@ -70,18 +70,23 @@ const BusinessSettingsManager = () => {
 
       if (error) {
         console.error('Error loading settings:', error);
-        // Don't throw error, use defaults instead
+        // Initialize with defaults if no settings exist
+        await initializeDefaultSettings();
+        return;
       }
 
       console.log('Loaded settings:', data);
 
-      // Use loaded data or defaults
-      const settingsToUse = data && data.length > 0 ? data : defaultSettings.map(setting => ({
-        id: crypto.randomUUID(),
-        setting_key: setting.setting_key,
-        setting_value: setting.setting_value,
-        description: setting.description
-      }));
+      // Merge with defaults for any missing settings
+      const settingsToUse = defaultSettings.map(defaultSetting => {
+        const existingSetting = data?.find(s => s.setting_key === defaultSetting.setting_key);
+        return existingSetting || {
+          id: crypto.randomUUID(),
+          setting_key: defaultSetting.setting_key,
+          setting_value: defaultSetting.setting_value,
+          description: defaultSetting.description
+        };
+      });
       
       setSettings(settingsToUse);
       
@@ -94,30 +99,52 @@ const BusinessSettingsManager = () => {
 
     } catch (error: any) {
       console.error('Error in loadSettings:', error);
-      
-      // Use defaults as fallback
-      const defaultSettingsData = defaultSettings.map(setting => ({
-        id: crypto.randomUUID(),
-        setting_key: setting.setting_key,
-        setting_value: setting.setting_value,
-        description: setting.description
-      }));
-      
-      setSettings(defaultSettingsData);
-      
-      const editingState: Record<string, string> = {};
-      defaultSettingsData.forEach(setting => {
-        editingState[setting.setting_key] = setting.setting_value;
-      });
-      setEditingSettings(editingState);
-      
       toast({
-        title: "Warning",
-        description: "Using default settings. Database connection may need configuration.",
+        title: "Error",
+        description: "Failed to load settings. Please try again.",
         variant: "destructive",
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const initializeDefaultSettings = async () => {
+    try {
+      const settingsToInsert = defaultSettings.map(setting => ({
+        setting_key: setting.setting_key,
+        setting_value: setting.setting_value,
+        description: setting.description,
+        setting_type: 'text'
+      }));
+
+      const { data, error } = await supabase
+        .from('pos_settings')
+        .insert(settingsToInsert)
+        .select();
+
+      if (error) throw error;
+
+      setSettings(data.map(setting => ({
+        id: setting.id,
+        setting_key: setting.setting_key,
+        setting_value: setting.setting_value,
+        description: setting.description
+      })));
+
+      const editingState: Record<string, string> = {};
+      data.forEach(setting => {
+        editingState[setting.setting_key] = setting.setting_value || '';
+      });
+      setEditingSettings(editingState);
+
+    } catch (error: any) {
+      console.error('Error initializing settings:', error);
+      toast({
+        title: "Error",
+        description: "Failed to initialize settings",
+        variant: "destructive",
+      });
     }
   };
 
@@ -135,7 +162,6 @@ const BusinessSettingsManager = () => {
     try {
       console.log(`Updating setting ${settingKey} with value:`, editingSettings[settingKey]);
       
-      // Use upsert functionality with ON CONFLICT
       const { data, error } = await supabase
         .from('pos_settings')
         .upsert({
@@ -171,16 +197,10 @@ const BusinessSettingsManager = () => {
     } catch (error: any) {
       console.error('Error updating setting:', error);
       toast({
-        title: "Success", // Show success anyway for demo purposes
-        description: "Setting updated successfully (demo mode)",
+        title: "Error",
+        description: "Failed to update setting. Please try again.",
+        variant: "destructive",
       });
-      
-      // Update local state anyway for demo
-      setSettings(prev => prev.map(setting => 
-        setting.setting_key === settingKey 
-          ? { ...setting, setting_value: editingSettings[settingKey] }
-          : setting
-      ));
     } finally {
       setIsSaving(false);
     }
