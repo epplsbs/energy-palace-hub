@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Zap, Car, Coffee, ChevronRight, Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Zap, Car, Coffee, ChevronRight, Phone, Mail, MapPin, Clock, Users, Info } from 'lucide-react';
 import ChargingModal from '@/components/modals/ChargingModal';
 import MenuModal from '@/components/modals/MenuModal';
 import ReservationModal from '@/components/modals/ReservationModal';
@@ -39,9 +39,20 @@ const Index = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-8 text-white/80">
-            <a href="/blog" className="hover:text-emerald-400 transition-colors">Blog</a>
-            <a href="/pos" className="hover:text-emerald-400 transition-colors">POS Login</a>
-            <a href="/admin" className="hover:text-emerald-400 transition-colors">Admin</a>
+            <a href="/blog" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
+              <span>Blog</span>
+            </a>
+            <a href="/contacts" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              <span>Contacts</span>
+            </a>
+            <button 
+              onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+              className="hover:text-emerald-400 transition-colors flex items-center gap-2"
+            >
+              <Info className="h-4 w-4" />
+              <span>About Us</span>
+            </button>
           </div>
         </nav>
       </header>
@@ -148,6 +159,53 @@ const Index = () => {
           </div>
         </div>
       </main>
+
+      {/* About Us Section */}
+      <section id="about" className="relative z-10 py-20 bg-black/20 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl font-bold text-white mb-6">
+              <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+                About Energy Palace
+              </span>
+            </h2>
+            <p className="text-xl text-white/70 max-w-3xl mx-auto">
+              Leading the way in sustainable transportation with cutting-edge EV charging technology and exceptional hospitality.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="glass rounded-2xl p-6 border border-white/20 text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-emerald-100/20 to-blue-100/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8 text-emerald-400" />
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2">Innovation</h4>
+              <p className="text-white/60 text-sm">Leading the way in sustainable energy solutions</p>
+            </div>
+            <div className="glass rounded-2xl p-6 border border-white/20 text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-emerald-100/20 to-blue-100/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Car className="h-8 w-8 text-blue-400" />
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2">Sustainability</h4>
+              <p className="text-white/60 text-sm">Committed to environmental responsibility</p>
+            </div>
+            <div className="glass rounded-2xl p-6 border border-white/20 text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-emerald-100/20 to-blue-100/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-purple-400" />
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2">Community</h4>
+              <p className="text-white/60 text-sm">Building connections and supporting the EV community</p>
+            </div>
+            <div className="glass rounded-2xl p-6 border border-white/20 text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-emerald-100/20 to-blue-100/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Coffee className="h-8 w-8 text-yellow-400" />
+              </div>
+              <h4 className="text-lg font-bold text-white mb-2">Excellence</h4>
+              <p className="text-white/60 text-sm">Delivering exceptional service and premium experiences</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="relative z-10 mt-16 border-t border-white/10 bg-black/20 backdrop-blur-sm">

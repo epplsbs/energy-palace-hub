@@ -103,7 +103,7 @@ const Blog = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {galleryItems.map((item, index) => (
-              <Card key={item.id} className="glass border border-white/20 backdrop-blur-xl hover:border-emerald-500/50 transition-all duration-300 hover:scale-105 group overflow-hidden">
+              <Card key={item.id} className="glass border border-white/20 backdrop-blur-xl hover:border-emerald-500/50 transition-all duration-300 hover:scale-105 group overflow-hidden bg-gray-900/50">
                 <div className="relative">
                   <img
                     src={item.image_url}
@@ -112,8 +112,8 @@ const Blog = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
-                <CardHeader>
-                  <div className="flex items-center gap-2 text-sm text-white/60 mb-2">
+                <CardHeader className="bg-gray-900/80 backdrop-blur-sm">
+                  <div className="flex items-center gap-2 text-sm text-gray-300 mb-2">
                     <Calendar className="h-4 w-4" />
                     <span>{new Date(item.created_at).toLocaleDateString()}</span>
                   </div>
@@ -121,8 +121,8 @@ const Blog = () => {
                     {item.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-white/70 leading-relaxed">
+                <CardContent className="bg-gray-900/80 backdrop-blur-sm">
+                  <p className="text-gray-300 leading-relaxed">
                     {item.description}
                   </p>
                 </CardContent>

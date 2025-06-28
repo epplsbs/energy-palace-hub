@@ -4,10 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, Edit, Trash2, Phone, Mail, User, Building } from 'lucide-react';
+import { Plus, Edit, Trash2, Phone, Mail, User, Building, Upload } from 'lucide-react';
 
 interface Contact {
   id: string;
@@ -18,6 +17,7 @@ interface Contact {
   department: string;
   is_active: boolean;
   display_order: number;
+  photo_url?: string;
 }
 
 const ContactsManager = () => {
@@ -26,13 +26,15 @@ const ContactsManager = () => {
   const [loading, setLoading] = useState(true);
   const [editingContact, setEditingContact] = useState<Contact | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     position: '',
     email: '',
     phone: '',
     department: '',
-    display_order: 0
+    display_order: 0,
+    photo_url: ''
   });
 
   useEffect(() => {
@@ -56,6 +58,43 @@ const ContactsManager = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadingPhoto(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `contacts/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('contacts')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from('contacts')
+        .getPublicUrl(filePath);
+
+      setFormData(prev => ({ ...prev, photo_url: data.publicUrl }));
+
+      toast({
+        title: "Success",
+        description: "Photo uploaded successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to upload photo",
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingPhoto(false);
     }
   };
 
@@ -95,7 +134,8 @@ const ContactsManager = () => {
         email: '',
         phone: '',
         department: '',
-        display_order: 0
+        display_order: 0,
+        photo_url: ''
       });
       setEditingContact(null);
       setShowForm(false);
@@ -119,7 +159,8 @@ const ContactsManager = () => {
       email: contact.email,
       phone: contact.phone,
       department: contact.department,
-      display_order: contact.display_order
+      display_order: contact.display_order,
+      photo_url: contact.photo_url || ''
     });
     setShowForm(true);
   };
@@ -194,7 +235,8 @@ const ContactsManager = () => {
               email: '',
               phone: '',
               department: '',
-              display_order: contacts.length
+              display_order: contacts.length,
+              photo_url: ''
             });
           }}
           className="bg-emerald-500 hover:bg-emerald-600"
@@ -264,8 +306,37 @@ const ContactsManager = () => {
                   />
                 </div>
               </div>
+              
+              <div>
+                <Label htmlFor="photo">Photo</Label>
+                <div className="flex items-center space-x-4">
+                  <Input
+                    id="photo"
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    disabled={uploadingPhoto}
+                  />
+                  {uploadingPhoto && (
+                    <div className="flex items-center">
+                      <Upload className="h-4 w-4 mr-2 animate-spin" />
+                      <span>Uploading...</span>
+                    </div>
+                  )}
+                </div>
+                {formData.photo_url && (
+                  <div className="mt-2">
+                    <img 
+                      src={formData.photo_url} 
+                      alt="Preview" 
+                      className="w-20 h-20 object-cover rounded-lg"
+                    />
+                  </div>
+                )}
+              </div>
+              
               <div className="flex gap-2">
-                <Button type="submit" disabled={loading}>
+                <Button type="submit" disabled={loading || uploadingPhoto}>
                   {editingContact ? 'Update' : 'Create'} Contact
                 </Button>
                 <Button 
@@ -289,14 +360,24 @@ const ContactsManager = () => {
           <Card key={contact.id} className={`${!contact.is_active ? 'opacity-50' : ''}`}>
             <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <User className="h-5 w-5 text-emerald-600" />
-                    {contact.name}
-                  </CardTitle>
-                  {contact.position && (
-                    <p className="text-sm text-gray-600 mt-1">{contact.position}</p>
+                <div className="flex items-center gap-3">
+                  {contact.photo_url ? (
+                    <img 
+                      src={contact.photo_url} 
+                      alt={contact.name}
+                      className="w-12 h-12 object-cover rounded-full"
+                    />
+                  ) : (
+                    <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-500/20 to-blue-500/20">
+                      <User className="h-6 w-6 text-emerald-600" />
+                    </div>
                   )}
+                  <div>
+                    <CardTitle className="text-lg">{contact.name}</CardTitle>
+                    {contact.position && (
+                      <p className="text-sm text-gray-600 mt-1">{contact.position}</p>
+                    )}
+                  </div>
                 </div>
                 <div className="flex gap-1">
                   <Button
