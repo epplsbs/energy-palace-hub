@@ -2,247 +2,177 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User } from '@supabase/supabase-js';
-import { LogOut, Settings, Users, Utensils, Zap, Image, Calendar, ShoppingCart, Edit, Phone, Search } from 'lucide-react';
-import ChargingStationManager from './ChargingStationManager';
+import { Badge } from '@/components/ui/badge';
+import { 
+  LayoutDashboard, 
+  Utensils, 
+  Image, 
+  Users, 
+  Phone, 
+  Zap, 
+  ShoppingCart, 
+  Calendar,
+  Search,
+  Settings,
+  Menu,
+  X,
+  UserCheck
+} from 'lucide-react';
 import MenuManager from './MenuManager';
 import GalleryManager from './GalleryManager';
-import ReservationManager from './ReservationManager';
-import OrderManager from './OrderManager';
-import BusinessSettingsManager from './BusinessSettingsManager';
 import ContactsManager from './ContactsManager';
+import ChargingStationManager from './ChargingStationManager';
+import OrderManager from './OrderManager';
+import ReservationManager from './ReservationManager';
+import BusinessSettingsManager from './BusinessSettingsManager';
 import SEOManager from './SEOManager';
+import AboutUsManager from './AboutUsManager';
 
-interface AdminDashboardProps {
-  user: User;
-  onSignOut: () => void;
-}
+const AdminDashboard = () => {
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-const AdminDashboard = ({ user, onSignOut }: AdminDashboardProps) => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const menuItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'menu', label: 'Menu', icon: Utensils },
+    { id: 'gallery', label: 'Gallery', icon: Image },
+    { id: 'about', label: 'About Us', icon: UserCheck },
+    { id: 'contacts', label: 'Contacts', icon: Phone },
+    { id: 'charging', label: 'Charging Stations', icon: Zap },
+    { id: 'orders', label: 'Orders', icon: ShoppingCart },
+    { id: 'reservations', label: 'Reservations', icon: Calendar },
+    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'seo', label: 'SEO', icon: Search },
+  ];
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold text-gray-900">Energy Palace Admin</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Welcome, {user.email}</span>
-              <Button
-                onClick={onSignOut}
-                variant="outline"
-                size="sm"
-                className="flex items-center space-x-2"
-              >
-                <LogOut className="h-4 w-4" />
-                <span>Sign Out</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-9">
-            <TabsTrigger value="overview" className="flex items-center space-x-2">
-              <Settings className="h-4 w-4" />
-              <span>Overview</span>
-            </TabsTrigger>
-            <TabsTrigger value="charging" className="flex items-center space-x-2">
-              <Zap className="h-4 w-4" />
-              <span>Charging</span>
-            </TabsTrigger>
-            <TabsTrigger value="menu" className="flex items-center space-x-2">
-              <Utensils className="h-4 w-4" />
-              <span>Menu</span>
-            </TabsTrigger>
-            <TabsTrigger value="gallery" className="flex items-center space-x-2">
-              <Image className="h-4 w-4" />
-              <span>Gallery</span>
-            </TabsTrigger>
-            <TabsTrigger value="reservations" className="flex items-center space-x-2">
-              <Calendar className="h-4 w-4" />
-              <span>Reservations</span>
-            </TabsTrigger>
-            <TabsTrigger value="orders" className="flex items-center space-x-2">
-              <ShoppingCart className="h-4 w-4" />
-              <span>Orders</span>
-            </TabsTrigger>
-            <TabsTrigger value="contacts" className="flex items-center space-x-2">
-              <Phone className="h-4 w-4" />
-              <span>Contacts</span>
-            </TabsTrigger>
-            <TabsTrigger value="seo" className="flex items-center space-x-2">
-              <Search className="h-4 w-4" />
-              <span>SEO</span>
-            </TabsTrigger>
-            <TabsTrigger value="business" className="flex items-center space-x-2">
-              <Edit className="h-4 w-4" />
-              <span>Settings</span>
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Charging Stations</CardTitle>
-                  <Zap className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">4</div>
-                  <p className="text-xs text-muted-foreground">Total stations</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Menu Items</CardTitle>
-                  <Utensils className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">8</div>
-                  <p className="text-xs text-muted-foreground">Active items</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Gallery Items</CardTitle>
-                  <Image className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">4</div>
-                  <p className="text-xs text-muted-foreground">Photos displayed</p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Recent Orders</CardTitle>
-                  <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">-</div>
-                  <p className="text-xs text-muted-foreground">From website</p>
-                </CardContent>
-              </Card>
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'menu':
+        return <MenuManager />;
+      case 'gallery':
+        return <GalleryManager />;
+      case 'about':
+        return <AboutUsManager />;
+      case 'contacts':
+        return <ContactsManager />;
+      case 'charging':
+        return <ChargingStationManager />;
+      case 'orders':
+        return <OrderManager />;
+      case 'reservations':
+        return <ReservationManager />;
+      case 'settings':
+        return <BusinessSettingsManager />;
+      case 'seo':
+        return <SEOManager />;
+      default:
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                System Online
+              </Badge>
             </div>
             
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-                  <Button 
-                    onClick={() => setActiveTab('charging')}
-                    className="h-20 flex flex-col items-center space-y-2"
-                    variant="outline"
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              {menuItems.slice(1).map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Card 
+                    key={item.id}
+                    className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105"
+                    onClick={() => setActiveTab(item.id)}
                   >
-                    <Zap className="h-6 w-6" />
-                    <span>Charging</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveTab('menu')}
-                    className="h-20 flex flex-col items-center space-y-2"
-                    variant="outline"
-                  >
-                    <Utensils className="h-6 w-6" />
-                    <span>Menu</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveTab('gallery')}
-                    className="h-20 flex flex-col items-center space-y-2"
-                    variant="outline"
-                  >
-                    <Image className="h-6 w-6" />
-                    <span>Gallery</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveTab('reservations')}
-                    className="h-20 flex flex-col items-center space-y-2"
-                    variant="outline"
-                  >
-                    <Calendar className="h-6 w-6" />
-                    <span>Reservations</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveTab('orders')}
-                    className="h-20 flex flex-col items-center space-y-2"
-                    variant="outline"
-                  >
-                    <ShoppingCart className="h-6 w-6" />
-                    <span>Orders</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveTab('contacts')}
-                    className="h-20 flex flex-col items-center space-y-2"
-                    variant="outline"
-                  >
-                    <Phone className="h-6 w-6" />
-                    <span>Contacts</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveTab('seo')}
-                    className="h-20 flex flex-col items-center space-y-2"
-                    variant="outline"
-                  >
-                    <Search className="h-6 w-6" />
-                    <span>SEO</span>
-                  </Button>
-                  <Button 
-                    onClick={() => setActiveTab('business')}
-                    className="h-20 flex flex-col items-center space-y-2"
-                    variant="outline"
-                  >
-                    <Edit className="h-6 w-6" />
-                    <span>Settings</span>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">{item.label}</CardTitle>
+                      <Icon className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">Manage</div>
+                      <p className="text-xs text-muted-foreground">Click to manage {item.label.toLowerCase()}</p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        );
+    }
+  };
 
-          <TabsContent value="charging" className="mt-6">
-            <ChargingStationManager />
-          </TabsContent>
+  return (
+    <div className="flex h-screen bg-gray-50">
+      {/* Mobile sidebar backdrop */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <aside className={`
+        fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out
+        lg:relative lg:translate-x-0 lg:z-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        <div className="flex items-center justify-between p-4 border-b">
+          <h2 className="text-lg font-bold text-gray-900">Admin Panel</h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <nav className="p-4 space-y-2 overflow-y-auto h-[calc(100vh-80px)]">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Button
+                key={item.id}
+                variant={activeTab === item.id ? "default" : "ghost"}
+                className="w-full justify-start text-left"
+                onClick={() => {
+                  setActiveTab(item.id);
+                  setSidebarOpen(false);
+                }}
+              >
+                <Icon className="h-4 w-4 mr-3 flex-shrink-0" />
+                <span className="truncate">{item.label}</span>
+              </Button>
+            );
+          })}
+        </nav>
+      </aside>
 
-          <TabsContent value="menu" className="mt-6">
-            <MenuManager />
-          </TabsContent>
-
-          <TabsContent value="gallery" className="mt-6">
-            <GalleryManager />
-          </TabsContent>
-
-          <TabsContent value="reservations" className="mt-6">
-            <ReservationManager />
-          </TabsContent>
-
-          <TabsContent value="orders" className="mt-6">
-            <OrderManager />
-          </TabsContent>
-
-          <TabsContent value="contacts" className="mt-6">
-            <ContactsManager />
-          </TabsContent>
-
-          <TabsContent value="seo" className="mt-6">
-            <SEOManager />
-          </TabsContent>
-
-          <TabsContent value="business" className="mt-6">
-            <BusinessSettingsManager />
-          </TabsContent>
-        </Tabs>
+      {/* Main content */}
+      <main className="flex-1 overflow-hidden">
+        {/* Mobile header */}
+        <div className="lg:hidden flex items-center justify-between p-4 bg-white border-b">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+          <h1 className="text-lg font-semibold text-gray-900">
+            {menuItems.find(item => item.id === activeTab)?.label || 'Dashboard'}
+          </h1>
+          <div className="w-8" /> {/* Spacer for centering */}
+        </div>
+        
+        {/* Content area */}
+        <div className="h-full overflow-y-auto">
+          <div className="h-full">
+            {renderContent()}
+          </div>
+        </div>
       </main>
     </div>
   );

@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, Edit, Trash2, Phone, Mail, User, Building, Upload } from 'lucide-react';
+import { Plus, Edit, Trash2, Phone, Mail, User, Building, Upload, X } from 'lucide-react';
+import { uploadFile } from '@/services/contentService';
 
 interface Contact {
   id: string;
@@ -67,27 +68,15 @@ const ContactsManager = () => {
 
     setUploadingPhoto(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `contacts/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('contacts')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from('contacts')
-        .getPublicUrl(filePath);
-
-      setFormData(prev => ({ ...prev, photo_url: data.publicUrl }));
+      const photoUrl = await uploadFile(file, 'contacts');
+      setFormData(prev => ({ ...prev, photo_url: photoUrl }));
 
       toast({
         title: "Success",
         description: "Photo uploaded successfully",
       });
     } catch (error: any) {
+      console.error('Error uploading photo:', error);
       toast({
         title: "Error",
         description: "Failed to upload photo",
@@ -222,9 +211,9 @@ const ContactsManager = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Contacts Management</h2>
+    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-xl md:text-2xl font-bold">Contacts Management</h2>
         <Button
           onClick={() => {
             setShowForm(true);
@@ -239,7 +228,7 @@ const ContactsManager = () => {
               photo_url: ''
             });
           }}
-          className="bg-emerald-500 hover:bg-emerald-600"
+          className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Contact
@@ -249,9 +238,9 @@ const ContactsManager = () => {
       {showForm && (
         <Card>
           <CardHeader>
-            <CardTitle>{editingContact ? 'Edit Contact' : 'Add New Contact'}</CardTitle>
+            <CardTitle className="text-lg md:text-xl">{editingContact ? 'Edit Contact' : 'Add New Contact'}</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 md:p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -308,8 +297,8 @@ const ContactsManager = () => {
               </div>
               
               <div>
-                <Label htmlFor="photo">Photo</Label>
-                <div className="flex items-center space-x-4">
+                <Label htmlFor="photo">Upload Photo</Label>
+                <div className="space-y-4">
                   <Input
                     id="photo"
                     type="file"
@@ -317,25 +306,36 @@ const ContactsManager = () => {
                     onChange={handlePhotoUpload}
                     disabled={uploadingPhoto}
                   />
+                  
                   {uploadingPhoto && (
-                    <div className="flex items-center">
-                      <Upload className="h-4 w-4 mr-2 animate-spin" />
-                      <span>Uploading...</span>
+                    <div className="flex items-center gap-2">
+                      <Upload className="h-4 w-4 animate-spin" />
+                      <span>Uploading photo...</span>
+                    </div>
+                  )}
+                  
+                  {formData.photo_url && (
+                    <div className="relative inline-block">
+                      <img 
+                        src={formData.photo_url} 
+                        alt="Preview" 
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="absolute -top-2 -right-2"
+                        onClick={() => setFormData(prev => ({ ...prev, photo_url: '' }))}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
                     </div>
                   )}
                 </div>
-                {formData.photo_url && (
-                  <div className="mt-2">
-                    <img 
-                      src={formData.photo_url} 
-                      alt="Preview" 
-                      className="w-20 h-20 object-cover rounded-lg"
-                    />
-                  </div>
-                )}
               </div>
               
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Button type="submit" disabled={loading || uploadingPhoto}>
                   {editingContact ? 'Update' : 'Create'} Contact
                 </Button>
@@ -355,7 +355,7 @@ const ContactsManager = () => {
         </Card>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
         {contacts.map((contact) => (
           <Card key={contact.id} className={`${!contact.is_active ? 'opacity-50' : ''}`}>
             <CardHeader className="pb-3">
@@ -372,14 +372,14 @@ const ContactsManager = () => {
                       <User className="h-6 w-6 text-emerald-600" />
                     </div>
                   )}
-                  <div>
-                    <CardTitle className="text-lg">{contact.name}</CardTitle>
+                  <div className="min-w-0 flex-1">
+                    <CardTitle className="text-base md:text-lg truncate">{contact.name}</CardTitle>
                     {contact.position && (
-                      <p className="text-sm text-gray-600 mt-1">{contact.position}</p>
+                      <p className="text-sm text-gray-600 mt-1 truncate">{contact.position}</p>
                     )}
                   </div>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex gap-1 ml-2">
                   <Button
                     size="sm"
                     variant="outline"
@@ -400,20 +400,20 @@ const ContactsManager = () => {
             <CardContent className="space-y-2">
               {contact.email && (
                 <div className="flex items-center gap-2 text-sm">
-                  <Mail className="h-4 w-4 text-blue-600" />
-                  <span>{contact.email}</span>
+                  <Mail className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                  <span className="truncate">{contact.email}</span>
                 </div>
               )}
               {contact.phone && (
                 <div className="flex items-center gap-2 text-sm">
-                  <Phone className="h-4 w-4 text-green-600" />
+                  <Phone className="h-4 w-4 text-green-600 flex-shrink-0" />
                   <span>{contact.phone}</span>
                 </div>
               )}
               {contact.department && (
                 <div className="flex items-center gap-2 text-sm">
-                  <Building className="h-4 w-4 text-purple-600" />
-                  <span>{contact.department}</span>
+                  <Building className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                  <span className="truncate">{contact.department}</span>
                 </div>
               )}
               <div className="pt-2">

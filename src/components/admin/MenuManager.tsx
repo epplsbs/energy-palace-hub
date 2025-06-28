@@ -10,13 +10,14 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { Utensils, Plus, Edit, Trash2, Image } from 'lucide-react';
+import { Utensils, Plus, Edit, Trash2, Upload, X } from 'lucide-react';
 import { 
   getMenuCategories, 
   getMenuItems, 
   createMenuItem, 
   updateMenuItem, 
   deleteMenuItem,
+  uploadFile,
   type MenuCategory, 
   type MenuItem 
 } from '@/services/contentService';
@@ -28,6 +29,7 @@ const MenuManager = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -59,6 +61,30 @@ const MenuManager = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const imageUrl = await uploadFile(file, 'menu-items');
+      setFormData(prev => ({ ...prev, image_url: imageUrl }));
+      toast({
+        title: "Success",
+        description: "Image uploaded successfully",
+      });
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: "Error",
+        description: "Failed to upload image",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -167,7 +193,7 @@ const MenuManager = () => {
   if (loading) {
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-gray-900">Menu Management</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900">Menu Management</h2>
         <div className="text-center py-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading menu items...</p>
@@ -177,18 +203,18 @@ const MenuManager = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">Menu Management</h2>
+    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900">Menu Management</h2>
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={resetForm} className="bg-orange-500 hover:bg-orange-600">
+            <Button onClick={resetForm} className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600">
               <Plus className="h-4 w-4 mr-2" />
               Add Menu Item
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingItem ? 'Edit Menu Item' : 'Add New Menu Item'}</DialogTitle>
               <DialogDescription>
@@ -249,13 +275,42 @@ const MenuManager = () => {
               </div>
 
               <div>
-                <Label htmlFor="image_url">Image URL</Label>
-                <Input
-                  id="image_url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                  placeholder="https://example.com/image.jpg"
-                />
+                <Label htmlFor="image">Upload Image</Label>
+                <div className="space-y-4">
+                  <Input
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={uploading}
+                  />
+                  
+                  {uploading && (
+                    <div className="flex items-center gap-2">
+                      <Upload className="h-4 w-4 animate-spin" />
+                      <span>Uploading image...</span>
+                    </div>
+                  )}
+                  
+                  {formData.image_url && (
+                    <div className="relative inline-block">
+                      <img 
+                        src={formData.image_url} 
+                        alt="Preview" 
+                        className="w-32 h-32 object-cover rounded-lg"
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="absolute -top-2 -right-2"
+                        onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -279,11 +334,11 @@ const MenuManager = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-2">
+              <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                 <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-orange-500 hover:bg-orange-600">
+                <Button type="submit" className="bg-orange-500 hover:bg-orange-600" disabled={uploading}>
                   {editingItem ? 'Update Item' : 'Add Item'}
                 </Button>
               </div>
@@ -294,25 +349,25 @@ const MenuManager = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center">
+          <CardTitle className="flex items-center text-lg md:text-xl">
             <Utensils className="h-5 w-5 mr-2 text-orange-600" />
             Menu Items ({menuItems.length})
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 md:p-6">
           {menuItems.length === 0 ? (
             <div className="text-center py-8">
               <Utensils className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600">No menu items found. Add your first item to get started!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {menuItems.map((item) => (
                 <Card key={item.id} className="border border-gray-200">
                   <CardContent className="p-4">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-lg">{item.name}</h3>
-                      <div className="flex space-x-1">
+                      <h3 className="font-semibold text-base md:text-lg line-clamp-2">{item.name}</h3>
+                      <div className="flex space-x-1 ml-2">
                         <Button
                           onClick={() => handleEdit(item)}
                           variant="outline"
@@ -332,7 +387,7 @@ const MenuManager = () => {
                     </div>
                     
                     {item.image_url && (
-                      <div className="mb-2">
+                      <div className="mb-3">
                         <img 
                           src={item.image_url} 
                           alt={item.name}
@@ -341,17 +396,17 @@ const MenuManager = () => {
                       </div>
                     )}
                     
-                    <p className="text-gray-600 text-sm mb-2">{item.description}</p>
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">{item.description}</p>
                     
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-xl font-bold text-green-600">${Number(item.price).toFixed(2)}</span>
-                      <Badge className={getCategoryName(item.category_id || '')}>
+                      <span className="text-lg md:text-xl font-bold text-green-600">Rs. {Number(item.price).toFixed(2)}</span>
+                      <Badge variant="outline" className="text-xs">
                         {getCategoryName(item.category_id || '')}
                       </Badge>
                     </div>
                     
                     <div className="flex justify-between items-center">
-                      <Badge variant={item.is_available ? "default" : "secondary"}>
+                      <Badge variant={item.is_available ? "default" : "secondary"} className="text-xs">
                         {item.is_available ? 'Available' : 'Unavailable'}
                       </Badge>
                       <span className="text-sm text-gray-500">Order: {item.display_order}</span>

@@ -1,8 +1,10 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { getGalleryItems } from '@/services/contentService';
-import { Zap, ArrowLeft, Calendar, Tag } from 'lucide-react';
+import { Zap, ArrowLeft, Calendar, Tag, BookOpen, X } from 'lucide-react';
 
 interface GalleryItem {
   id: string;
@@ -16,6 +18,8 @@ interface GalleryItem {
 const Blog = () => {
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPost, setSelectedPost] = useState<GalleryItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchGalleryItems();
@@ -30,6 +34,21 @@ const Blog = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const openModal = (item: GalleryItem) => {
+    setSelectedPost(item);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedPost(null);
+    setIsModalOpen(false);
+  };
+
+  const truncateText = (text: string, maxLength: number = 150) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
   };
 
   if (loading) {
@@ -52,79 +71,88 @@ const Blog = () => {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
 
       {/* Header */}
-      <header className="relative z-20 p-6">
-        <nav className="max-w-7xl mx-auto flex justify-between items-center">
+      <header className="relative z-20 p-4 md:p-6">
+        <nav className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center space-x-3">
             <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
-              <Zap className="h-8 w-8 text-white" />
+              <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+              <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
                 Energy Palace
               </h1>
               <p className="text-sm text-white/60">Our Story in Pictures</p>
             </div>
           </div>
 
-          <div className="hidden md:flex items-center space-x-8 text-white/80">
+          <div className="flex items-center space-x-4 md:space-x-8 text-white/80">
             <a href="/" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to Home
+              <span className="hidden sm:inline">Back to Home</span>
             </a>
             <a href="/contacts" className="hover:text-emerald-400 transition-colors">Contacts</a>
-            <a href="/admin" className="hover:text-emerald-400 transition-colors">Admin</a>
+            <a href="/about" className="hover:text-emerald-400 transition-colors">About</a>
           </div>
         </nav>
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-7xl mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-6">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:py-16">
+        <div className="text-center mb-12 md:mb-16">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mb-6">
             <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
               Our Journey
             </span>
           </h1>
-          <p className="text-xl text-white/70 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto">
             Discover the story behind Energy Palace through our gallery. From groundbreaking ceremonies to premium facilities, witness our commitment to sustainable energy and exceptional hospitality.
           </p>
         </div>
 
         {galleryItems.length === 0 ? (
           <div className="text-center py-16">
-            <div className="glass border border-white/20 rounded-2xl p-12 backdrop-blur-xl">
-              <Tag className="h-16 w-16 text-white/40 mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-white mb-4">Coming Soon</h3>
+            <div className="glass border border-white/20 rounded-2xl p-8 md:p-12 backdrop-blur-xl">
+              <Tag className="h-12 md:h-16 w-12 md:w-16 text-white/40 mx-auto mb-6" />
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4">Coming Soon</h3>
               <p className="text-white/70">
                 Our gallery is being curated. Check back soon to see our amazing journey through pictures!
               </p>
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {galleryItems.map((item, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {galleryItems.map((item) => (
               <Card key={item.id} className="glass border border-white/20 backdrop-blur-xl hover:border-emerald-500/50 transition-all duration-300 hover:scale-105 group overflow-hidden bg-gray-900/50">
                 <div className="relative">
                   <img
                     src={item.image_url}
                     alt={item.title}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-48 md:h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
-                <CardHeader className="bg-gray-900/80 backdrop-blur-sm">
+                <CardHeader className="bg-gray-900/80 backdrop-blur-sm p-4">
                   <div className="flex items-center gap-2 text-sm text-gray-300 mb-2">
                     <Calendar className="h-4 w-4" />
                     <span>{new Date(item.created_at).toLocaleDateString()}</span>
                   </div>
-                  <CardTitle className="text-xl text-white group-hover:text-emerald-400 transition-colors">
+                  <CardTitle className="text-lg md:text-xl text-white group-hover:text-emerald-400 transition-colors line-clamp-2">
                     {item.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="bg-gray-900/80 backdrop-blur-sm">
-                  <p className="text-gray-300 leading-relaxed">
-                    {item.description}
+                <CardContent className="bg-gray-900/80 backdrop-blur-sm p-4">
+                  <p className="text-gray-300 leading-relaxed mb-4 text-sm md:text-base">
+                    {truncateText(item.description)}
                   </p>
+                  {item.description.length > 150 && (
+                    <Button
+                      onClick={() => openModal(item)}
+                      className="w-full bg-gradient-to-r from-emerald-500/20 to-blue-500/20 hover:from-emerald-500/30 hover:to-blue-500/30 border border-emerald-500/30 text-emerald-400 hover:text-emerald-300"
+                    >
+                      <BookOpen className="h-4 w-4 mr-2" />
+                      Read More
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -132,9 +160,9 @@ const Blog = () => {
         )}
 
         {/* Call to Action */}
-        <div className="text-center mt-16">
-          <div className="glass border border-white/20 rounded-2xl p-8 backdrop-blur-xl">
-            <h3 className="text-3xl font-bold text-white mb-4">
+        <div className="text-center mt-12 md:mt-16">
+          <div className="glass border border-white/20 rounded-2xl p-6 md:p-8 backdrop-blur-xl">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
               <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
                 Experience Energy Palace
               </span>
@@ -142,7 +170,7 @@ const Blog = () => {
             <p className="text-white/70 mb-6 max-w-2xl mx-auto">
               Ready to be part of our story? Visit us for an unforgettable EV charging and dining experience.
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <a
                 href="/"
                 className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold rounded-xl hover:from-emerald-600 hover:to-emerald-700 transition-all duration-300"
@@ -159,6 +187,51 @@ const Blog = () => {
           </div>
         </div>
       </main>
+
+      {/* Read More Modal */}
+      <Dialog open={isModalOpen} onOpenChange={closeModal}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden bg-gray-900/95 backdrop-blur-xl border-white/20 text-white">
+          <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-white/20">
+            <div className="flex-1">
+              <DialogTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+                {selectedPost?.title}
+              </DialogTitle>
+              {selectedPost && (
+                <div className="flex items-center gap-2 text-sm text-gray-400 mt-2">
+                  <Calendar className="h-4 w-4" />
+                  <span>{new Date(selectedPost.created_at).toLocaleDateString()}</span>
+                </div>
+              )}
+            </div>
+            <Button
+              onClick={closeModal}
+              variant="ghost"
+              size="sm"
+              className="text-white/60 hover:text-white"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </DialogHeader>
+          
+          {selectedPost && (
+            <div className="overflow-y-auto max-h-[calc(90vh-120px)] space-y-6">
+              <div className="relative">
+                <img
+                  src={selectedPost.image_url}
+                  alt={selectedPost.title}
+                  className="w-full h-64 md:h-96 object-cover rounded-lg"
+                />
+              </div>
+              
+              <div className="prose prose-invert max-w-none">
+                <div className="text-white/90 leading-relaxed whitespace-pre-wrap">
+                  {selectedPost.description}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

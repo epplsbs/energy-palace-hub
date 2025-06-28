@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Zap, Car, Clock, Battery } from 'lucide-react';
+import { Zap, Car, Clock, Battery, MapPin, Power } from 'lucide-react';
 import { createChargingBooking, getAvailableChargingStations } from '@/services/chargingService';
 
 interface ChargingModalProps {
@@ -21,12 +22,15 @@ interface ChargingStation {
   power: string;
   connector: string;
   status: string;
+  estimated_time?: string;
 }
 
 const ChargingModal = ({ isOpen, onClose }: ChargingModalProps) => {
   const { toast } = useToast();
   const [stations, setStations] = useState<ChargingStation[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectedStation, setSelectedStation] = useState<ChargingStation | null>(null);
+  const [showBookingForm, setShowBookingForm] = useState(false);
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
@@ -58,6 +62,12 @@ const ChargingModal = ({ isOpen, onClose }: ChargingModalProps) => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleStationSelect = (station: ChargingStation) => {
+    setSelectedStation(station);
+    setFormData(prev => ({ ...prev, stationId: station.id }));
+    setShowBookingForm(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -99,7 +109,8 @@ const ChargingModal = ({ isOpen, onClose }: ChargingModalProps) => {
         startTime: '',
         estimatedDuration: 30
       });
-
+      setSelectedStation(null);
+      setShowBookingForm(false);
       onClose();
     } catch (error) {
       console.error('Error creating booking:', error);
@@ -113,166 +124,233 @@ const ChargingModal = ({ isOpen, onClose }: ChargingModalProps) => {
     }
   };
 
-  const selectedStation = stations.find(s => s.id === formData.stationId);
+  const resetAndClose = () => {
+    setShowBookingForm(false);
+    setSelectedStation(null);
+    setFormData({
+      customerName: '',
+      customerPhone: '',
+      vehicleNumber: '',
+      stationId: '',
+      startTime: new Date().toISOString().slice(0, 16),
+      estimatedDuration: 30
+    });
+    onClose();
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass border border-white/20 backdrop-blur-xl bg-gray-900/90 text-white max-w-lg">
+    <Dialog open={isOpen} onOpenChange={resetAndClose}>
+      <DialogContent className="glass border border-white/20 backdrop-blur-xl bg-gray-900/90 text-white max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent flex items-center gap-2">
+          <DialogTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent flex items-center gap-2">
             <Zap className="h-6 w-6 text-emerald-400" />
-            Book Charging Station
+            {showBookingForm ? 'Complete Booking Details' : 'Select Charging Station'}
           </DialogTitle>
           <DialogDescription className="text-white/70">
-            Reserve your preferred charging station and get ready for a seamless charging experience.
+            {showBookingForm 
+              ? 'Fill in your details to complete the booking.'
+              : 'Choose from our available charging stations and book your preferred slot.'
+            }
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="customerName" className="text-white/90">Full Name *</Label>
-              <Input
-                id="customerName"
-                value={formData.customerName}
-                onChange={(e) => setFormData(prev => ({ ...prev, customerName: e.target.value }))}
-                placeholder="Your full name"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/40"
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="customerPhone" className="text-white/90">Phone Number *</Label>
-              <Input
-                id="customerPhone"
-                value={formData.customerPhone}
-                onChange={(e) => setFormData(prev => ({ ...prev, customerPhone: e.target.value }))}
-                placeholder="Your phone number"
-                className="bg-white/5 border-white/20 text-white placeholder:text-white/40"
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="vehicleNumber" className="text-white/90">Vehicle Number *</Label>
-            <Input
-              id="vehicleNumber"
-              value={formData.vehicleNumber}
-              onChange={(e) => setFormData(prev => ({ ...prev, vehicleNumber: e.target.value }))}
-              placeholder="e.g., BA 1 KHA 1234"
-              className="bg-white/5 border-white/20 text-white placeholder:text-white/40"
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="stationId" className="text-white/90">Select Charging Station *</Label>
-            <Select onValueChange={(value) => setFormData(prev => ({ ...prev, stationId: value }))}>
-              <SelectTrigger className="bg-white/5 border-white/20 text-white">
-                <SelectValue placeholder="Choose an available station" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-900 border-white/20">
-                {stations.map(station => (
-                  <SelectItem key={station.id} value={station.id} className="text-white hover:bg-white/10">
-                    <div className="flex items-center gap-2">
-                      <Battery className="h-4 w-4 text-emerald-400" />
-                      <span>Station {station.station_id} - {station.power} ({station.type})</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {selectedStation && (
-            <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-              <h4 className="font-semibold text-emerald-400 mb-2">Station Details</h4>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-white/60">Type:</span>
-                  <span className="ml-2 text-white">{selectedStation.type}</span>
+        {!showBookingForm ? (
+          <div className="space-y-6 mt-6">
+            {stations.length === 0 ? (
+              <div className="text-center py-8">
+                <Clock className="h-12 w-12 text-white/40 mx-auto mb-4" />
+                <p className="text-white/70">No charging stations are currently available. Please try again later.</p>
+              </div>
+            ) : (
+              <>
+                <div className="text-center mb-6">
+                  <p className="text-white/80">We have {stations.length} charging station{stations.length !== 1 ? 's' : ''} available</p>
                 </div>
-                <div>
-                  <span className="text-white/60">Power:</span>
-                  <span className="ml-2 text-white">{selectedStation.power}</span>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {stations.map(station => (
+                    <Card 
+                      key={station.id} 
+                      className="bg-white/5 border-white/20 hover:bg-white/10 transition-all duration-300 cursor-pointer group"
+                      onClick={() => handleStationSelect(station)}
+                    >
+                      <CardContent className="p-4 md:p-6">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-emerald-500/20">
+                              <Battery className="h-6 w-6 text-emerald-400" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-white text-lg">Station {station.station_id}</h3>
+                              <p className="text-emerald-400 text-sm font-medium">Available Now</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-xs text-white/60 mb-1">Type</div>
+                            <div className="text-sm font-semibold text-white">{station.type}</div>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                          <div className="flex items-center gap-2">
+                            <Power className="h-4 w-4 text-blue-400" />
+                            <div>
+                              <div className="text-xs text-white/60">Power</div>
+                              <div className="text-sm font-semibold text-white">{station.power}</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4 text-purple-400" />
+                            <div>
+                              <div className="text-xs text-white/60">Connector</div>
+                              <div className="text-sm font-semibold text-white">{station.connector}</div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {station.estimated_time && (
+                          <div className="flex items-center gap-2 mb-4 p-2 bg-blue-500/10 rounded-lg">
+                            <Clock className="h-4 w-4 text-blue-400" />
+                            <span className="text-sm text-blue-300">Est. time: {station.estimated_time}</span>
+                          </div>
+                        )}
+                        
+                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 group-hover:scale-105 transition-all duration-300">
+                          <Car className="h-4 w-4 mr-2" />
+                          Select This Station
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-                <div>
-                  <span className="text-white/60">Connector:</span>
-                  <span className="ml-2 text-white">{selectedStation.connector}</span>
-                </div>
-                <div>
-                  <span className="text-white/60">Status:</span>
-                  <span className="ml-2 text-emerald-400">Available</span>
+              </>
+            )}
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+            {/* Selected Station Summary */}
+            {selectedStation && (
+              <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                <h4 className="font-semibold text-emerald-400 mb-2 flex items-center gap-2">
+                  <Battery className="h-4 w-4" />
+                  Selected Station
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                  <div>
+                    <span className="text-white/60">Station:</span>
+                    <span className="ml-2 text-white font-semibold">{selectedStation.station_id}</span>
+                  </div>
+                  <div>
+                    <span className="text-white/60">Type:</span>
+                    <span className="ml-2 text-white">{selectedStation.type}</span>
+                  </div>
+                  <div>
+                    <span className="text-white/60">Power:</span>
+                    <span className="ml-2 text-white">{selectedStation.power}</span>
+                  </div>
+                  <div>
+                    <span className="text-white/60">Connector:</span>
+                    <span className="ml-2 text-white">{selectedStation.connector}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="customerName" className="text-white/90">Full Name *</Label>
+                <Input
+                  id="customerName"
+                  value={formData.customerName}
+                  onChange={(e) => setFormData(prev => ({ ...prev, customerName: e.target.value }))}
+                  placeholder="Your full name"
+                  className="bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="customerPhone" className="text-white/90">Phone Number *</Label>
+                <Input
+                  id="customerPhone"
+                  value={formData.customerPhone}
+                  onChange={(e) => setFormData(prev => ({ ...prev, customerPhone: e.target.value }))}
+                  placeholder="Your phone number"
+                  className="bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                  required
+                />
+              </div>
+            </div>
+
             <div>
-              <Label htmlFor="startTime" className="text-white/90">Preferred Start Time *</Label>
+              <Label htmlFor="vehicleNumber" className="text-white/90">Vehicle Number *</Label>
               <Input
-                id="startTime"
-                type="datetime-local"
-                value={formData.startTime}
-                onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
-                className="bg-white/5 border-white/20 text-white"
+                id="vehicleNumber"
+                value={formData.vehicleNumber}
+                onChange={(e) => setFormData(prev => ({ ...prev, vehicleNumber: e.target.value }))}
+                placeholder="e.g., BA 1 KHA 1234"
+                className="bg-white/5 border-white/20 text-white placeholder:text-white/40"
                 required
               />
             </div>
-            <div>
-              <Label htmlFor="estimatedDuration" className="text-white/90">Estimated Duration (minutes)</Label>
-              <Select onValueChange={(value) => setFormData(prev => ({ ...prev, estimatedDuration: parseInt(value) }))}>
-                <SelectTrigger className="bg-white/5 border-white/20 text-white">
-                  <SelectValue placeholder="30 minutes" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900 border-white/20">
-                  <SelectItem value="15" className="text-white hover:bg-white/10">15 minutes</SelectItem>
-                  <SelectItem value="30" className="text-white hover:bg-white/10">30 minutes</SelectItem>
-                  <SelectItem value="45" className="text-white hover:bg-white/10">45 minutes</SelectItem>
-                  <SelectItem value="60" className="text-white hover:bg-white/10">1 hour</SelectItem>
-                  <SelectItem value="90" className="text-white hover:bg-white/10">1.5 hours</SelectItem>
-                  <SelectItem value="120" className="text-white hover:bg-white/10">2 hours</SelectItem>
-                </SelectContent>
-              </Select>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="startTime" className="text-white/90">Preferred Start Time *</Label>
+                <Input
+                  id="startTime"
+                  type="datetime-local"
+                  value={formData.startTime}
+                  onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                  className="bg-white/5 border-white/20 text-white"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="estimatedDuration" className="text-white/90">Estimated Duration (minutes)</Label>
+                <Select onValueChange={(value) => setFormData(prev => ({ ...prev, estimatedDuration: parseInt(value) }))}>
+                  <SelectTrigger className="bg-white/5 border-white/20 text-white">
+                    <SelectValue placeholder="30 minutes" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-900 border-white/20">
+                    <SelectItem value="15" className="text-white hover:bg-white/10">15 minutes</SelectItem>
+                    <SelectItem value="30" className="text-white hover:bg-white/10">30 minutes</SelectItem>
+                    <SelectItem value="45" className="text-white hover:bg-white/10">45 minutes</SelectItem>
+                    <SelectItem value="60" className="text-white hover:bg-white/10">1 hour</SelectItem>
+                    <SelectItem value="90" className="text-white hover:bg-white/10">1.5 hours</SelectItem>
+                    <SelectItem value="120" className="text-white hover:bg-white/10">2 hours</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-          </div>
 
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="submit"
-              disabled={loading || stations.length === 0}
-              className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl"
-            >
-              {loading ? (
-                <div className="flex items-center gap-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Booking...</span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Car className="h-4 w-4" />
-                  <span>Confirm Booking</span>
-                </div>
-              )}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              className="border-white/30 text-white hover:bg-white/10"
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
-
-        {stations.length === 0 && (
-          <div className="text-center py-8">
-            <Clock className="h-12 w-12 text-white/40 mx-auto mb-4" />
-            <p className="text-white/70">No charging stations are currently available. Please try again later.</p>
-          </div>
+            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowBookingForm(false)}
+                className="border-white/30 text-white hover:bg-white/10"
+              >
+                Back to Stations
+              </Button>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl"
+              >
+                {loading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <span>Booking...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Car className="h-4 w-4" />
+                    <span>Confirm Booking</span>
+                  </div>
+                )}
+              </Button>
+            </div>
+          </form>
         )}
       </DialogContent>
     </Dialog>

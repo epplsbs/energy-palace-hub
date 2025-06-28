@@ -9,6 +9,51 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      about_us: {
+        Row: {
+          company_story: string | null
+          created_at: string
+          display_order: number | null
+          hero_image_url: string | null
+          id: string
+          is_active: boolean | null
+          mission_statement: string | null
+          team_description: string | null
+          title: string
+          updated_at: string
+          values: Json | null
+          vision_statement: string | null
+        }
+        Insert: {
+          company_story?: string | null
+          created_at?: string
+          display_order?: number | null
+          hero_image_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          mission_statement?: string | null
+          team_description?: string | null
+          title?: string
+          updated_at?: string
+          values?: Json | null
+          vision_statement?: string | null
+        }
+        Update: {
+          company_story?: string | null
+          created_at?: string
+          display_order?: number | null
+          hero_image_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          mission_statement?: string | null
+          team_description?: string | null
+          title?: string
+          updated_at?: string
+          values?: Json | null
+          vision_statement?: string | null
+        }
+        Relationships: []
+      }
       ai_content_suggestions: {
         Row: {
           content: string
