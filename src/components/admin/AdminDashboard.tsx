@@ -75,7 +75,7 @@ const AdminDashboard = () => {
               </Badge>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
               {menuItems.slice(1).map((item) => {
                 const Icon = item.icon;
                 return (
@@ -169,7 +169,7 @@ const AdminDashboard = () => {
         
         {/* Content area */}
         <div className="h-full overflow-y-auto">
-          <div className="h-full">
+          <div className="p-4 lg:p-6">
             {renderContent()}
           </div>
         </div>

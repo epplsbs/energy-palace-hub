@@ -44,12 +44,12 @@ const POSSettings = ({ user }: POSSettingsProps) => {
     
     try {
       console.log('Updating setting:', settingKey, settingValue);
-      await updatePosSetting(settingKey, settingValue);
+      const updatedSetting = await updatePosSetting(settingKey, settingValue);
       
       // Update local state
       setSettings(prev => prev.map(setting => 
         setting.setting_key === settingKey 
-          ? { ...setting, setting_value: settingValue, updated_at: new Date().toISOString() }
+          ? { ...updatedSetting }
           : setting
       ));
       

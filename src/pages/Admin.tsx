@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -89,7 +90,7 @@ const Admin = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -146,7 +147,7 @@ const Admin = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-700">Welcome, {user.email}</span>
+              <span className="text-sm text-gray-700 hidden sm:block">Welcome, {user.email}</span>
               <Button onClick={handleSignOut} variant="outline" size="sm">
                 Sign Out
               </Button>
@@ -158,16 +159,18 @@ const Admin = () => {
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
-              <TabsTrigger value="dashboard" className="text-xs">Dashboard</TabsTrigger>
-              <TabsTrigger value="menu" className="text-xs">Menu</TabsTrigger>
-              <TabsTrigger value="orders" className="text-xs">Orders</TabsTrigger>
-              <TabsTrigger value="reservations" className="text-xs">Reservations</TabsTrigger>
-              <TabsTrigger value="charging" className="text-xs">Charging</TabsTrigger>
-              <TabsTrigger value="gallery" className="text-xs">Gallery</TabsTrigger>
-              <TabsTrigger value="contacts" className="text-xs">Contacts</TabsTrigger>
-              <TabsTrigger value="about" className="text-xs">About Us</TabsTrigger>
-            </TabsList>
+            <div className="overflow-x-auto">
+              <TabsList className="grid w-full min-w-max grid-cols-8 mb-6">
+                <TabsTrigger value="dashboard" className="text-xs px-2">Dashboard</TabsTrigger>
+                <TabsTrigger value="menu" className="text-xs px-2">Menu</TabsTrigger>
+                <TabsTrigger value="orders" className="text-xs px-2">Orders</TabsTrigger>
+                <TabsTrigger value="reservations" className="text-xs px-2">Reservations</TabsTrigger>
+                <TabsTrigger value="charging" className="text-xs px-2">Charging</TabsTrigger>
+                <TabsTrigger value="gallery" className="text-xs px-2">Gallery</TabsTrigger>
+                <TabsTrigger value="contacts" className="text-xs px-2">Contacts</TabsTrigger>
+                <TabsTrigger value="about" className="text-xs px-2">About Us</TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="dashboard" className="mt-6">
               <AdminDashboard />
