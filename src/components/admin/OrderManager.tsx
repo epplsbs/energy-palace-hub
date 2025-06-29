@@ -40,7 +40,7 @@ const OrderManager = () => {
     }
   };
 
-  const handleStatusUpdate = async (orderId: string, newStatus: string) => {
+  const handleStatusUpdate = async (orderId: string, newStatus: Order['status']) => {
     try {
       await updateOrder(orderId, { status: newStatus });
       toast({
@@ -252,7 +252,7 @@ const OrderManager = () => {
                                   <h4 className="font-semibold mb-2">Update Status</h4>
                                   <Select 
                                     value={selectedOrder.status || 'pending'} 
-                                    onValueChange={(value) => handleStatusUpdate(selectedOrder.id, value)}
+                                    onValueChange={(value) => handleStatusUpdate(selectedOrder.id, value as Order['status'])}
                                   >
                                     <SelectTrigger>
                                       <SelectValue />
@@ -298,7 +298,7 @@ const OrderManager = () => {
                     <div className="mt-3 flex justify-end">
                       <Select 
                         value={order.status || 'pending'} 
-                        onValueChange={(value) => handleStatusUpdate(order.id, value)}
+                        onValueChange={(value) => handleStatusUpdate(order.id, value as Order['status'])}
                       >
                         <SelectTrigger className="w-32">
                           <SelectValue />

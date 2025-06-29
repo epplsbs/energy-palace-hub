@@ -26,8 +26,12 @@ export interface AIContentSuggestion {
   id: string;
   title: string;
   content: string;
+  content_type: string;
   keywords: string[];
   status: 'pending' | 'approved' | 'rejected';
+  target_audience?: string;
+  reviewed_by?: string;
+  reviewed_at?: string;
   created_at: string;
   updated_at: string;
 }
@@ -133,7 +137,7 @@ export const getAboutUsContent = async (): Promise<AboutUsContent | null> => {
   
   return {
     ...data,
-    values: Array.isArray(data.values) ? data.values : []
+    values: Array.isArray(data.values) ? data.values as Array<{ title: string; description: string }> : []
   };
 };
 
@@ -159,7 +163,7 @@ export const createAboutUsContent = async (content: Omit<AboutUsContent, 'id' | 
   if (error) throw error;
   return {
     ...data,
-    values: Array.isArray(data.values) ? data.values : []
+    values: Array.isArray(data.values) ? data.values as Array<{ title: string; description: string }> : []
   };
 };
 
@@ -272,18 +276,27 @@ export const getAIContentSuggestions = async (): Promise<AIContentSuggestion[]> 
     .order('created_at', { ascending: false });
   
   if (error) throw error;
-  return data || [];
+  return (data || []).map(item => ({
+    ...item,
+    updated_at: item.created_at // Use created_at as fallback for updated_at
+  }));
 };
 
 export const createAIContentSuggestion = async (content: Omit<AIContentSuggestion, 'id' | 'created_at' | 'updated_at'>): Promise<AIContentSuggestion> => {
   const { data, error } = await supabase
     .from('ai_content_suggestions')
-    .insert(content)
+    .insert({
+      ...content,
+      content_type: content.content_type || 'general'
+    })
     .select()
     .single();
   
   if (error) throw error;
-  return data;
+  return {
+    ...data,
+    updated_at: data.created_at
+  };
 };
 
 export const updateAIContentSuggestion = async (id: string, content: Partial<AIContentSuggestion>): Promise<void> => {
@@ -393,7 +406,10 @@ export const getChargingStations = async (): Promise<ChargingStation[]> => {
     .order('station_id');
   
   if (error) throw error;
-  return data || [];
+  return (data || []).map(station => ({
+    ...station,
+    status: station.status as 'available' | 'occupied' | 'maintenance'
+  }));
 };
 
 export const updateChargingStation = async (id: string, updates: Partial<ChargingStation>): Promise<void> => {
@@ -413,7 +429,10 @@ export const getReservations = async (): Promise<Reservation[]> => {
     .order('created_at', { ascending: false });
   
   if (error) throw error;
-  return data || [];
+  return (data || []).map(reservation => ({
+    ...reservation,
+    status: reservation.status as 'pending' | 'confirmed' | 'cancelled'
+  }));
 };
 
 export const createReservation = async (reservation: Omit<Reservation, 'id' | 'created_at'>): Promise<Reservation> => {
@@ -424,7 +443,10 @@ export const createReservation = async (reservation: Omit<Reservation, 'id' | 'c
     .single();
   
   if (error) throw error;
-  return data;
+  return {
+    ...data,
+    status: data.status as 'pending' | 'confirmed' | 'cancelled'
+  };
 };
 
 export const updateReservation = async (id: string, updates: Partial<Reservation>): Promise<void> => {
@@ -444,7 +466,11 @@ export const getOrders = async (): Promise<Order[]> => {
     .order('created_at', { ascending: false });
   
   if (error) throw error;
-  return data || [];
+  return (data || []).map(order => ({
+    ...order,
+    items: Array.isArray(order.items) ? order.items : [],
+    status: order.status as 'pending' | 'confirmed' | 'preparing' | 'ready' | 'completed' | 'cancelled'
+  }));
 };
 
 export const createOrder = async (order: Omit<Order, 'id' | 'created_at'>): Promise<Order> => {
@@ -455,7 +481,11 @@ export const createOrder = async (order: Omit<Order, 'id' | 'created_at'>): Prom
     .single();
   
   if (error) throw error;
-  return data;
+  return {
+    ...data,
+    items: Array.isArray(data.items) ? data.items : [],
+    status: data.status as 'pending' | 'confirmed' | 'preparing' | 'ready' | 'completed' | 'cancelled'
+  };
 };
 
 export const updateOrder = async (id: string, updates: Partial<Order>): Promise<void> => {
