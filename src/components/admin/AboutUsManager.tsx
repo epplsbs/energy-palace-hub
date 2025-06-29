@@ -5,15 +5,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { Users, Plus, Trash2, Upload, X } from 'lucide-react';
-import { getAboutUsContent, updateAboutUsContent, uploadFile, type AboutUsContent } from '@/services/contentService';
+import { Info, Plus, Trash2 } from 'lucide-react';
+import { 
+  getAboutUsContent, 
+  updateAboutUsContent, 
+  createAboutUsContent,
+  uploadFile,
+  type AboutUsContent 
+} from '@/services/contentService';
 
 const AboutUsManager = () => {
   const { toast } = useToast();
   const [content, setContent] = useState<AboutUsContent | null>(null);
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     company_story: '',
@@ -21,14 +29,16 @@ const AboutUsManager = () => {
     vision_statement: '',
     team_description: '',
     hero_image_url: '',
-    values: [] as Array<{ title: string; description: string }>
+    values: [] as Array<{ title: string; description: string }>,
+    is_active: true,
+    display_order: 0
   });
 
   useEffect(() => {
-    loadContent();
+    loadData();
   }, []);
 
-  const loadContent = async () => {
+  const loadData = async () => {
     try {
       const data = await getAboutUsContent();
       if (data) {
@@ -40,7 +50,9 @@ const AboutUsManager = () => {
           vision_statement: data.vision_statement || '',
           team_description: data.team_description || '',
           hero_image_url: data.hero_image_url || '',
-          values: data.values || []
+          values: Array.isArray(data.values) ? data.values : [],
+          is_active: data.is_active,
+          display_order: data.display_order
         });
       }
     } catch (error) {
@@ -55,59 +67,55 @@ const AboutUsManager = () => {
     }
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
+  const handleImageUpload = async (file: File): Promise<string> => {
     try {
-      const imageUrl = await uploadFile(file, 'menu-items', `about-us/${Date.now()}`);
-      setFormData(prev => ({ ...prev, hero_image_url: imageUrl }));
-      toast({
-        title: "Success",
-        description: "Image uploaded successfully",
-      });
+      return await uploadFile(file, 'menu-items');
     } catch (error) {
       console.error('Error uploading image:', error);
-      toast({
-        title: "Error",
-        description: "Failed to upload image",
-        variant: "destructive",
-      });
-    } finally {
-      setUploading(false);
+      throw error;
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!content) return;
+    setSaving(true);
 
     try {
-      await updateAboutUsContent(content.id, {
-        title: formData.title,
-        company_story: formData.company_story,
-        mission_statement: formData.mission_statement,
-        vision_statement: formData.vision_statement,
-        team_description: formData.team_description,
-        hero_image_url: formData.hero_image_url || null,
-        values: formData.values
-      });
+      let imageUrl = formData.hero_image_url;
+      
+      if (imageFile) {
+        imageUrl = await handleImageUpload(imageFile);
+      }
 
-      toast({
-        title: "Success",
-        description: "About us content updated successfully",
-      });
+      const submitData = {
+        ...formData,
+        hero_image_url: imageUrl
+      };
 
-      await loadContent();
+      if (content) {
+        await updateAboutUsContent(content.id, submitData);
+        toast({
+          title: "Content Updated",
+          description: "About us content has been updated successfully.",
+        });
+      } else {
+        await createAboutUsContent(submitData);
+        toast({
+          title: "Content Created",
+          description: "About us content has been created successfully.",
+        });
+      }
+
+      await loadData();
     } catch (error) {
-      console.error('Error updating about us content:', error);
+      console.error('Error saving content:', error);
       toast({
         title: "Error",
-        description: "Failed to update about us content",
+        description: "Failed to save about us content",
         variant: "destructive",
       });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -121,8 +129,8 @@ const AboutUsManager = () => {
   const updateValue = (index: number, field: 'title' | 'description', value: string) => {
     setFormData(prev => ({
       ...prev,
-      values: prev.values.map((val, i) => 
-        i === index ? { ...val, [field]: value } : val
+      values: prev.values.map((item, i) => 
+        i === index ? { ...item, [field]: value } : item
       )
     }));
   };
@@ -137,7 +145,7 @@ const AboutUsManager = () => {
   if (loading) {
     return (
       <div className="space-y-6">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-900">About Us Management</h2>
+        <h2 className="text-2xl font-bold text-gray-900">About Us Management</h2>
         <div className="text-center py-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading content...</p>
@@ -147,64 +155,41 @@ const AboutUsManager = () => {
   }
 
   return (
-    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
-      <div className="flex items-center gap-3">
-        <Users className="h-6 w-6 text-emerald-600" />
-        <h2 className="text-xl md:text-2xl font-bold text-gray-900">About Us Management</h2>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-900">About Us Management</h2>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Edit About Us Content</CardTitle>
+          <CardTitle className="flex items-center">
+            <Info className="h-5 w-5 mr-2 text-emerald-600" />
+            About Us Content
+          </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 md:p-6">
+        <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <Label htmlFor="title">Page Title</Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                placeholder="About Energy Palace"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="hero_image">Hero Image</Label>
-              <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="title">Page Title</Label>
+                <Input
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  placeholder="About Energy Palace"
+                />
+              </div>
+              <div>
+                <Label htmlFor="hero_image">Hero Image</Label>
                 <Input
                   id="hero_image"
                   type="file"
                   accept="image/*"
-                  onChange={handleImageUpload}
-                  disabled={uploading}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) setImageFile(file);
+                  }}
                 />
-                
-                {uploading && (
-                  <div className="flex items-center gap-2">
-                    <Upload className="h-4 w-4 animate-spin" />
-                    <span>Uploading image...</span>
-                  </div>
-                )}
-                
-                {formData.hero_image_url && (
-                  <div className="relative inline-block">
-                    <img 
-                      src={formData.hero_image_url} 
-                      alt="Hero Preview" 
-                      className="w-48 h-32 object-cover rounded-lg"
-                    />
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      className="absolute -top-2 -right-2"
-                      onClick={() => setFormData(prev => ({ ...prev, hero_image_url: '' }))}
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -219,26 +204,27 @@ const AboutUsManager = () => {
               />
             </div>
 
-            <div>
-              <Label htmlFor="mission_statement">Mission Statement</Label>
-              <Textarea
-                id="mission_statement"
-                value={formData.mission_statement}
-                onChange={(e) => setFormData(prev => ({ ...prev, mission_statement: e.target.value }))}
-                placeholder="What is your mission?"
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="vision_statement">Vision Statement</Label>
-              <Textarea
-                id="vision_statement"
-                value={formData.vision_statement}
-                onChange={(e) => setFormData(prev => ({ ...prev, vision_statement: e.target.value }))}
-                placeholder="What is your vision?"
-                rows={3}
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="mission_statement">Mission Statement</Label>
+                <Textarea
+                  id="mission_statement"
+                  value={formData.mission_statement}
+                  onChange={(e) => setFormData(prev => ({ ...prev, mission_statement: e.target.value }))}
+                  placeholder="Our mission..."
+                  rows={3}
+                />
+              </div>
+              <div>
+                <Label htmlFor="vision_statement">Vision Statement</Label>
+                <Textarea
+                  id="vision_statement"
+                  value={formData.vision_statement}
+                  onChange={(e) => setFormData(prev => ({ ...prev, vision_statement: e.target.value }))}
+                  placeholder="Our vision..."
+                  rows={3}
+                />
+              </div>
             </div>
 
             <div>
@@ -248,58 +234,76 @@ const AboutUsManager = () => {
                 value={formData.team_description}
                 onChange={(e) => setFormData(prev => ({ ...prev, team_description: e.target.value }))}
                 placeholder="Describe your team..."
-                rows={2}
+                rows={3}
               />
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex justify-between items-center mb-4">
                 <Label>Company Values</Label>
-                <Button type="button" onClick={addValue} size="sm">
+                <Button type="button" onClick={addValue} variant="outline" size="sm">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Value
                 </Button>
               </div>
-              
               <div className="space-y-4">
                 {formData.values.map((value, index) => (
                   <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 border rounded-lg">
                     <div>
-                      <Label htmlFor={`value_title_${index}`}>Title</Label>
+                      <Label>Value Title</Label>
                       <Input
-                        id={`value_title_${index}`}
                         value={value.title}
                         onChange={(e) => updateValue(index, 'title', e.target.value)}
-                        placeholder="Value title"
+                        placeholder="e.g., Innovation"
                       />
                     </div>
-                    <div className="flex gap-2">
-                      <div className="flex-1">
-                        <Label htmlFor={`value_desc_${index}`}>Description</Label>
+                    <div>
+                      <Label>Description</Label>
+                      <div className="flex space-x-2">
                         <Input
-                          id={`value_desc_${index}`}
                           value={value.description}
                           onChange={(e) => updateValue(index, 'description', e.target.value)}
-                          placeholder="Value description"
+                          placeholder="Describe this value..."
                         />
+                        <Button
+                          type="button"
+                          onClick={() => removeValue(index)}
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </div>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeValue(index)}
-                        className="mt-6"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <Button type="submit" className="w-full bg-emerald-500 hover:bg-emerald-600" disabled={uploading}>
-              Update About Us Content
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="is_active"
+                  checked={formData.is_active}
+                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
+                />
+                <Label htmlFor="is_active">Active on website</Label>
+              </div>
+              <div>
+                <Label htmlFor="display_order">Display Order</Label>
+                <Input
+                  id="display_order"
+                  type="number"
+                  value={formData.display_order}
+                  onChange={(e) => setFormData(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))}
+                  className="w-24"
+                />
+              </div>
+            </div>
+
+            <Button type="submit" disabled={saving} className="bg-emerald-500 hover:bg-emerald-600">
+              {saving ? 'Saving...' : (content ? 'Update Content' : 'Create Content')}
             </Button>
           </form>
         </CardContent>

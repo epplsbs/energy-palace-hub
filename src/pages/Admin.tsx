@@ -1,261 +1,206 @@
-
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { User } from '@supabase/supabase-js';
-import { User as UserIcon, Lock, Loader2, Zap } from 'lucide-react';
 import AdminDashboard from '@/components/admin/AdminDashboard';
+import MenuManager from '@/components/admin/MenuManager';
+import OrderManager from '@/components/admin/OrderManager';
+import ReservationManager from '@/components/admin/ReservationManager';
+import ChargingStationManager from '@/components/admin/ChargingStationManager';
+import GalleryManager from '@/components/admin/GalleryManager';
+import ContactsManager from '@/components/admin/ContactsManager';
+import AboutUsManager from '@/components/admin/AboutUsManager';
 
 const Admin = () => {
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isLogin, setIsLogin] = useState(true);
-  const [credentials, setCredentials] = useState({
-    email: 'sujan1nepal@gmail.com',
-    password: 'password'
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   useEffect(() => {
-    // Check if user is already logged in
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
-    };
-
-    getUser();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
-    return () => subscription.unsubscribe();
+    checkUser();
   }, []);
 
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  const checkUser = async () => {
     try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: credentials.email,
-          password: credentials.password
-        });
-        
-        if (error) throw error;
-        
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully logged in to the admin panel.",
-        });
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email: credentials.email,
-          password: credentials.password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/admin`
-          }
-        });
-        
-        if (error) throw error;
-        
-        toast({
-          title: "Account created!",
-          description: "Please check your email to verify your account.",
-        });
-      }
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    } catch (error) {
+      console.error('Error checking user:', error);
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    setCredentials({ email: 'sujan1nepal@gmail.com', password: 'password' });
-    toast({
-      title: "Signed out",
-      description: "You have been successfully signed out.",
-    });
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+      toast({
+        title: "Signed out",
+        description: "You have been signed out successfully.",
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleSignIn = async (email: string, password: string) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      setUser(data.user);
+      toast({
+        title: "Welcome back!",
+        description: "You have been signed in successfully.",
+      });
+    } catch (error: any) {
+      console.error('Error signing in:', error);
+      toast({
+        title: "Sign in failed",
+        description: error.message || "Please check your credentials and try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-futuristic flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-white">Loading...</p>
+          <p className="text-gray-600">Loading...</p>
         </div>
       </div>
     );
   }
 
-  if (user) {
-    return <AdminDashboard user={user} onSignOut={handleSignOut} />;
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-md w-full space-y-8">
+          <div>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+              Admin Sign In
+            </h2>
+          </div>
+          <form className="mt-8 space-y-6" onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            const email = formData.get('email') as string;
+            const password = formData.get('password') as string;
+            handleSignIn(email, password);
+          }}>
+            <div className="rounded-md shadow-sm -space-y-px">
+              <div>
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
+                  placeholder="Email address"
+                />
+              </div>
+              <div>
+                <input
+                  name="password"
+                  type="password"
+                  required
+                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
+                  placeholder="Password"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                Sign In
+              </Button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-futuristic flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
-      </div>
-
-      {/* Grid Pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
-
-      <div className="w-full max-w-md relative z-10">
-        <div className="glass border border-white/20 shadow-2xl p-8 rounded-2xl backdrop-blur-xl">
-          {/* Logo/Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-3 mb-4">
-              <div className="p-3 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
-                <Zap className="h-8 w-8 text-white" />
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex">
+              <div className="flex-shrink-0 flex items-center">
+                <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
               </div>
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2">
-              <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
-                Admin Panel
-              </span>
-            </h2>
-            <p className="text-white/70">Access your admin dashboard</p>
-          </div>
-
-          <Tabs value={isLogin ? 'login' : 'signup'} onValueChange={(value) => setIsLogin(value === 'login')}>
-            <TabsList className="grid w-full grid-cols-2 mb-6 bg-white/10 border border-white/20">
-              <TabsTrigger value="login" className="text-white data-[state=active]:bg-emerald-500/20">Sign In</TabsTrigger>
-              <TabsTrigger value="signup" className="text-white data-[state=active]:bg-emerald-500/20">Sign Up</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="login">
-              <form onSubmit={handleAuth} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white/90 font-medium">Email Address</Label>
-                  <div className="relative">
-                    <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/40" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="Enter your email"
-                      value={credentials.email}
-                      onChange={(e) => setCredentials(prev => ({ ...prev, email: e.target.value }))}
-                      className="pl-12 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-emerald-500/50 focus:ring-emerald-500/20 rounded-xl h-12"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-white/90 font-medium">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/40" />
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      value={credentials.password}
-                      onChange={(e) => setCredentials(prev => ({ ...prev, password: e.target.value }))}
-                      className="pl-12 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-emerald-500/50 focus:ring-emerald-500/20 rounded-xl h-12"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full h-12 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/25 flex items-center justify-center gap-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      <span>Signing In...</span>
-                    </>
-                  ) : (
-                    <span>Sign In to Admin</span>
-                  )}
-                </button>
-              </form>
-            </TabsContent>
-            
-            <TabsContent value="signup">
-              <form onSubmit={handleAuth} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email" className="text-white/90 font-medium">Email Address</Label>
-                  <div className="relative">
-                    <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/40" />
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      placeholder="Enter your email"
-                      value={credentials.email}
-                      onChange={(e) => setCredentials(prev => ({ ...prev, email: e.target.value }))}
-                      className="pl-12 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-emerald-500/50 focus:ring-emerald-500/20 rounded-xl h-12"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password" className="text-white/90 font-medium">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/40" />
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      placeholder="Choose a strong password"
-                      value={credentials.password}
-                      onChange={(e) => setCredentials(prev => ({ ...prev, password: e.target.value }))}
-                      className="pl-12 bg-white/5 border-white/20 text-white placeholder:text-white/40 focus:border-emerald-500/50 focus:ring-emerald-500/20 rounded-xl h-12"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full h-12 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold rounded-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/25 flex items-center justify-center gap-2"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      <span>Creating Account...</span>
-                    </>
-                  ) : (
-                    <span>Create Account</span>
-                  )}
-                </button>
-              </form>
-            </TabsContent>
-          </Tabs>
-
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-white/5 rounded-xl border border-white/10">
-            <p className="text-xs text-white/60 text-center mb-2">Demo Credentials:</p>
-            <div className="text-xs text-white/80 space-y-1">
-              <div><strong>Email:</strong> sujan1nepal@gmail.com</div>
-              <div><strong>Password:</strong> password</div>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-700">Welcome, {user.email}</span>
+              <Button onClick={handleSignOut} variant="outline" size="sm">
+                Sign Out
+              </Button>
             </div>
           </div>
+        </div>
+      </nav>
+
+      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 sm:px-0">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
+              <TabsTrigger value="dashboard" className="text-xs">Dashboard</TabsTrigger>
+              <TabsTrigger value="menu" className="text-xs">Menu</TabsTrigger>
+              <TabsTrigger value="orders" className="text-xs">Orders</TabsTrigger>
+              <TabsTrigger value="reservations" className="text-xs">Reservations</TabsTrigger>
+              <TabsTrigger value="charging" className="text-xs">Charging</TabsTrigger>
+              <TabsTrigger value="gallery" className="text-xs">Gallery</TabsTrigger>
+              <TabsTrigger value="contacts" className="text-xs">Contacts</TabsTrigger>
+              <TabsTrigger value="about" className="text-xs">About Us</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="dashboard" className="mt-6">
+              <AdminDashboard />
+            </TabsContent>
+
+            <TabsContent value="menu" className="mt-6">
+              <MenuManager />
+            </TabsContent>
+
+            <TabsContent value="orders" className="mt-6">
+              <OrderManager />
+            </TabsContent>
+
+            <TabsContent value="reservations" className="mt-6">
+              <ReservationManager />
+            </TabsContent>
+
+            <TabsContent value="charging" className="mt-6">
+              <ChargingStationManager />
+            </TabsContent>
+
+            <TabsContent value="gallery" className="mt-6">
+              <GalleryManager />
+            </TabsContent>
+
+            <TabsContent value="contacts" className="mt-6">
+              <ContactsManager />
+            </TabsContent>
+
+            <TabsContent value="about" className="mt-6">
+              <AboutUsManager />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>

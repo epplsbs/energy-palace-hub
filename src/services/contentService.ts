@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 
 export interface GalleryItem {
@@ -6,8 +7,8 @@ export interface GalleryItem {
   description: string;
   image_url: string;
   is_active: boolean;
+  display_order: number;
   created_at: string;
-  updated_at: string;
 }
 
 export interface Employee {
@@ -19,7 +20,6 @@ export interface Employee {
   specialties: string[];
   is_active: boolean;
   created_at: string;
-  updated_at: string;
 }
 
 export interface AIContentSuggestion {
@@ -39,7 +39,6 @@ export interface MenuCategory {
   display_order: number;
   is_active: boolean;
   created_at: string;
-  updated_at: string;
 }
 
 export interface MenuItem {
@@ -52,10 +51,46 @@ export interface MenuItem {
   is_available: boolean;
   display_order: number;
   created_at: string;
+}
+
+export interface ChargingStation {
+  id: string;
+  station_id: string;
+  type: string;
+  power: string;
+  connector: string;
+  status: 'available' | 'occupied' | 'maintenance';
+  estimated_time?: string;
+  created_at: string;
   updated_at: string;
 }
 
-// Add About Us interfaces and functions
+export interface Reservation {
+  id: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string;
+  date: string;
+  time: string;
+  guests: number;
+  special_requests?: string;
+  status: 'pending' | 'confirmed' | 'cancelled';
+  created_at: string;
+}
+
+export interface Order {
+  id: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string;
+  items: any[];
+  total_amount: number;
+  notes?: string;
+  status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'completed' | 'cancelled';
+  order_source: string;
+  created_at: string;
+}
+
 export interface AboutUsContent {
   id: string;
   title: string;
@@ -65,6 +100,19 @@ export interface AboutUsContent {
   values: Array<{ title: string; description: string }>;
   team_description: string | null;
   hero_image_url: string | null;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Contact {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  position?: string;
+  department?: string;
   is_active: boolean;
   display_order: number;
   created_at: string;
@@ -81,7 +129,12 @@ export const getAboutUsContent = async (): Promise<AboutUsContent | null> => {
     .single();
   
   if (error && error.code !== 'PGRST116') throw error;
-  return data;
+  if (!data) return null;
+  
+  return {
+    ...data,
+    values: Array.isArray(data.values) ? data.values : []
+  };
 };
 
 export const updateAboutUsContent = async (id: string, content: Partial<AboutUsContent>): Promise<void> => {
@@ -104,10 +157,13 @@ export const createAboutUsContent = async (content: Omit<AboutUsContent, 'id' | 
     .single();
   
   if (error) throw error;
-  return data;
+  return {
+    ...data,
+    values: Array.isArray(data.values) ? data.values : []
+  };
 };
 
-// Add file upload helper
+// File upload helper
 export const uploadFile = async (file: File, bucket: string, path?: string): Promise<string> => {
   const fileExt = file.name.split('.').pop();
   const fileName = path || `${Date.now()}.${fileExt}`;
@@ -129,7 +185,7 @@ export const uploadFile = async (file: File, bucket: string, path?: string): Pro
 // Gallery functions
 export const getGalleryItems = async (): Promise<GalleryItem[]> => {
   const { data, error } = await supabase
-    .from('gallery')
+    .from('gallery_items')
     .select('*')
     .eq('is_active', true)
     .order('created_at', { ascending: false });
@@ -138,9 +194,9 @@ export const getGalleryItems = async (): Promise<GalleryItem[]> => {
   return data || [];
 };
 
-export const createGalleryItem = async (item: Omit<GalleryItem, 'id' | 'created_at' | 'updated_at'>): Promise<GalleryItem> => {
+export const createGalleryItem = async (item: Omit<GalleryItem, 'id' | 'created_at'>): Promise<GalleryItem> => {
   const { data, error } = await supabase
-    .from('gallery')
+    .from('gallery_items')
     .insert(item)
     .select()
     .single();
@@ -151,11 +207,8 @@ export const createGalleryItem = async (item: Omit<GalleryItem, 'id' | 'created_
 
 export const updateGalleryItem = async (id: string, item: Partial<GalleryItem>): Promise<void> => {
   const { error } = await supabase
-    .from('gallery')
-    .update({
-      ...item,
-      updated_at: new Date().toISOString()
-    })
+    .from('gallery_items')
+    .update(item)
     .eq('id', id);
   
   if (error) throw error;
@@ -163,7 +216,7 @@ export const updateGalleryItem = async (id: string, item: Partial<GalleryItem>):
 
 export const deleteGalleryItem = async (id: string): Promise<void> => {
   const { error } = await supabase
-    .from('gallery')
+    .from('gallery_items')
     .delete()
     .eq('id', id);
   
@@ -182,7 +235,7 @@ export const getEmployees = async (): Promise<Employee[]> => {
   return data || [];
 };
 
-export const createEmployee = async (employee: Omit<Employee, 'id' | 'created_at' | 'updated_at'>): Promise<Employee> => {
+export const createEmployee = async (employee: Omit<Employee, 'id' | 'created_at'>): Promise<Employee> => {
   const { data, error } = await supabase
     .from('employees')
     .insert(employee)
@@ -196,10 +249,7 @@ export const createEmployee = async (employee: Omit<Employee, 'id' | 'created_at
 export const updateEmployee = async (id: string, employee: Partial<Employee>): Promise<void> => {
   const { error } = await supabase
     .from('employees')
-    .update({
-      ...employee,
-      updated_at: new Date().toISOString()
-    })
+    .update(employee)
     .eq('id', id);
   
   if (error) throw error;
@@ -239,10 +289,7 @@ export const createAIContentSuggestion = async (content: Omit<AIContentSuggestio
 export const updateAIContentSuggestion = async (id: string, content: Partial<AIContentSuggestion>): Promise<void> => {
   const { error } = await supabase
     .from('ai_content_suggestions')
-    .update({
-      ...content,
-      updated_at: new Date().toISOString()
-    })
+    .update(content)
     .eq('id', id);
   
   if (error) throw error;
@@ -269,7 +316,7 @@ export const getMenuCategories = async (): Promise<MenuCategory[]> => {
   return data || [];
 };
 
-export const createMenuCategory = async (category: Omit<MenuCategory, 'id' | 'created_at' | 'updated_at'>): Promise<MenuCategory> => {
+export const createMenuCategory = async (category: Omit<MenuCategory, 'id' | 'created_at'>): Promise<MenuCategory> => {
   const { data, error } = await supabase
     .from('menu_categories')
     .insert(category)
@@ -283,10 +330,7 @@ export const createMenuCategory = async (category: Omit<MenuCategory, 'id' | 'cr
 export const updateMenuCategory = async (id: string, category: Partial<MenuCategory>): Promise<void> => {
   const { error } = await supabase
     .from('menu_categories')
-    .update({
-      ...category,
-      updated_at: new Date().toISOString()
-    })
+    .update(category)
     .eq('id', id);
   
   if (error) throw error;
@@ -312,7 +356,7 @@ export const getMenuItems = async (): Promise<MenuItem[]> => {
   return data || [];
 };
 
-export const createMenuItem = async (item: Omit<MenuItem, 'id' | 'created_at' | 'updated_at'>): Promise<MenuItem> => {
+export const createMenuItem = async (item: Omit<MenuItem, 'id' | 'created_at'>): Promise<MenuItem> => {
   const { data, error } = await supabase
     .from('menu_items')
     .insert(item)
@@ -326,10 +370,7 @@ export const createMenuItem = async (item: Omit<MenuItem, 'id' | 'created_at' | 
 export const updateMenuItem = async (id: string, item: Partial<MenuItem>): Promise<void> => {
   const { error } = await supabase
     .from('menu_items')
-    .update({
-      ...item,
-      updated_at: new Date().toISOString()
-    })
+    .update(item)
     .eq('id', id);
   
   if (error) throw error;
@@ -338,6 +379,132 @@ export const updateMenuItem = async (id: string, item: Partial<MenuItem>): Promi
 export const deleteMenuItem = async (id: string): Promise<void> => {
   const { error } = await supabase
     .from('menu_items')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
+// Charging Station functions
+export const getChargingStations = async (): Promise<ChargingStation[]> => {
+  const { data, error } = await supabase
+    .from('charging_stations')
+    .select('*')
+    .order('station_id');
+  
+  if (error) throw error;
+  return data || [];
+};
+
+export const updateChargingStation = async (id: string, updates: Partial<ChargingStation>): Promise<void> => {
+  const { error } = await supabase
+    .from('charging_stations')
+    .update(updates)
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
+// Reservation functions
+export const getReservations = async (): Promise<Reservation[]> => {
+  const { data, error } = await supabase
+    .from('reservations')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (error) throw error;
+  return data || [];
+};
+
+export const createReservation = async (reservation: Omit<Reservation, 'id' | 'created_at'>): Promise<Reservation> => {
+  const { data, error } = await supabase
+    .from('reservations')
+    .insert(reservation)
+    .select()
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateReservation = async (id: string, updates: Partial<Reservation>): Promise<void> => {
+  const { error } = await supabase
+    .from('reservations')
+    .update(updates)
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
+// Order functions
+export const getOrders = async (): Promise<Order[]> => {
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (error) throw error;
+  return data || [];
+};
+
+export const createOrder = async (order: Omit<Order, 'id' | 'created_at'>): Promise<Order> => {
+  const { data, error } = await supabase
+    .from('orders')
+    .insert(order)
+    .select()
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateOrder = async (id: string, updates: Partial<Order>): Promise<void> => {
+  const { error } = await supabase
+    .from('orders')
+    .update(updates)
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
+// Contact functions
+export const getContacts = async (): Promise<Contact[]> => {
+  const { data, error } = await supabase
+    .from('contacts')
+    .select('*')
+    .eq('is_active', true)
+    .order('display_order');
+  
+  if (error) throw error;
+  return data || [];
+};
+
+export const createContact = async (contact: Omit<Contact, 'id' | 'created_at' | 'updated_at'>): Promise<Contact> => {
+  const { data, error } = await supabase
+    .from('contacts')
+    .insert(contact)
+    .select()
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateContact = async (id: string, contact: Partial<Contact>): Promise<void> => {
+  const { error } = await supabase
+    .from('contacts')
+    .update({
+      ...contact,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
+export const deleteContact = async (id: string): Promise<void> => {
+  const { error } = await supabase
+    .from('contacts')
     .delete()
     .eq('id', id);
   
