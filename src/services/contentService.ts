@@ -278,7 +278,12 @@ export const getAIContentSuggestions = async (): Promise<AIContentSuggestion[]> 
   if (error) throw error;
   return (data || []).map(item => ({
     ...item,
-    updated_at: item.created_at // Use created_at as fallback for updated_at
+    updated_at: item.created_at,
+    status: (item.status || 'pending') as 'pending' | 'approved' | 'rejected',
+    keywords: item.keywords || [],
+    target_audience: item.target_audience || undefined,
+    reviewed_by: item.reviewed_by || undefined,
+    reviewed_at: item.reviewed_at || undefined
   }));
 };
 
@@ -295,7 +300,12 @@ export const createAIContentSuggestion = async (content: Omit<AIContentSuggestio
   if (error) throw error;
   return {
     ...data,
-    updated_at: data.created_at
+    updated_at: data.created_at,
+    status: (data.status || 'pending') as 'pending' | 'approved' | 'rejected',
+    keywords: data.keywords || [],
+    target_audience: data.target_audience || undefined,
+    reviewed_by: data.reviewed_by || undefined,
+    reviewed_at: data.reviewed_at || undefined
   };
 };
 
