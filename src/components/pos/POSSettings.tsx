@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { getPosSettings, updatePosSetting } from '@/services/posService';
+import { getPosSettings, updatePosSetting, type Setting } from '@/services/settingsService';
 import { Settings } from 'lucide-react';
 
 interface POSSettingsProps {
@@ -14,7 +14,7 @@ interface POSSettingsProps {
 
 const POSSettings = ({ user }: POSSettingsProps) => {
   const { toast } = useToast();
-  const [settings, setSettings] = useState<any[]>([]);
+  const [settings, setSettings] = useState<Setting[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [updatingSettings, setUpdatingSettings] = useState<{[key: string]: boolean}>({});
 
@@ -25,6 +25,7 @@ const POSSettings = ({ user }: POSSettingsProps) => {
   const loadData = async () => {
     try {
       const data = await getPosSettings();
+      console.log('Settings loaded:', data);
       setSettings(data);
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -42,12 +43,13 @@ const POSSettings = ({ user }: POSSettingsProps) => {
     setUpdatingSettings(prev => ({ ...prev, [settingKey]: true }));
     
     try {
+      console.log('Updating setting:', settingKey, settingValue);
       await updatePosSetting(settingKey, settingValue);
       
       // Update local state
       setSettings(prev => prev.map(setting => 
         setting.setting_key === settingKey 
-          ? { ...setting, setting_value: settingValue }
+          ? { ...setting, setting_value: settingValue, updated_at: new Date().toISOString() }
           : setting
       ));
       

@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Users, Award, Target, Heart, Sparkles } from 'lucide-react';
-import { getEmployees, getAIContentSuggestions, getAboutUsContent } from '@/services/contentService';
+import { getEmployees, getAIContentSuggestions } from '@/services/contentService';
+import { getAboutUsContent, type AboutUsContent } from '@/services/aboutUsService';
 
 interface Employee {
   id: string;
@@ -36,7 +36,7 @@ interface AboutUsData {
 const AboutUs = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [aiContent, setAIContent] = useState<AIContent[]>([]);
-  const [aboutUsData, setAboutUsData] = useState<AboutUsData | null>(null);
+  const [aboutUsData, setAboutUsData] = useState<AboutUsContent | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,6 +51,7 @@ const AboutUs = () => {
         getAboutUsContent()
       ]);
       
+      console.log('About Us data received:', aboutData);
       setEmployees(employeesData || []);
       setAIContent(aiContentData?.filter(content => content.status === 'approved') || []);
       setAboutUsData(aboutData);
