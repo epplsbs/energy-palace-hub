@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 
 export interface GalleryItem {
@@ -123,6 +122,26 @@ export interface Contact {
   updated_at: string;
 }
 
+// File upload helper
+export const uploadFile = async (file: File, bucket: string, path?: string): Promise<string> => {
+  const fileExt = file.name.split('.').pop();
+  const fileName = path || `${Date.now()}.${fileExt}`;
+  const filePath = `${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from(bucket)
+    .upload(filePath, file);
+
+  if (uploadError) throw uploadError;
+
+  const { data } = supabase.storage
+    .from(bucket)
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
+};
+
+// About Us functions
 export const getAboutUsContent = async (): Promise<AboutUsContent | null> => {
   const { data, error } = await supabase
     .from('about_us')
@@ -165,25 +184,6 @@ export const createAboutUsContent = async (content: Omit<AboutUsContent, 'id' | 
     ...data,
     values: Array.isArray(data.values) ? data.values as Array<{ title: string; description: string }> : []
   };
-};
-
-// File upload helper
-export const uploadFile = async (file: File, bucket: string, path?: string): Promise<string> => {
-  const fileExt = file.name.split('.').pop();
-  const fileName = path || `${Date.now()}.${fileExt}`;
-  const filePath = `${fileName}`;
-
-  const { error: uploadError } = await supabase.storage
-    .from(bucket)
-    .upload(filePath, file);
-
-  if (uploadError) throw uploadError;
-
-  const { data } = supabase.storage
-    .from(bucket)
-    .getPublicUrl(filePath);
-
-  return data.publicUrl;
 };
 
 // Gallery functions
@@ -549,4 +549,16 @@ export const deleteContact = async (id: string): Promise<void> => {
     .eq('id', id);
   
   if (error) throw error;
+};
+
+// POS Settings function (added missing function)
+export const updatePosSetting = async (key: string, value: string) => {
+  const { data, error } = await supabase
+    .from('pos_settings')
+    .update({ setting_value: value, updated_at: new Date().toISOString() })
+    .eq('setting_key', key)
+    .select();
+  
+  if (error) throw error;
+  return data;
 };

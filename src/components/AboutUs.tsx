@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Users, Award, Target, Heart, Sparkles } from 'lucide-react';
-import { getEmployees, getAIContentSuggestions } from '@/services/contentService';
+import { getEmployees, getAIContentSuggestions, getAboutUsContent } from '@/services/contentService';
 
 interface Employee {
   id: string;
@@ -22,9 +22,21 @@ interface AIContent {
   status: string;
 }
 
+interface AboutUsData {
+  id: string;
+  title: string;
+  company_story: string | null;
+  mission_statement: string | null;
+  vision_statement: string | null;
+  values: Array<{ title: string; description: string }>;
+  team_description: string | null;
+  hero_image_url: string | null;
+}
+
 const AboutUs = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [aiContent, setAIContent] = useState<AIContent[]>([]);
+  const [aboutUsData, setAboutUsData] = useState<AboutUsData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,13 +45,15 @@ const AboutUs = () => {
 
   const fetchData = async () => {
     try {
-      const [employeesData, aiContentData] = await Promise.all([
+      const [employeesData, aiContentData, aboutData] = await Promise.all([
         getEmployees(),
-        getAIContentSuggestions()
+        getAIContentSuggestions(),
+        getAboutUsContent()
       ]);
       
       setEmployees(employeesData || []);
       setAIContent(aiContentData?.filter(content => content.status === 'approved') || []);
+      setAboutUsData(aboutData);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -47,7 +61,8 @@ const AboutUs = () => {
     }
   };
 
-  const companyValues = [
+  // Default values if no data from admin
+  const defaultValues = [
     {
       icon: Target,
       title: 'Innovation',
@@ -70,6 +85,25 @@ const AboutUs = () => {
     }
   ];
 
+  const companyValues = aboutUsData?.values && aboutUsData.values.length > 0 
+    ? aboutUsData.values.map((value, index) => ({
+        icon: defaultValues[index % defaultValues.length].icon,
+        title: value.title,
+        description: value.description
+      }))
+    : defaultValues;
+
+  if (loading) {
+    return (
+      <section id="about" className="py-20 bg-white">
+        <div className="container mx-auto px-4 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="about" className="py-20 bg-white">
       <div className="container mx-auto px-4">
@@ -79,10 +113,10 @@ const AboutUs = () => {
             <span className="text-blue-800 text-sm font-medium">About Us</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Meet Energy Palace
+            {aboutUsData?.title || 'Meet Energy Palace'}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            We're passionate about creating the future of sustainable transportation and exceptional hospitality
+            {aboutUsData?.team_description || "We're passionate about creating the future of sustainable transportation and exceptional hospitality"}
           </p>
         </div>
 
@@ -90,17 +124,25 @@ const AboutUs = () => {
         <div className="max-w-4xl mx-auto mb-20">
           <div className="bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl p-8 md:p-12 text-white mb-12">
             <h3 className="text-3xl font-bold mb-6">Our Story</h3>
-            <p className="text-lg leading-relaxed mb-6">
-              Energy Palace was born from a vision to revolutionize the EV charging experience. We recognized that 
-              charging your electric vehicle shouldn't be just about plugging in – it should be an opportunity to 
-              relax, recharge yourself, and enjoy premium amenities.
-            </p>
-            <p className="text-lg leading-relaxed">
-              Founded in 2024, we've combined cutting-edge charging technology with exceptional hospitality to create 
-              a destination that serves both your vehicle and your well-being. Our state-of-the-art facility features 
-              high-speed charging stations alongside a premium restaurant and coffee shop, making every visit a 
-              delightful experience.
-            </p>
+            <div className="space-y-6">
+              {aboutUsData?.company_story ? (
+                <p className="text-lg leading-relaxed">{aboutUsData.company_story}</p>
+              ) : (
+                <>
+                  <p className="text-lg leading-relaxed">
+                    Energy Palace was born from a vision to revolutionize the EV charging experience. We recognized that 
+                    charging your electric vehicle shouldn't be just about plugging in – it should be an opportunity to 
+                    relax, recharge yourself, and enjoy premium amenities.
+                  </p>
+                  <p className="text-lg leading-relaxed">
+                    Founded in 2024, we've combined cutting-edge charging technology with exceptional hospitality to create 
+                    a destination that serves both your vehicle and your well-being. Our state-of-the-art facility features 
+                    high-speed charging stations alongside a premium restaurant and coffee shop, making every visit a 
+                    delightful experience.
+                  </p>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Company Values */}
@@ -156,51 +198,75 @@ const AboutUs = () => {
         )}
 
         {/* Team Section */}
-        <div className="mb-16">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">Meet Our Team</h3>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Our dedicated professionals are committed to providing exceptional service and expertise
-            </p>
-          </div>
+        {employees.length > 0 && (
+          <div className="mb-16">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Meet Our Team</h3>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Our dedicated professionals are committed to providing exceptional service and expertise
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {employees.map((employee) => (
-              <Card key={employee.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
-                <div className="aspect-square overflow-hidden">
-                  <img 
-                    src={employee.image_url} 
-                    alt={employee.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardContent className="p-6">
-                  <h4 className="text-xl font-bold text-gray-900 mb-1">{employee.name}</h4>
-                  <p className="text-emerald-600 font-semibold mb-3">{employee.designation}</p>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4">{employee.bio}</p>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {employee.specialties?.map((specialty, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
-                        {specialty}
-                      </Badge>
-                    ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {employees.map((employee) => (
+                <Card key={employee.id} className="bg-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden">
+                  <div className="aspect-square overflow-hidden">
+                    <img 
+                      src={employee.image_url} 
+                      alt={employee.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                  <CardContent className="p-6">
+                    <h4 className="text-xl font-bold text-gray-900 mb-1">{employee.name}</h4>
+                    <p className="text-emerald-600 font-semibold mb-3">{employee.designation}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed mb-4">{employee.bio}</p>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {employee.specialties?.map((specialty, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {specialty}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Mission Statement */}
+        {/* Mission & Vision */}
         <div className="text-center">
           <div className="bg-gray-50 rounded-2xl p-8 md:p-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h3>
-            <p className="text-xl text-gray-700 leading-relaxed max-w-4xl mx-auto">
-              To accelerate the adoption of sustainable transportation by providing world-class EV charging 
-              infrastructure paired with exceptional hospitality experiences. We believe that the future of 
-              travel should be both environmentally responsible and genuinely enjoyable.
-            </p>
+            {aboutUsData?.mission_statement && (
+              <div className="mb-8">
+                <h3 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h3>
+                <p className="text-xl text-gray-700 leading-relaxed max-w-4xl mx-auto">
+                  {aboutUsData.mission_statement}
+                </p>
+              </div>
+            )}
+            
+            {aboutUsData?.vision_statement && (
+              <div className="mb-8">
+                <h3 className="text-3xl font-bold text-gray-900 mb-6">Our Vision</h3>
+                <p className="text-xl text-gray-700 leading-relaxed max-w-4xl mx-auto">
+                  {aboutUsData.vision_statement}
+                </p>
+              </div>
+            )}
+
+            {!aboutUsData?.mission_statement && !aboutUsData?.vision_statement && (
+              <div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h3>
+                <p className="text-xl text-gray-700 leading-relaxed max-w-4xl mx-auto">
+                  To accelerate the adoption of sustainable transportation by providing world-class EV charging 
+                  infrastructure paired with exceptional hospitality experiences. We believe that the future of 
+                  travel should be both environmentally responsible and genuinely enjoyable.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
