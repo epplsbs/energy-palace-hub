@@ -12,16 +12,14 @@ import {
   getAboutUsContent, 
   updateAboutUsContent, 
   createAboutUsContent,
-  uploadFile,
   type AboutUsContent 
-} from '@/services/contentService';
+} from '@/services/aboutUsService';
 
 const AboutUsManager = () => {
   const { toast } = useToast();
   const [content, setContent] = useState<AboutUsContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     company_story: '',
@@ -51,8 +49,8 @@ const AboutUsManager = () => {
           team_description: data.team_description || '',
           hero_image_url: data.hero_image_url || '',
           values: Array.isArray(data.values) ? data.values : [],
-          is_active: data.is_active,
-          display_order: data.display_order
+          is_active: data.is_active || true,
+          display_order: data.display_order || 0
         });
       }
     } catch (error) {
@@ -67,29 +65,13 @@ const AboutUsManager = () => {
     }
   };
 
-  const handleImageUpload = async (file: File): Promise<string> => {
-    try {
-      return await uploadFile(file, 'menu-items');
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      throw error;
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
 
     try {
-      let imageUrl = formData.hero_image_url;
-      
-      if (imageFile) {
-        imageUrl = await handleImageUpload(imageFile);
-      }
-
       const submitData = {
-        ...formData,
-        hero_image_url: imageUrl
+        ...formData
       };
 
       if (content) {
@@ -180,15 +162,12 @@ const AboutUsManager = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="hero_image">Hero Image</Label>
+                <Label htmlFor="hero_image_url">Hero Image URL</Label>
                 <Input
-                  id="hero_image"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) setImageFile(file);
-                  }}
+                  id="hero_image_url"
+                  value={formData.hero_image_url}
+                  onChange={(e) => setFormData(prev => ({ ...prev, hero_image_url: e.target.value }))}
+                  placeholder="https://example.com/image.jpg"
                 />
               </div>
             </div>

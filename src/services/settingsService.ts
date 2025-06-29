@@ -34,7 +34,8 @@ export const updatePosSetting = async (
 ): Promise<Setting> => {
   console.log('Updating POS setting:', settingKey, settingValue);
   
-  const { data, error } = await supabase
+  // First try to update existing setting
+  const { data: updateData, error: updateError } = await supabase
     .from('pos_settings')
     .update({
       setting_value: settingValue,
@@ -42,15 +43,38 @@ export const updatePosSetting = async (
     })
     .eq('setting_key', settingKey)
     .select()
-    .single();
+    .maybeSingle();
 
-  if (error) {
-    console.error('Error updating POS setting:', error);
-    throw error;
+  if (updateError) {
+    console.error('Error updating POS setting:', updateError);
+    throw updateError;
   }
 
-  console.log('POS setting updated:', data);
-  return data as Setting;
+  // If no rows were updated, create a new setting
+  if (!updateData) {
+    console.log('Setting not found, creating new one:', settingKey);
+    const { data: insertData, error: insertError } = await supabase
+      .from('pos_settings')
+      .insert([{
+        setting_key: settingKey,
+        setting_value: settingValue,
+        setting_type: 'text',
+        description: null
+      }])
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error('Error creating POS setting:', insertError);
+      throw insertError;
+    }
+
+    console.log('POS setting created:', insertData);
+    return insertData as Setting;
+  }
+
+  console.log('POS setting updated:', updateData);
+  return updateData as Setting;
 };
 
 export const createPosSetting = async (

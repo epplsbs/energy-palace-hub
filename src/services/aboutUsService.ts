@@ -25,7 +25,7 @@ export const getAboutUsContent = async (): Promise<AboutUsContent | null> => {
     .eq('is_active', true)
     .order('display_order', { ascending: true })
     .limit(1)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error('Error fetching About Us content:', error);
