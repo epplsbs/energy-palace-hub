@@ -13,6 +13,7 @@ import ChargingStationManager from '@/components/admin/ChargingStationManager';
 import GalleryManager from '@/components/admin/GalleryManager';
 import ContactsManager from '@/components/admin/ContactsManager';
 import AboutUsManager from '@/components/admin/AboutUsManager';
+import BusinessSettingsManager from '@/components/admin/BusinessSettingsManager';
 
 const Admin = () => {
   const { toast } = useToast();
@@ -160,7 +161,7 @@ const Admin = () => {
         <div className="px-4 py-6 sm:px-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="overflow-x-auto">
-              <TabsList className="grid w-full min-w-max grid-cols-8 mb-6">
+              <TabsList className="grid w-full min-w-max grid-cols-9 mb-6">
                 <TabsTrigger value="dashboard" className="text-xs px-2">Dashboard</TabsTrigger>
                 <TabsTrigger value="menu" className="text-xs px-2">Menu</TabsTrigger>
                 <TabsTrigger value="orders" className="text-xs px-2">Orders</TabsTrigger>
@@ -169,6 +170,7 @@ const Admin = () => {
                 <TabsTrigger value="gallery" className="text-xs px-2">Gallery</TabsTrigger>
                 <TabsTrigger value="contacts" className="text-xs px-2">Contacts</TabsTrigger>
                 <TabsTrigger value="about" className="text-xs px-2">About Us</TabsTrigger>
+                <TabsTrigger value="settings" className="text-xs px-2">Settings</TabsTrigger>
               </TabsList>
             </div>
 
@@ -202,6 +204,10 @@ const Admin = () => {
 
             <TabsContent value="about" className="mt-6">
               <AboutUsManager />
+            </TabsContent>
+
+            <TabsContent value="settings" className="mt-6">
+              <BusinessSettingsManager />
             </TabsContent>
           </Tabs>
         </div>

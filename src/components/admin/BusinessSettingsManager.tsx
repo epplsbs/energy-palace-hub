@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Edit, Save, Phone, Mail, MapPin, Building, Loader2, Clock, Tag } from 'lucide-react';
+import { Edit, Save, Phone, Mail, MapPin, Building, Loader2, Clock, Tag, Image } from 'lucide-react';
 
 interface BusinessSetting {
   id: string;
@@ -53,6 +53,11 @@ const BusinessSettingsManager = () => {
       setting_key: 'opening_hours',
       setting_value: '24/7',
       description: 'Business operating hours'
+    },
+    {
+      setting_key: 'background_image_url',
+      setting_value: '',
+      description: 'Background image URL for homepage'
     }
   ];
 
@@ -149,7 +154,7 @@ const BusinessSettingsManager = () => {
   };
 
   const updateSetting = async (settingKey: string) => {
-    if (!editingSettings[settingKey]) {
+    if (!editingSettings[settingKey] && settingKey !== 'background_image_url') {
       toast({
         title: "Error",
         description: "Please enter a value before saving",
@@ -220,6 +225,8 @@ const BusinessSettingsManager = () => {
         return <Tag className="h-5 w-5 text-pink-600" />;
       case 'opening_hours':
         return <Clock className="h-5 w-5 text-orange-600" />;
+      case 'background_image_url':
+        return <Image className="h-5 w-5 text-cyan-600" />;
       default:
         return <Edit className="h-5 w-5 text-gray-600" />;
     }
@@ -239,6 +246,8 @@ const BusinessSettingsManager = () => {
         return 'Business Tagline';
       case 'opening_hours':
         return 'Opening Hours';
+      case 'background_image_url':
+        return 'Background Image URL';
       default:
         return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     }
@@ -294,7 +303,7 @@ const BusinessSettingsManager = () => {
                       ...prev,
                       [setting.setting_key]: e.target.value
                     }))}
-                    placeholder="Enter value"
+                    placeholder={setting.setting_key === 'background_image_url' ? 'https://example.com/image.jpg (optional)' : 'Enter value'}
                     className="mt-1 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
                   />
                 )}
@@ -332,6 +341,7 @@ const BusinessSettingsManager = () => {
             <p>• <strong>Business Name:</strong> Displayed as the main title throughout the website</p>
             <p>• <strong>Business Tagline:</strong> Shown in the hero section and headers</p>
             <p>• <strong>Opening Hours:</strong> Displayed in business information sections</p>
+            <p>• <strong>Background Image URL:</strong> Sets the homepage background image (leave empty for default animated background)</p>
           </div>
         </CardContent>
       </Card>

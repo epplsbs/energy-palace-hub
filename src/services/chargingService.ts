@@ -8,13 +8,13 @@ export interface ChargingBooking {
   vehicle_number: string;
   charging_station_id: string;
   start_time: string;
-  estimated_duration: number;
   status: 'booked' | 'active' | 'completed' | 'cancelled';
   total_amount?: number;
   created_at?: string;
+  order_number?: string;
 }
 
-export const createChargingBooking = async (booking: Omit<ChargingBooking, 'id' | 'created_at'>): Promise<ChargingBooking> => {
+export const createChargingBooking = async (booking: Omit<ChargingBooking, 'id' | 'created_at' | 'order_number'>): Promise<ChargingBooking> => {
   console.log('Creating charging booking:', booking);
   
   // Generate order number first
@@ -65,10 +65,10 @@ export const createChargingBooking = async (booking: Omit<ChargingBooking, 'id' 
     vehicle_number: data.vehicle_number || '',
     charging_station_id: data.charging_station_id || '',
     start_time: data.start_time || '',
-    estimated_duration: booking.estimated_duration,
     status: data.status as 'booked' | 'active' | 'completed' | 'cancelled',
     total_amount: data.total_amount,
-    created_at: data.created_at
+    created_at: data.created_at,
+    order_number: data.order_number
   };
 };
 
