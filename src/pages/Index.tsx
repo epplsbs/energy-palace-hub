@@ -125,7 +125,7 @@ const Index = () => {
                 Charge
               </span>
               <span className={`block ${theme === 'light' ? 'text-gray-800' : 'text-white/90'}`}>
-                Your Future
+                And Dine
               </span>
             </h1>
             
