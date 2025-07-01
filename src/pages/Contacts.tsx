@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
+import { getBusinessSettings } from '@/services/businessSettingsService';
 import { Phone, Mail, MapPin, Clock, User, Building, Zap, ArrowLeft } from 'lucide-react';
 
 interface Contact {
@@ -18,11 +19,24 @@ interface Contact {
 
 const Contacts = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [businessSettings, setBusinessSettings] = useState<any>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchContacts();
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const [contactsData, settingsData] = await Promise.all([
+        fetchContacts(),
+        getBusinessSettings()
+      ]);
+      setBusinessSettings(settingsData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const fetchContacts = async () => {
     try {
@@ -34,8 +48,10 @@ const Contacts = () => {
 
       if (error) throw error;
       setContacts(data || []);
+      return data || [];
     } catch (error) {
       console.error('Error fetching contacts:', error);
+      return [];
     } finally {
       setLoading(false);
     }
@@ -108,7 +124,7 @@ const Contacts = () => {
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Visit Us</h3>
               <p className="text-white/70">
-                Kathmandu, Nepal<br />
+                {businessSettings.business_address || 'Kathmandu, Nepal'}<br />
                 Premium EV Charging Station
               </p>
             </CardContent>
@@ -121,7 +137,7 @@ const Contacts = () => {
               </div>
               <h3 className="text-xl font-bold text-white mb-2">Call Us</h3>
               <p className="text-white/70">
-                +977-1-XXXXXX<br />
+                {businessSettings.contact_phone || '+977-1-XXXXXX'}<br />
                 Available 24/7
               </p>
             </CardContent>

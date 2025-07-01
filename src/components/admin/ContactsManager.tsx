@@ -296,16 +296,26 @@ const ContactsManager = () => {
                 </div>
               </div>
               
-              <div>
-                <Label htmlFor="photo">Upload Photo</Label>
-                <div className="space-y-4">
-                  <Input
-                    id="photo"
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                    disabled={uploadingPhoto}
-                  />
+                <div>
+                  <Label htmlFor="photo">Photo</Label>
+                  <div className="space-y-4">
+                    <Input
+                      id="photo"
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      disabled={uploadingPhoto}
+                    />
+                    
+                    <div>
+                      <Label htmlFor="photo_url">Or enter photo URL</Label>
+                      <Input
+                        id="photo_url"
+                        value={formData.photo_url}
+                        onChange={(e) => setFormData(prev => ({ ...prev, photo_url: e.target.value }))}
+                        placeholder="Enter photo URL"
+                      />
+                    </div>
                   
                   {uploadingPhoto && (
                     <div className="flex items-center gap-2">

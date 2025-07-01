@@ -17,19 +17,9 @@ export interface ChargingBooking {
 export const createChargingBooking = async (booking: Omit<ChargingBooking, 'id' | 'created_at' | 'order_number'>): Promise<ChargingBooking> => {
   console.log('Creating charging booking:', booking);
   
-  // Generate order number first
-  const { data: orderNumberData, error: orderNumberError } = await supabase
-    .rpc('generate_charging_order_number');
-  
-  if (orderNumberError) {
-    console.error('Error generating order number:', orderNumberError);
-    throw orderNumberError;
-  }
-  
   const { data, error } = await supabase
     .from('pos_charging_orders')
     .insert({
-      order_number: orderNumberData,
       customer_name: booking.customer_name,
       customer_phone: booking.customer_phone,
       vehicle_number: booking.vehicle_number,
