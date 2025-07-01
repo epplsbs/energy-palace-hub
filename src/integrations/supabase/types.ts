@@ -353,7 +353,7 @@ export type Database = {
           customer_phone: string | null
           end_time: string | null
           id: string
-          order_number: string
+          order_number: string | null
           payment_method: string | null
           payment_status: string | null
           rate_per_unit: number
@@ -371,7 +371,7 @@ export type Database = {
           customer_phone?: string | null
           end_time?: string | null
           id?: string
-          order_number: string
+          order_number?: string | null
           payment_method?: string | null
           payment_status?: string | null
           rate_per_unit: number
@@ -389,7 +389,7 @@ export type Database = {
           customer_phone?: string | null
           end_time?: string | null
           id?: string
-          order_number?: string
+          order_number?: string | null
           payment_method?: string | null
           payment_status?: string | null
           rate_per_unit?: number
