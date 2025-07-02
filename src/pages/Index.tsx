@@ -2,12 +2,13 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Zap, Car, Coffee, ChevronRight, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon, Menu, X } from 'lucide-react';
-import ChargingModal from '@/components/modals/ChargingModal';
+import ChargingStationSelectorModal from '@/components/modals/ChargingStationSelectorModal';
 import MenuModal from '@/components/modals/MenuModal';
 import ReservationModal from '@/components/modals/ReservationModal';
 import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
 import { getAboutUsContent, type AboutUsContent } from '@/services/aboutUsService';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 
 const Index = () => {
   const [isChargingModalOpen, setIsChargingModalOpen] = useState(false);
@@ -17,6 +18,7 @@ const Index = () => {
   const [businessSettings, setBusinessSettings] = useState<BusinessSettings | null>(null);
   const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null);
   const { theme, toggleTheme } = useTheme();
+  const backgroundImageUrl = useBackgroundImage();
 
   useEffect(() => {
     loadSettings();
@@ -49,14 +51,24 @@ const Index = () => {
   } : {};
 
   return (
-    <div className={`min-h-screen ${theme === 'light' ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-futuristic'} relative overflow-hidden`} style={backgroundStyle}>
+    <div 
+      className={`min-h-screen ${theme === 'light' ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-futuristic'} relative overflow-hidden`}
+      style={backgroundImageUrl ? {
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+        ...backgroundStyle
+      } : backgroundStyle}
+    >
       {/* Theme overlay for better readability when background image is present */}
-      {businessSettings?.background_image_url && (
+      {(businessSettings?.background_image_url || backgroundImageUrl) && (
         <div className={`absolute inset-0 ${theme === 'light' ? 'bg-white/80' : 'bg-black/60'}`}></div>
       )}
 
       {/* Animated Background Elements (only show if no background image) */}
-      {!businessSettings?.background_image_url && (
+      {!(businessSettings?.background_image_url || backgroundImageUrl) && (
         <div className="absolute inset-0">
           <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl animate-float"></div>
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
@@ -65,7 +77,7 @@ const Index = () => {
       )}
 
       {/* Grid Pattern Overlay (only show if no background image) */}
-      {!businessSettings?.background_image_url && (
+      {!(businessSettings?.background_image_url || backgroundImageUrl) && (
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
       )}
 
@@ -353,7 +365,7 @@ const Index = () => {
       </footer>
 
       {/* Modals */}
-      <ChargingModal 
+      <ChargingStationSelectorModal 
         isOpen={isChargingModalOpen} 
         onClose={() => setIsChargingModalOpen(false)} 
       />

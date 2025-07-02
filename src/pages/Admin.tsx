@@ -10,6 +10,7 @@ import MenuManager from '@/components/admin/MenuManager';
 import OrderManager from '@/components/admin/OrderManager';
 import ReservationManager from '@/components/admin/ReservationManager';
 import ChargingStationManager from '@/components/admin/ChargingStationManager';
+import ChargingOrderManager from '@/components/admin/ChargingOrderManager';
 import GalleryManager from '@/components/admin/GalleryManager';
 import ContactsManager from '@/components/admin/ContactsManager';
 import AboutUsManager from '@/components/admin/AboutUsManager';
@@ -161,12 +162,13 @@ const Admin = () => {
         <div className="px-4 py-6 sm:px-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="overflow-x-auto">
-              <TabsList className="grid w-full min-w-max grid-cols-9 mb-6">
+              <TabsList className="grid w-full min-w-max grid-cols-10 mb-6">
                 <TabsTrigger value="dashboard" className="text-xs px-2">Dashboard</TabsTrigger>
                 <TabsTrigger value="menu" className="text-xs px-2">Menu</TabsTrigger>
                 <TabsTrigger value="orders" className="text-xs px-2">Orders</TabsTrigger>
                 <TabsTrigger value="reservations" className="text-xs px-2">Reservations</TabsTrigger>
                 <TabsTrigger value="charging" className="text-xs px-2">Charging</TabsTrigger>
+                <TabsTrigger value="charging-orders" className="text-xs px-2">Charging Orders</TabsTrigger>
                 <TabsTrigger value="gallery" className="text-xs px-2">Gallery</TabsTrigger>
                 <TabsTrigger value="contacts" className="text-xs px-2">Contacts</TabsTrigger>
                 <TabsTrigger value="about" className="text-xs px-2">About Us</TabsTrigger>
@@ -192,6 +194,10 @@ const Admin = () => {
 
             <TabsContent value="charging" className="mt-6">
               <ChargingStationManager />
+            </TabsContent>
+
+            <TabsContent value="charging-orders" className="mt-6">
+              <ChargingOrderManager />
             </TabsContent>
 
             <TabsContent value="gallery" className="mt-6">
