@@ -22,6 +22,7 @@ import MenuManager from './MenuManager';
 import GalleryManager from './GalleryManager';
 import ContactsManager from './ContactsManager';
 import ChargingStationManager from './ChargingStationManager';
+import ChargingOrderManager from './ChargingOrderManager';
 import OrderManager from './OrderManager';
 import ReservationManager from './ReservationManager';
 import BusinessSettingsManager from './BusinessSettingsManager';
@@ -39,6 +40,7 @@ const AdminDashboard = () => {
     { id: 'about', label: 'About Us', icon: UserCheck },
     { id: 'contacts', label: 'Contacts', icon: Phone },
     { id: 'charging', label: 'Charging Stations', icon: Zap },
+    { id: 'charging-orders', label: 'Charging Orders', icon: Zap },
     { id: 'orders', label: 'Orders', icon: ShoppingCart },
     { id: 'reservations', label: 'Reservations', icon: Calendar },
     { id: 'settings', label: 'Settings', icon: Settings },
@@ -57,6 +59,8 @@ const AdminDashboard = () => {
         return <ContactsManager />;
       case 'charging':
         return <ChargingStationManager />;
+      case 'charging-orders':
+        return <ChargingOrderManager />;
       case 'orders':
         return <OrderManager />;
       case 'reservations':

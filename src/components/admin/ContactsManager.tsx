@@ -296,53 +296,53 @@ const ContactsManager = () => {
                 </div>
               </div>
               
-                <div>
-                  <Label htmlFor="photo">Photo</Label>
-                  <div className="space-y-4">
+              <div>
+                <Label htmlFor="photo">Photo</Label>
+                <div className="space-y-4">
+                  <Input
+                    id="photo"
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    disabled={uploadingPhoto}
+                  />
+                  
+                  <div>
+                    <Label htmlFor="photo_url">Or enter photo URL</Label>
                     <Input
-                      id="photo"
-                      type="file"
-                      accept="image/*"
-                      onChange={handlePhotoUpload}
-                      disabled={uploadingPhoto}
+                      id="photo_url"
+                      value={formData.photo_url}
+                      onChange={(e) => setFormData(prev => ({ ...prev, photo_url: e.target.value }))}
+                      placeholder="Enter photo URL"
                     />
-                    
-                    <div>
-                      <Label htmlFor="photo_url">Or enter photo URL</Label>
-                      <Input
-                        id="photo_url"
-                        value={formData.photo_url}
-                        onChange={(e) => setFormData(prev => ({ ...prev, photo_url: e.target.value }))}
-                        placeholder="Enter photo URL"
-                      />
-                    </div>
-                  
-                  {uploadingPhoto && (
-                    <div className="flex items-center gap-2">
-                      <Upload className="h-4 w-4 animate-spin" />
-                      <span>Uploading photo...</span>
-                    </div>
-                  )}
-                  
-                  {formData.photo_url && (
-                    <div className="relative inline-block">
-                      <img 
-                        src={formData.photo_url} 
-                        alt="Preview" 
-                        className="w-20 h-20 object-cover rounded-lg"
-                      />
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        className="absolute -top-2 -right-2"
-                        onClick={() => setFormData(prev => ({ ...prev, photo_url: '' }))}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                
+                {uploadingPhoto && (
+                  <div className="flex items-center gap-2">
+                    <Upload className="h-4 w-4 animate-spin" />
+                    <span>Uploading photo...</span>
+                  </div>
+                )}
+                
+                {formData.photo_url && (
+                  <div className="relative inline-block">
+                    <img 
+                      src={formData.photo_url} 
+                      alt="Preview" 
+                      className="w-20 h-20 object-cover rounded-lg"
+                    />
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="absolute -top-2 -right-2"
+                      onClick={() => setFormData(prev => ({ ...prev, photo_url: '' }))}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
               </div>
               
               <div className="flex flex-col sm:flex-row gap-2">

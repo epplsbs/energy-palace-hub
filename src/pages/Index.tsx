@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Zap, Car, Coffee, ChevronRight, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon } from 'lucide-react';
+import { Zap, Car, Coffee, ChevronRight, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon, Menu, X } from 'lucide-react';
 import ChargingModal from '@/components/modals/ChargingModal';
 import MenuModal from '@/components/modals/MenuModal';
 import ReservationModal from '@/components/modals/ReservationModal';
@@ -13,6 +13,7 @@ const Index = () => {
   const [isChargingModalOpen, setIsChargingModalOpen] = useState(false);
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [businessSettings, setBusinessSettings] = useState<BusinessSettings | null>(null);
   const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null);
   const { theme, toggleTheme } = useTheme();
@@ -107,7 +108,47 @@ const Index = () => {
               {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
             </button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
+          >
+            {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </nav>
+
+        {/* Mobile Menu */}
+        {showMobileMenu && (
+          <div className={`md:hidden absolute top-full left-0 right-0 ${theme === 'light' ? 'bg-white/95' : 'bg-black/95'} backdrop-blur-md shadow-lg border-t z-50`}>
+            <nav className="py-4">
+              <a href="/blog" className={`block px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
+                Blog
+              </a>
+              <a href="/contacts" className={`block px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
+                Contacts
+              </a>
+              <button 
+                onClick={() => {
+                  document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                  setShowMobileMenu(false);
+                }}
+                className={`block w-full text-left px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
+              >
+                About Us
+              </button>
+              <button
+                onClick={() => {
+                  toggleTheme();
+                  setShowMobileMenu(false);
+                }}
+                className={`block w-full text-left px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
+              >
+                {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+              </button>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Main Hero Section */}
