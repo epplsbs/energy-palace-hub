@@ -139,6 +139,7 @@ export type Database = {
           is_active: boolean | null
           name: string
           phone: string | null
+          photo_url: string | null
           position: string | null
           updated_at: string | null
         }
@@ -151,6 +152,7 @@ export type Database = {
           is_active?: boolean | null
           name: string
           phone?: string | null
+          photo_url?: string | null
           position?: string | null
           updated_at?: string | null
         }
@@ -163,6 +165,7 @@ export type Database = {
           is_active?: boolean | null
           name?: string
           phone?: string | null
+          photo_url?: string | null
           position?: string | null
           updated_at?: string | null
         }
