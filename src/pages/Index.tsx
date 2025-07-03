@@ -154,8 +154,9 @@ const Index = () => {
                   toggleTheme();
                   setShowMobileMenu(false);
                 }}
-                className={`block w-full text-left px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
+                className={`flex items-center w-full text-left px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
               >
+                {theme === 'light' ? <Moon className="h-5 w-5 mr-2" /> : <Sun className="h-5 w-5 mr-2" />}
                 {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
               </button>
             </nav>

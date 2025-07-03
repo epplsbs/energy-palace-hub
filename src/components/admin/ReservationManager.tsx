@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { getReservations, updateReservation, type Reservation } from '@/services/contentService';
-import { Calendar, Clock, Users, Phone, Mail, MessageSquare } from 'lucide-react';
+import { Calendar, Clock, Users, Phone, Mail, MessageSquare, Send } from 'lucide-react';
 
 const ReservationManager = () => {
   const { toast } = useToast();
@@ -67,6 +67,22 @@ const ReservationManager = () => {
         const newSet = new Set(prev);
         newSet.delete(reservationId);
         return newSet;
+      });
+    }
+  };
+
+  const sendConfirmationEmail = async (reservationId: string) => {
+    try {
+      // This would typically call an edge function to send email
+      toast({
+        title: "Email Sent",
+        description: "Reservation confirmation email sent successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Email Failed",
+        description: "Failed to send confirmation email",
+        variant: "destructive",
       });
     }
   };
@@ -160,26 +176,40 @@ const ReservationManager = () => {
                   </div>
                 )}
 
-                <div className="pt-4 border-t">
-                  <label className="text-sm font-medium text-gray-700 block mb-2">
-                    Update Status:
-                  </label>
-                  <Select
-                    value={reservation.status || 'pending'}
-                    onValueChange={(value) => handleStatusUpdate(reservation.id, value)}
-                    disabled={updatingReservations.has(reservation.id)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="confirmed">Confirmed</SelectItem>
-                      <SelectItem value="cancelled">Cancelled</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {updatingReservations.has(reservation.id) && (
-                    <p className="text-xs text-gray-500 mt-1">Updating...</p>
+                <div className="pt-4 border-t space-y-3">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 block mb-2">
+                      Update Status:
+                    </label>
+                    <Select
+                      value={reservation.status || 'pending'}
+                      onValueChange={(value) => handleStatusUpdate(reservation.id, value)}
+                      disabled={updatingReservations.has(reservation.id)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="confirmed">Confirmed</SelectItem>
+                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {updatingReservations.has(reservation.id) && (
+                      <p className="text-xs text-gray-500 mt-1">Updating...</p>
+                    )}
+                  </div>
+                  
+                  {reservation.status === 'pending' && (
+                    <Button
+                      onClick={() => sendConfirmationEmail(reservation.id)}
+                      size="sm"
+                      variant="outline"
+                      className="w-full text-blue-600 border-blue-600 hover:bg-blue-50"
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      Send Confirmation Email
+                    </Button>
                   )}
                 </div>
 

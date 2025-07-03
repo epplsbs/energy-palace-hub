@@ -58,6 +58,11 @@ const BusinessSettingsManager = () => {
       setting_key: 'background_image_url',
       setting_value: '',
       description: 'Background image URL for homepage'
+    },
+    {
+      setting_key: 'logo_url',
+      setting_value: '',
+      description: 'Website logo URL'
     }
   ];
 
@@ -227,6 +232,8 @@ const BusinessSettingsManager = () => {
         return <Clock className="h-5 w-5 text-orange-600" />;
       case 'background_image_url':
         return <Image className="h-5 w-5 text-cyan-600" />;
+      case 'logo_url':
+        return <Image className="h-5 w-5 text-indigo-600" />;
       default:
         return <Edit className="h-5 w-5 text-gray-600" />;
     }
@@ -248,6 +255,8 @@ const BusinessSettingsManager = () => {
         return 'Opening Hours';
       case 'background_image_url':
         return 'Background Image URL';
+      case 'logo_url':
+        return 'Logo URL';
       default:
         return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     }
@@ -342,6 +351,7 @@ const BusinessSettingsManager = () => {
             <p>• <strong>Business Tagline:</strong> Shown in the hero section and headers</p>
             <p>• <strong>Opening Hours:</strong> Displayed in business information sections</p>
             <p>• <strong>Background Image URL:</strong> Sets the homepage background image (leave empty for default animated background)</p>
+            <p>• <strong>Logo URL:</strong> Website logo displayed in headers and navigation</p>
           </div>
         </CardContent>
       </Card>

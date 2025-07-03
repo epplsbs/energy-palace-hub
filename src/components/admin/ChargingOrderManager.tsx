@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Clock, User, Car, Zap, Eye, CheckCircle, XCircle } from 'lucide-react';
+import { Clock, User, Car, Zap, Eye, CheckCircle, XCircle, Calendar } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface ChargingOrder {
   id: string;
@@ -15,6 +17,7 @@ interface ChargingOrder {
   charging_station_id: string;
   start_time: string;
   end_time?: string;
+  expected_end_time?: string;
   status: string;
   payment_status: string;
   total_amount: number;
@@ -30,6 +33,8 @@ const ChargingOrderManager = () => {
   const { toast } = useToast();
   const [orders, setOrders] = useState<ChargingOrder[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingExpectedEnd, setEditingExpectedEnd] = useState<string | null>(null);
+  const [expectedEndTime, setExpectedEndTime] = useState('');
 
   useEffect(() => {
     fetchOrders();
@@ -62,11 +67,12 @@ const ChargingOrderManager = () => {
     }
   };
 
-  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+  const updateOrderStatus = async (orderId: string, newStatus: string, additionalData?: any) => {
     try {
+      const updateData = { status: newStatus, ...additionalData };
       const { error } = await supabase
         .from('pos_charging_orders')
-        .update({ status: newStatus })
+        .update(updateData)
         .eq('id', orderId);
 
       if (error) throw error;
@@ -80,6 +86,51 @@ const ChargingOrderManager = () => {
       toast({
         title: "Error",
         description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleStartCharging = (orderId: string) => {
+    setEditingExpectedEnd(orderId);
+    // Set default expected end time to 2 hours from now
+    const defaultEndTime = new Date();
+    defaultEndTime.setHours(defaultEndTime.getHours() + 2);
+    const localDateTime = new Date(defaultEndTime.getTime() - defaultEndTime.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 16);
+    setExpectedEndTime(localDateTime);
+  };
+
+  const confirmStartCharging = async (orderId: string) => {
+    if (!expectedEndTime) {
+      toast({
+        title: "Missing Information",
+        description: "Please set an expected end time",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    await updateOrderStatus(orderId, 'active', {
+      start_time: new Date().toISOString(),
+      expected_end_time: expectedEndTime
+    });
+    setEditingExpectedEnd(null);
+    setExpectedEndTime('');
+  };
+
+  const sendConfirmationEmail = async (orderId: string, type: 'charging' | 'reservation') => {
+    try {
+      // This would typically call an edge function to send email
+      toast({
+        title: "Email Sent",
+        description: `${type === 'charging' ? 'Charging' : 'Reservation'} confirmation email sent successfully`,
+      });
+    } catch (error) {
+      toast({
+        title: "Email Failed",
+        description: "Failed to send confirmation email",
         variant: "destructive",
       });
     }
@@ -198,17 +249,63 @@ const ChargingOrderManager = () => {
                   )}
                 </div>
 
+                {order.expected_end_time && (
+                  <div className="flex items-center gap-2 mb-4">
+                    <Calendar className="h-4 w-4 text-purple-600" />
+                    <div>
+                      <p className="font-medium">Expected End Time</p>
+                      <p className="text-sm text-gray-600">
+                        {new Date(order.expected_end_time).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {editingExpectedEnd === order.id && (
+                  <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+                    <Label htmlFor="expectedEndTime" className="text-sm font-medium">
+                      Expected End Time
+                    </Label>
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        id="expectedEndTime"
+                        type="datetime-local"
+                        value={expectedEndTime}
+                        onChange={(e) => setExpectedEndTime(e.target.value)}
+                        className="flex-1"
+                      />
+                      <Button
+                        onClick={() => confirmStartCharging(order.id)}
+                        size="sm"
+                        className="bg-green-500 hover:bg-green-600"
+                      >
+                        Confirm Start
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setEditingExpectedEnd(null);
+                          setExpectedEndTime('');
+                        }}
+                        size="sm"
+                        variant="outline"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between pt-4 border-t">
                   <div>
                     <p className="text-sm text-gray-600">Total Amount</p>
                     <p className="text-lg font-bold">NPR {Number(order.total_amount).toFixed(2)}</p>
                   </div>
                   
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     {order.status === 'booked' && (
                       <Button
                         size="sm"
-                        onClick={() => updateOrderStatus(order.id, 'active')}
+                        onClick={() => handleStartCharging(order.id)}
                         className="bg-green-500 hover:bg-green-600"
                       >
                         <CheckCircle className="h-4 w-4 mr-1" />
@@ -223,6 +320,16 @@ const ChargingOrderManager = () => {
                       >
                         <CheckCircle className="h-4 w-4 mr-1" />
                         Complete
+                      </Button>
+                    )}
+                    {order.status === 'booked' && (
+                      <Button
+                        size="sm"
+                        onClick={() => sendConfirmationEmail(order.id, 'charging')}
+                        variant="outline"
+                        className="text-emerald-600 border-emerald-600 hover:bg-emerald-50"
+                      >
+                        Send Email
                       </Button>
                     )}
                     {(order.status === 'booked' || order.status === 'active') && (

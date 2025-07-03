@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Zap, X, ArrowLeft, Clock, Power } from 'lucide-react';
 import { createChargingBooking, getAvailableChargingStations } from '@/services/chargingService';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ChargingStationSelectorModalProps {
   isOpen: boolean;
@@ -53,8 +54,36 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
   const loadStations = async () => {
     setLoading(true);
     try {
-      const data = await getAvailableChargingStations();
-      setStations(data);
+      // Get current time
+      const now = new Date();
+      
+      // Get stations and check for conflicts with expected end times
+      const { data: stations, error: stationsError } = await supabase
+        .from('charging_stations')
+        .select('*')
+        .eq('status', 'available');
+
+      if (stationsError) throw stationsError;
+
+      // Get active/booked orders with expected end times
+      const { data: activeOrders, error: ordersError } = await supabase
+        .from('pos_charging_orders')
+        .select('charging_station_id, expected_end_time')
+        .in('status', ['active', 'booked'])
+        .not('expected_end_time', 'is', null);
+
+      if (ordersError) throw ordersError;
+
+      // Filter out stations that are busy until their expected end time
+      const availableStations = stations?.filter(station => {
+        const busyOrder = activeOrders?.find(order => order.charging_station_id === station.id);
+        if (!busyOrder || !busyOrder.expected_end_time) return true;
+        
+        const expectedEndTime = new Date(busyOrder.expected_end_time);
+        return now >= expectedEndTime;
+      }) || [];
+
+      setStations(availableStations);
     } catch (error) {
       console.error('Error loading stations:', error);
       toast({

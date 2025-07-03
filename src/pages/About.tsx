@@ -2,7 +2,9 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Users, Award, Target, Heart, Sparkles, ArrowLeft, Zap } from 'lucide-react';
+import { Users, Award, Target, Heart, Sparkles, ArrowLeft, Zap, Moon, Sun } from 'lucide-react';
+import { useBackgroundImage } from '@/hooks/useBackgroundImage';
+import { useTheme } from '@/contexts/ThemeContext';
 import { getEmployees, getAIContentSuggestions, getAboutUsContent, type AboutUsContent } from '@/services/contentService';
 
 interface Employee {
@@ -27,6 +29,8 @@ const About = () => {
   const [aiContent, setAIContent] = useState<AIContent[]>([]);
   const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null);
   const [loading, setLoading] = useState(true);
+  const backgroundImageUrl = useBackgroundImage();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     fetchData();
@@ -94,8 +98,18 @@ const About = () => {
     );
   }
 
+  const backgroundStyle = backgroundImageUrl ? {
+    backgroundImage: `url(${backgroundImageUrl})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed'
+  } : {};
+
   return (
-    <div className="min-h-screen bg-gradient-futuristic relative overflow-hidden">
+    <div 
+      className="min-h-screen bg-gradient-futuristic relative overflow-hidden"
+      style={backgroundStyle}
+    >
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl animate-float"></div>
@@ -121,9 +135,20 @@ const About = () => {
           </div>
 
           <div className="flex items-center space-x-4 md:space-x-8 text-white/80">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-5 w-5 text-yellow-400" />
+              ) : (
+                <Moon className="h-5 w-5 text-blue-400" />
+              )}
+            </button>
             <a href="/" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Back to Home</span>
+              <span className="hidden sm:inline">Home</span>
             </a>
             <a href="/contacts" className="hover:text-emerald-400 transition-colors">Contacts</a>
             <a href="/blog" className="hover:text-emerald-400 transition-colors">Blog</a>
@@ -136,7 +161,7 @@ const About = () => {
         <div className="text-center mb-12 md:mb-16">
           <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mb-6">
             <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-              {aboutContent?.title || 'About Energy Palace'}
+              Portfolio
             </span>
           </h1>
         </div>
