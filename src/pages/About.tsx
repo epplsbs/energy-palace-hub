@@ -1,96 +1,59 @@
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Users, Award, Target, Heart, Sparkles, ArrowLeft, Zap, Moon, Sun } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { getGalleryItems } from '@/services/contentService';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
-import { useTheme } from '@/contexts/ThemeContext';
 import { useSEO } from '@/hooks/useSEO';
-import { getEmployees, getAIContentSuggestions, getAboutUsContent, type AboutUsContent } from '@/services/contentService';
+import { Zap, ArrowLeft, Calendar, Tag, BookOpen, X } from 'lucide-react';
 
-interface Employee {
-  id: string;
-  name: string;
-  designation: string;
-  image_url: string;
-  bio: string;
-  specialties: string[];
-}
-
-interface AIContent {
+interface GalleryItem {
   id: string;
   title: string;
-  content: string;
-  keywords: string[];
-  status: string;
+  description: string;
+  image_url: string;
+  is_active: boolean;
+  created_at: string;
 }
 
-const About = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [aiContent, setAIContent] = useState<AIContent[]>([]);
-  const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null);
+const Blog = () => {
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPost, setSelectedPost] = useState<GalleryItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const backgroundImageUrl = useBackgroundImage();
-  const { theme, toggleTheme } = useTheme();
-  useSEO('/portfolio');
+  useSEO('/blog');
 
   useEffect(() => {
-    fetchData();
+    fetchGalleryItems();
   }, []);
 
-  const fetchData = async () => {
+  const fetchGalleryItems = async () => {
     try {
-      const [employeesData, aiContentData, aboutData] = await Promise.all([
-        getEmployees(),
-        getAIContentSuggestions(),
-        getAboutUsContent()
-      ]);
-      
-      setEmployees(employeesData || []);
-      setAIContent(aiContentData?.filter(content => content.status === 'approved') || []);
-      setAboutContent(aboutData);
+      const data = await getGalleryItems();
+      setGalleryItems(data || []);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching gallery items:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const defaultValues = [
-    {
-      icon: Target,
-      title: 'Innovation',
-      description: 'Leading the way in sustainable energy solutions and hospitality excellence'
-    },
-    {
-      icon: Heart,
-      title: 'Sustainability',
-      description: 'Committed to environmental responsibility and green energy practices'
-    },
-    {
-      icon: Users,
-      title: 'Community',
-      description: 'Building connections and supporting the EV community'
-    },
-    {
-      icon: Award,
-      title: 'Excellence',
-      description: 'Delivering exceptional service and premium experiences'
-    }
-  ];
-
-  const iconMap = {
-    'Innovation': Target,
-    'Sustainability': Heart,
-    'Community': Users,
-    'Excellence': Award
+  const openModal = (item: GalleryItem) => {
+    setSelectedPost(item);
+    setIsModalOpen(true);
   };
 
-  const companyValues = aboutContent?.values?.map(value => ({
-    icon: iconMap[value.title as keyof typeof iconMap] || Target,
-    title: value.title,
-    description: value.description
-  })) || defaultValues;
+  const closeModal = () => {
+    setSelectedPost(null);
+    setIsModalOpen(false);
+  };
+
+  const truncateText = (text: string, maxLength: number = 150) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
 
   if (loading) {
     return (
@@ -100,19 +63,9 @@ const About = () => {
     );
   }
 
-  const backgroundStyle = backgroundImageUrl ? {
-    backgroundImage: `url(${backgroundImageUrl})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundAttachment: 'fixed'
-  } : {};
-
   return (
-    <div 
-      className="min-h-screen bg-gradient-futuristic relative overflow-hidden"
-      style={backgroundStyle}
-    >
-      {/* Animated Background */}
+    <div className="min-h-screen bg-gradient-futuristic relative overflow-hidden">
+      {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl animate-float"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
@@ -132,28 +85,17 @@ const About = () => {
               <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
                 Energy Palace
               </h1>
-              <p className="text-sm text-white/60">About Our Journey</p>
+              <p className="text-sm text-white/60">Our Journey</p>
             </div>
           </div>
 
           <div className="flex items-center space-x-4 md:space-x-8 text-white/80">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-5 w-5 text-yellow-400" />
-              ) : (
-                <Moon className="h-5 w-5 text-blue-400" />
-              )}
-            </button>
             <a href="/" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Home</span>
+              <span className="hidden sm:inline">Back to Home</span>
             </a>
             <a href="/contacts" className="hover:text-emerald-400 transition-colors">Contacts</a>
-            <a href="/blog" className="hover:text-emerald-400 transition-colors">Blog</a>
+            <a href="/about" className="hover:text-emerald-400 transition-colors">About</a>
           </div>
         </nav>
       </header>
