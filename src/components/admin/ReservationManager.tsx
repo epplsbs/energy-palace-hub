@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { getReservations, updateReservation, type Reservation } from '@/services/contentService';
+import { supabase } from '@/integrations/supabase/client';
 import { Calendar, Clock, Users, Phone, Mail, MessageSquare, Send } from 'lucide-react';
 
 const ReservationManager = () => {
@@ -73,12 +74,31 @@ const ReservationManager = () => {
 
   const sendConfirmationEmail = async (reservationId: string) => {
     try {
-      // This would typically call an edge function to send email
+      const reservation = reservations.find(r => r.id === reservationId);
+      if (!reservation) return;
+
+      const { data, error } = await supabase.functions.invoke('send-confirmation-email', {
+        body: {
+          type: 'reservation',
+          customerName: reservation.customer_name,
+          customerEmail: reservation.customer_email,
+          orderDetails: {
+            date: reservation.date,
+            time: reservation.time,
+            guests: reservation.guests,
+            specialRequests: reservation.special_requests
+          }
+        }
+      });
+
+      if (error) throw error;
+
       toast({
         title: "Email Sent",
         description: "Reservation confirmation email sent successfully",
       });
     } catch (error) {
+      console.error('Email error:', error);
       toast({
         title: "Email Failed",
         description: "Failed to send confirmation email",

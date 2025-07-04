@@ -4,6 +4,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { getBusinessSettings } from '@/services/businessSettingsService';
 import { Phone, Mail, MapPin, Clock, User, Building, Zap, ArrowLeft } from 'lucide-react';
+import { useBackgroundImage } from '@/hooks/useBackgroundImage';
+import { useSEO } from '@/hooks/useSEO';
 
 interface Contact {
   id: string;
@@ -21,6 +23,8 @@ const Contacts = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [businessSettings, setBusinessSettings] = useState<any>({});
   const [loading, setLoading] = useState(true);
+  const backgroundImageUrl = useBackgroundImage();
+  useSEO('/contacts');
 
   useEffect(() => {
     fetchData();

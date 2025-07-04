@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Edit, Save, Phone, Mail, MapPin, Building, Loader2, Clock, Tag, Image } from 'lucide-react';
+import { Edit, Save, Phone, Mail, MapPin, Building, Loader2, Clock, Tag, Image, Upload } from 'lucide-react';
 
 interface BusinessSetting {
   id: string;
@@ -22,6 +22,7 @@ const BusinessSettingsManager = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [editingSettings, setEditingSettings] = useState<Record<string, string>>({});
+  const [uploading, setUploading] = useState<Record<string, boolean>>({});
 
   const defaultSettings = [
     {
@@ -216,6 +217,47 @@ const BusinessSettingsManager = () => {
     }
   };
 
+  const handleFileUpload = async (file: File, settingKey: string) => {
+    if (!file) return;
+
+    setUploading(prev => ({ ...prev, [settingKey]: true }));
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${settingKey}_${Date.now()}.${fileExt}`;
+      
+      const { data, error } = await supabase.storage
+        .from('contacts')
+        .upload(fileName, file);
+
+      if (error) throw error;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('contacts')
+        .getPublicUrl(fileName);
+
+      setEditingSettings(prev => ({
+        ...prev,
+        [settingKey]: publicUrl
+      }));
+
+      toast({
+        title: "Success",
+        description: "Image uploaded successfully",
+      });
+
+    } catch (error: any) {
+      console.error('Error uploading file:', error);
+      toast({
+        title: "Error",
+        description: "Failed to upload image. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(prev => ({ ...prev, [settingKey]: false }));
+    }
+  };
+
   const getSettingIcon = (key: string) => {
     switch (key) {
       case 'contact_phone':
@@ -304,6 +346,55 @@ const BusinessSettingsManager = () => {
                     rows={3}
                     className="mt-1 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
                   />
+                ) : (setting.setting_key === 'background_image_url' || setting.setting_key === 'logo_url') ? (
+                  <div className="space-y-2">
+                    <Input
+                      id={setting.setting_key}
+                      value={editingSettings[setting.setting_key] || ''}
+                      onChange={(e) => setEditingSettings(prev => ({
+                        ...prev,
+                        [setting.setting_key]: e.target.value
+                      }))}
+                      placeholder="https://example.com/image.jpg or upload below"
+                      className="mt-1 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                    />
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleFileUpload(file, setting.setting_key);
+                        }}
+                        className="hidden"
+                        id={`file-${setting.setting_key}`}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => document.getElementById(`file-${setting.setting_key}`)?.click()}
+                        disabled={uploading[setting.setting_key]}
+                        className="flex items-center gap-2"
+                      >
+                        {uploading[setting.setting_key] ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Upload className="h-4 w-4" />
+                        )}
+                        {uploading[setting.setting_key] ? 'Uploading...' : 'Upload Image'}
+                      </Button>
+                    </div>
+                    {editingSettings[setting.setting_key] && (
+                      <div className="mt-2">
+                        <img 
+                          src={editingSettings[setting.setting_key]} 
+                          alt="Preview" 
+                          className="max-w-32 max-h-32 object-cover rounded border"
+                        />
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <Input
                     id={setting.setting_key}
@@ -312,7 +403,7 @@ const BusinessSettingsManager = () => {
                       ...prev,
                       [setting.setting_key]: e.target.value
                     }))}
-                    placeholder={setting.setting_key === 'background_image_url' ? 'https://example.com/image.jpg (optional)' : 'Enter value'}
+                    placeholder="Enter value"
                     className="mt-1 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
                   />
                 )}

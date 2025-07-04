@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { getGalleryItems } from '@/services/contentService';
+import { useBackgroundImage } from '@/hooks/useBackgroundImage';
+import { useSEO } from '@/hooks/useSEO';
 import { Zap, ArrowLeft, Calendar, Tag, BookOpen, X } from 'lucide-react';
 
 interface GalleryItem {
@@ -20,6 +22,8 @@ const Blog = () => {
   const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState<GalleryItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const backgroundImageUrl = useBackgroundImage();
+  useSEO('/blog');
 
   useEffect(() => {
     fetchGalleryItems();

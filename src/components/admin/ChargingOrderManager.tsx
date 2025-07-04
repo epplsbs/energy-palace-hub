@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Clock, User, Car, Zap, Eye, CheckCircle, XCircle, Calendar } from 'lucide-react';
+import { Clock, User, Car, Zap, Eye, CheckCircle, XCircle, Calendar, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -122,15 +122,59 @@ const ChargingOrderManager = () => {
 
   const sendConfirmationEmail = async (orderId: string, type: 'charging' | 'reservation') => {
     try {
-      // This would typically call an edge function to send email
+      const order = orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      const { data, error } = await supabase.functions.invoke('send-confirmation-email', {
+        body: {
+          type: 'charging',
+          customerName: order.customer_name,
+          customerEmail: order.customer_phone, // Assuming phone for now, should be email
+          orderDetails: {
+            orderNumber: order.order_number,
+            stationId: order.charging_stations?.station_id,
+            vehicleNumber: order.vehicle_number,
+            startTime: order.start_time,
+            expectedEndTime: order.expected_end_time,
+            totalAmount: order.total_amount
+          }
+        }
+      });
+
+      if (error) throw error;
+
       toast({
         title: "Email Sent",
-        description: `${type === 'charging' ? 'Charging' : 'Reservation'} confirmation email sent successfully`,
+        description: "Charging confirmation email sent successfully",
       });
     } catch (error) {
+      console.error('Email error:', error);
       toast({
         title: "Email Failed",
         description: "Failed to send confirmation email",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const deleteOrder = async (orderId: string) => {
+    try {
+      const { error } = await supabase
+        .from('pos_charging_orders')
+        .delete()
+        .eq('id', orderId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Charging order deleted successfully",
+      });
+      fetchOrders();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
         variant: "destructive",
       });
     }
@@ -340,6 +384,16 @@ const ChargingOrderManager = () => {
                       >
                         <XCircle className="h-4 w-4 mr-1" />
                         Cancel
+                      </Button>
+                    )}
+                    {(order.status === 'cancelled' || order.status === 'completed') && (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => deleteOrder(order.id)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        Delete
                       </Button>
                     )}
                   </div>

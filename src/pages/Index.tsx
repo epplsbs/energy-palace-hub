@@ -9,6 +9,7 @@ import { getBusinessSettings, type BusinessSettings } from '@/services/businessS
 import { getAboutUsContent, type AboutUsContent } from '@/services/aboutUsService';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
+import { useSEO } from '@/hooks/useSEO';
 
 const Index = () => {
   const [isChargingModalOpen, setIsChargingModalOpen] = useState(false);
@@ -19,6 +20,7 @@ const Index = () => {
   const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null);
   const { theme, toggleTheme } = useTheme();
   const backgroundImageUrl = useBackgroundImage();
+  useSEO('/');
 
   useEffect(() => {
     loadSettings();
@@ -106,13 +108,13 @@ const Index = () => {
               <Users className="h-4 w-4" />
               <span>Contacts</span>
             </a>
-            <button 
-              onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+            <a 
+              href="/portfolio"
               className="hover:text-emerald-400 transition-colors flex items-center gap-2"
             >
               <Info className="h-4 w-4" />
-              <span>About Us</span>
-            </button>
+              <span>Portfolio</span>
+            </a>
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg hover:bg-white/10 transition-colors"
@@ -140,15 +142,13 @@ const Index = () => {
               <a href="/contacts" className={`block px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
                 Contacts
               </a>
-              <button 
-                onClick={() => {
-                  document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-                  setShowMobileMenu(false);
-                }}
-                className={`block w-full text-left px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
+              <a 
+                href="/portfolio"
+                className={`block px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
+                onClick={() => setShowMobileMenu(false)}
               >
-                About Us
-              </button>
+                Portfolio
+              </a>
               <button
                 onClick={() => {
                   toggleTheme();

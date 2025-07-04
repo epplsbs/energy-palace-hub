@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Users, Award, Target, Heart, Sparkles, ArrowLeft, Zap, Moon, Sun } from 'lucide-react';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useSEO } from '@/hooks/useSEO';
 import { getEmployees, getAIContentSuggestions, getAboutUsContent, type AboutUsContent } from '@/services/contentService';
 
 interface Employee {
@@ -31,6 +32,7 @@ const About = () => {
   const [loading, setLoading] = useState(true);
   const backgroundImageUrl = useBackgroundImage();
   const { theme, toggleTheme } = useTheme();
+  useSEO('/portfolio');
 
   useEffect(() => {
     fetchData();
