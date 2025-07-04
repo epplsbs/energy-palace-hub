@@ -109,11 +109,11 @@ const Index = () => {
               <span>Contacts</span>
             </a>
             <a 
-              href="/portfolio"
+              href="/about"
               className="hover:text-emerald-400 transition-colors flex items-center gap-2"
             >
               <Info className="h-4 w-4" />
-              <span>Portfolio</span>
+              <span>About</span>
             </a>
             <button
               onClick={toggleTheme}
