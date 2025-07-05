@@ -9,6 +9,7 @@ export interface BusinessSettings {
   business_tagline: string;
   opening_hours: string;
   background_image_url?: string;
+  logo_url?: string;
 }
 
 export const getBusinessSettings = async (): Promise<BusinessSettings> => {
@@ -24,7 +25,8 @@ export const getBusinessSettings = async (): Promise<BusinessSettings> => {
       'business_name',
       'business_tagline',
       'opening_hours',
-      'background_image_url'
+      'background_image_url',
+      'logo_url'
     ]);
 
   if (error) {
@@ -57,5 +59,6 @@ export const getBusinessSettings = async (): Promise<BusinessSettings> => {
     business_tagline: settings.business_tagline || 'Premium EV Charging & Dining Experience',
     opening_hours: settings.opening_hours || '24/7',
     background_image_url: settings.background_image_url || undefined,
+    logo_url: settings.logo_url || undefined,
   };
 };

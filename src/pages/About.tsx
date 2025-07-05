@@ -1,59 +1,62 @@
-
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { getGalleryItems } from '@/services/contentService';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
-import { Zap, ArrowLeft, Calendar, Tag, BookOpen, X } from 'lucide-react';
+import { getAboutUsContent, getEmployees, getAIContentSuggestions, type AboutUsContent, type Employee, type AIContentSuggestion } from '@/services/contentService';
+import { Zap, ArrowLeft, Users, Coffee, Car, Sparkles } from 'lucide-react';
 
-interface GalleryItem {
-  id: string;
-  title: string;
-  description: string;
-  image_url: string;
-  is_active: boolean;
-  created_at: string;
-}
-
-const Blog = () => {
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+const About = () => {
+  const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [aiContent, setAiContent] = useState<AIContentSuggestion[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedPost, setSelectedPost] = useState<GalleryItem | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const backgroundImageUrl = useBackgroundImage();
-  useSEO('/blog');
+  useSEO('/about');
 
   useEffect(() => {
-    fetchGalleryItems();
+    fetchContent();
   }, []);
 
-  const fetchGalleryItems = async () => {
+  const fetchContent = async () => {
     try {
-      const data = await getGalleryItems();
-      setGalleryItems(data || []);
+      const [aboutData, employeesData, aiData] = await Promise.all([
+        getAboutUsContent(),
+        getEmployees(),
+        getAIContentSuggestions()
+      ]);
+      setAboutContent(aboutData);
+      setEmployees(employeesData || []);
+      setAiContent(aiData?.filter(item => item.status === 'approved') || []);
     } catch (error) {
-      console.error('Error fetching gallery items:', error);
+      console.error('Error fetching content:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const openModal = (item: GalleryItem) => {
-    setSelectedPost(item);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setSelectedPost(null);
-    setIsModalOpen(false);
-  };
-
-  const truncateText = (text: string, maxLength: number = 150) => {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
-  };
+  const companyValues = [
+    {
+      icon: Zap,
+      title: "Innovation",
+      description: "Leading the way in sustainable energy solutions"
+    },
+    {
+      icon: Car,
+      title: "Sustainability", 
+      description: "Committed to environmental responsibility"
+    },
+    {
+      icon: Users,
+      title: "Community",
+      description: "Building connections and supporting the EV community"
+    },
+    {
+      icon: Coffee,
+      title: "Excellence",
+      description: "Delivering exceptional service and premium experiences"
+    }
+  ];
 
   if (loading) {
     return (
@@ -85,7 +88,7 @@ const Blog = () => {
               <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
                 Energy Palace
               </h1>
-              <p className="text-sm text-white/60">Our Journey</p>
+              <p className="text-sm text-white/60">About Us</p>
             </div>
           </div>
 
@@ -95,7 +98,7 @@ const Blog = () => {
               <span className="hidden sm:inline">Back to Home</span>
             </a>
             <a href="/contacts" className="hover:text-emerald-400 transition-colors">Contacts</a>
-            <a href="/about" className="hover:text-emerald-400 transition-colors">About</a>
+            <a href="/blog" className="hover:text-emerald-400 transition-colors">Blog</a>
           </div>
         </nav>
       </header>
@@ -105,7 +108,7 @@ const Blog = () => {
         <div className="text-center mb-12 md:mb-16">
           <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mb-6">
             <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Portfolio
+              About Us
             </span>
           </h1>
         </div>

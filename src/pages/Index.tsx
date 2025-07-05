@@ -86,10 +86,18 @@ const Index = () => {
       {/* Header */}
       <header className="relative z-20 p-6">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
-              <Zap className="h-8 w-8 text-white" />
-            </div>
+            <div className="flex items-center space-x-3">
+              {businessSettings?.logo_url ? (
+                <img 
+                  src={businessSettings.logo_url} 
+                  alt="Logo" 
+                  className="h-12 w-12 object-contain rounded-xl"
+                />
+              ) : (
+                <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
+                  <Zap className="h-8 w-8 text-white" />
+                </div>
+              )}
             <div>
               <h1 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 {businessSettings?.business_name || 'Energy Palace'}
@@ -113,7 +121,7 @@ const Index = () => {
               className="hover:text-emerald-400 transition-colors flex items-center gap-2"
             >
               <Info className="h-4 w-4" />
-              <span>About</span>
+              <span>Portfolio</span>
             </a>
             <button
               onClick={toggleTheme}
@@ -143,7 +151,7 @@ const Index = () => {
                 Contacts
               </a>
               <a 
-                href="/portfolio"
+                href="/about"
                 className={`block px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
                 onClick={() => setShowMobileMenu(false)}
               >
@@ -320,9 +328,17 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
-                <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500">
-                  <Zap className="h-6 w-6 text-white" />
-                </div>
+                {businessSettings?.logo_url ? (
+                  <img 
+                    src={businessSettings.logo_url} 
+                    alt="Logo" 
+                    className="h-10 w-10 object-contain rounded-xl"
+                  />
+                ) : (
+                  <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500">
+                    <Zap className="h-6 w-6 text-white" />
+                  </div>
+                )}
                 <span className={`text-xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                   {businessSettings?.business_name || 'Energy Palace'}
                 </span>

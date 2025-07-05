@@ -5,9 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { getReservations, updateReservation, type Reservation } from '@/services/contentService';
+import { 
+  getReservations, 
+  updateReservation,
+  deleteReservation, 
+  type Reservation 
+} from '@/services/contentService';
 import { supabase } from '@/integrations/supabase/client';
-import { Calendar, Clock, Users, Phone, Mail, MessageSquare, Send } from 'lucide-react';
+import { Calendar, Clock, Users, Phone, Mail, MessageSquare, Send, Trash2 } from 'lucide-react';
 
 const ReservationManager = () => {
   const { toast } = useToast();
@@ -68,6 +73,26 @@ const ReservationManager = () => {
         const newSet = new Set(prev);
         newSet.delete(reservationId);
         return newSet;
+      });
+    }
+  };
+
+  const handleDeleteReservation = async (reservationId: string) => {
+    if (!confirm('Are you sure you want to delete this reservation?')) return;
+    
+    try {
+      await deleteReservation(reservationId);
+      setReservations(prev => prev.filter(r => r.id !== reservationId));
+      toast({
+        title: "Success",
+        description: "Reservation deleted successfully",
+      });
+    } catch (error) {
+      console.error('Error deleting reservation:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete reservation",
+        variant: "destructive",
       });
     }
   };
@@ -155,9 +180,19 @@ const ReservationManager = () => {
                     <Calendar className="h-5 w-5 mr-2 text-emerald-600" />
                     {reservation.customer_name}
                   </CardTitle>
-                  <Badge className={`${getStatusColor(reservation.status)} text-white border-0`}>
-                    {reservation.status}
-                  </Badge>
+                  <div className="flex items-center space-x-2">
+                    <Badge className={`${getStatusColor(reservation.status)} text-white border-0`}>
+                      {reservation.status}
+                    </Badge>
+                    <Button
+                      onClick={() => handleDeleteReservation(reservation.id)}
+                      variant="outline"
+                      size="sm"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">

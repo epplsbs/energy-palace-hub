@@ -507,6 +507,24 @@ export const updateOrder = async (id: string, updates: Partial<Order>): Promise<
   if (error) throw error;
 };
 
+export const deleteOrder = async (id: string): Promise<void> => {
+  const { error } = await supabase
+    .from('orders')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
+export const deleteReservation = async (id: string): Promise<void> => {
+  const { error } = await supabase
+    .from('reservations')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
 // Contact functions
 export const getContacts = async (): Promise<Contact[]> => {
   const { data, error } = await supabase

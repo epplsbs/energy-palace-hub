@@ -57,11 +57,11 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
       // Get current time
       const now = new Date();
       
-      // Get stations and check for conflicts with expected end times
+      // Get all stations regardless of status
       const { data: stations, error: stationsError } = await supabase
         .from('charging_stations')
         .select('*')
-        .eq('status', 'available');
+        .order('station_id');
 
       if (stationsError) throw stationsError;
 
@@ -74,16 +74,34 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
 
       if (ordersError) throw ordersError;
 
-      // Filter out stations that are busy until their expected end time
-      const availableStations = stations?.filter(station => {
+      // Add availability info to stations
+      const stationsWithAvailability = stations?.map(station => {
         const busyOrder = activeOrders?.find(order => order.charging_station_id === station.id);
-        if (!busyOrder || !busyOrder.expected_end_time) return true;
+        let availability = 'available';
+        let availableAt = null;
         
-        const expectedEndTime = new Date(busyOrder.expected_end_time);
-        return now >= expectedEndTime;
+        if (station.status === 'maintenance') {
+          availability = 'maintenance';
+        } else if (station.status === 'occupied' || busyOrder) {
+          availability = 'occupied';
+          if (busyOrder?.expected_end_time) {
+            const expectedEndTime = new Date(busyOrder.expected_end_time);
+            if (now < expectedEndTime) {
+              availableAt = expectedEndTime;
+            } else {
+              availability = 'available'; // Past expected end time
+            }
+          }
+        }
+        
+        return {
+          ...station,
+          availability,
+          availableAt
+        };
       }) || [];
 
-      setStations(availableStations);
+      setStations(stationsWithAvailability);
     } catch (error) {
       console.error('Error loading stations:', error);
       toast({

@@ -6,10 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { ShoppingCart, Eye, Calendar, User, Phone, Mail, Clock } from 'lucide-react';
+import { ShoppingCart, Eye, Calendar, User, Phone, Mail, Clock, Trash2 } from 'lucide-react';
 import { 
   getOrders, 
   updateOrder,
+  deleteOrder,
   type Order 
 } from '@/services/contentService';
 
@@ -53,6 +54,26 @@ const OrderManager = () => {
       toast({
         title: "Error",
         description: "Failed to update order status",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    if (!confirm('Are you sure you want to delete this order?')) return;
+    
+    try {
+      await deleteOrder(orderId);
+      toast({
+        title: "Success",
+        description: "Order deleted successfully",
+      });
+      await loadData();
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete order",
         variant: "destructive",
       });
     }
@@ -174,6 +195,14 @@ const OrderManager = () => {
                         <Badge className={`${getStatusColor(order.status || 'pending')} text-white border-0 capitalize`}>
                           {order.status || 'pending'}
                         </Badge>
+                        <Button
+                          onClick={() => handleDeleteOrder(order.id)}
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
