@@ -104,7 +104,7 @@ const ChargingModal = ({ isOpen, onClose }: ChargingModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md mx-auto bg-white rounded-2xl shadow-2xl">
+      <DialogContent className="max-w-md mx-auto bg-white dark:bg-white rounded-2xl shadow-2xl">
         <DialogHeader className="text-center pb-4">
           <div className="mx-auto w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center mb-4">
             <Zap className="h-8 w-8 text-white" />

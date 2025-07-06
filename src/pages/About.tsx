@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
+import { useTheme } from '@/contexts/ThemeContext';
 import { getAboutUsContent, getEmployees, getAIContentSuggestions, type AboutUsContent, type Employee, type AIContentSuggestion } from '@/services/contentService';
-import { Zap, ArrowLeft, Users, Coffee, Car, Sparkles } from 'lucide-react';
+import { Zap, ArrowLeft, Users, Coffee, Car, Sparkles, Sun, Moon, Menu, X } from 'lucide-react';
 
 const About = () => {
   const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [aiContent, setAiContent] = useState<AIContentSuggestion[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const backgroundImageUrl = useBackgroundImage();
+  const { theme, toggleTheme } = useTheme();
   useSEO('/about');
 
   useEffect(() => {
@@ -92,14 +96,52 @@ const About = () => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4 md:space-x-8 text-white/80">
-            <a href="/" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Back to Home</span>
-            </a>
-            <a href="/contacts" className="hover:text-emerald-400 transition-colors">Contacts</a>
-            <a href="/blog" className="hover:text-emerald-400 transition-colors">Blog</a>
+          <div className="flex items-center space-x-4">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-4 text-white/80">
+              <a href="/" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                <span>Back to Home</span>
+              </a>
+              <a href="/contacts" className="hover:text-emerald-400 transition-colors">Contacts</a>
+              <a href="/blog" className="hover:text-emerald-400 transition-colors">Portfolio</a>
+            </div>
+            
+            {/* Theme Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              className="p-2 text-white/80 hover:text-emerald-400 hover:bg-white/10"
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="md:hidden p-2 text-white/80 hover:text-emerald-400 hover:bg-white/10"
+            >
+              {showMobileMenu ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </Button>
           </div>
+        </nav>
+
+        {/* Mobile Menu */}
+        {showMobileMenu && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-black/90 backdrop-blur-md border-t border-white/20 z-50">
+            <nav className="py-4 px-4">
+              <a href="/" className="block py-3 text-white/80 hover:text-emerald-400 transition-colors flex items-center gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                Back to Home
+              </a>
+              <a href="/contacts" className="block py-3 text-white/80 hover:text-emerald-400 transition-colors">Contacts</a>
+              <a href="/blog" className="block py-3 text-white/80 hover:text-emerald-400 transition-colors">Portfolio</a>
+            </nav>
+          </div>
+        )}
         </nav>
       </header>
 
