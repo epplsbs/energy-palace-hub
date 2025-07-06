@@ -142,7 +142,6 @@ const About = () => {
             </nav>
           </div>
         )}
-        </nav>
       </header>
 
       {/* Main Content */}

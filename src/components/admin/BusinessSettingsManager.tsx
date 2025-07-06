@@ -64,6 +64,21 @@ const BusinessSettingsManager = () => {
       setting_key: 'logo_url',
       setting_value: '',
       description: 'Website logo URL'
+    },
+    {
+      setting_key: 'business_latitude',
+      setting_value: '27.7172',
+      description: 'Business location latitude coordinate'
+    },
+    {
+      setting_key: 'business_longitude',
+      setting_value: '85.3240',
+      description: 'Business location longitude coordinate'
+    },
+    {
+      setting_key: 'business_location_name',
+      setting_value: 'Kathmandu, Nepal',
+      description: 'Business location display name'
     }
   ];
 
@@ -276,6 +291,12 @@ const BusinessSettingsManager = () => {
         return <Image className="h-5 w-5 text-cyan-600" />;
       case 'logo_url':
         return <Image className="h-5 w-5 text-indigo-600" />;
+      case 'business_latitude':
+        return <MapPin className="h-5 w-5 text-red-600" />;
+      case 'business_longitude':
+        return <MapPin className="h-5 w-5 text-red-600" />;
+      case 'business_location_name':
+        return <MapPin className="h-5 w-5 text-red-600" />;
       default:
         return <Edit className="h-5 w-5 text-gray-600" />;
     }
@@ -299,6 +320,12 @@ const BusinessSettingsManager = () => {
         return 'Background Image URL';
       case 'logo_url':
         return 'Logo URL';
+      case 'business_latitude':
+        return 'Location Latitude';
+      case 'business_longitude':
+        return 'Location Longitude';
+      case 'business_location_name':
+        return 'Location Name';
       default:
         return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     }
@@ -314,19 +341,19 @@ const BusinessSettingsManager = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 bg-white dark:bg-white min-h-screen">
+      <div className="flex justify-between items-center p-6 border-b">
         <h2 className="text-2xl font-bold flex items-center text-gray-900">
           <Edit className="h-6 w-6 mr-2" />
           Business Settings
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         {settings.map(setting => (
-          <Card key={setting.setting_key} className="hover:shadow-lg transition-shadow border-gray-200">
+          <Card key={setting.setting_key} className="hover:shadow-lg transition-shadow border-gray-200 bg-white">
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="text-lg flex items-center gap-2 text-gray-900">
                 {getSettingIcon(setting.setting_key)}
                 {getSettingLabel(setting.setting_key)}
               </CardTitle>
@@ -429,7 +456,7 @@ const BusinessSettingsManager = () => {
         ))}
       </div>
 
-      <Card className="border-gray-200">
+      <Card className="border-gray-200 bg-white m-6">
         <CardHeader>
           <CardTitle className="text-gray-900">Usage Instructions</CardTitle>
         </CardHeader>
@@ -443,6 +470,9 @@ const BusinessSettingsManager = () => {
             <p>• <strong>Opening Hours:</strong> Displayed in business information sections</p>
             <p>• <strong>Background Image URL:</strong> Sets the homepage background image (leave empty for default animated background)</p>
             <p>• <strong>Logo URL:</strong> Website logo displayed in headers and navigation</p>
+            <p>• <strong>Location Latitude:</strong> GPS latitude coordinate for map integration</p>
+            <p>• <strong>Location Longitude:</strong> GPS longitude coordinate for map integration</p>
+            <p>• <strong>Location Name:</strong> Display name for business location</p>
           </div>
         </CardContent>
       </Card>

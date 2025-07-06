@@ -93,6 +93,59 @@ export type Database = {
         }
         Relationships: []
       }
+      charger_reservations: {
+        Row: {
+          charging_station_id: string | null
+          created_at: string | null
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string | null
+          end_time: string
+          id: string
+          reservation_date: string
+          special_requests: string | null
+          start_time: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          charging_station_id?: string | null
+          created_at?: string | null
+          customer_email?: string | null
+          customer_name: string
+          customer_phone?: string | null
+          end_time: string
+          id?: string
+          reservation_date: string
+          special_requests?: string | null
+          start_time: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          charging_station_id?: string | null
+          created_at?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string | null
+          end_time?: string
+          id?: string
+          reservation_date?: string
+          special_requests?: string | null
+          start_time?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "charger_reservations_charging_station_id_fkey"
+            columns: ["charging_station_id"]
+            isOneToOne: false
+            referencedRelation: "charging_stations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       charging_stations: {
         Row: {
           connector: string

@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Zap, Car, Clock } from 'lucide-react';
 import { getChargingStations, type ChargingStation } from '@/services/contentService';
 import { useToast } from '@/hooks/use-toast';
+import LocationDisplay from './LocationDisplay';
 
 const ChargingStations = () => {
   const { toast } = useToast();
@@ -178,6 +179,26 @@ const ChargingStations = () => {
             </Card>
           ))}
         </div>
+
+        {/* Add charger reservation button */}
+        <div className="text-center mt-8">
+          <button
+            onClick={() => {
+              // This would open charger reservation modal
+              // For now, we'll just show a toast
+              toast({
+                title: "Feature Coming Soon",
+                description: "Charger reservation system will be available soon!",
+              });
+            }}
+            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105"
+          >
+            Reserve a Charging Station
+          </button>
+        </div>
+
+        {/* Add Location Display */}
+        <LocationDisplay />
 
         {/* Additional Info */}
         <div className="mt-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl p-8 text-white">

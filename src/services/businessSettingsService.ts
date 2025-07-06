@@ -10,6 +10,9 @@ export interface BusinessSettings {
   opening_hours: string;
   background_image_url?: string;
   logo_url?: string;
+  business_latitude?: string;
+  business_longitude?: string;
+  business_location_name?: string;
 }
 
 export const getBusinessSettings = async (): Promise<BusinessSettings> => {
@@ -26,7 +29,10 @@ export const getBusinessSettings = async (): Promise<BusinessSettings> => {
       'business_tagline',
       'opening_hours',
       'background_image_url',
-      'logo_url'
+      'logo_url',
+      'business_latitude',
+      'business_longitude',
+      'business_location_name'
     ]);
 
   if (error) {
@@ -60,5 +66,8 @@ export const getBusinessSettings = async (): Promise<BusinessSettings> => {
     opening_hours: settings.opening_hours || '24/7',
     background_image_url: settings.background_image_url || undefined,
     logo_url: settings.logo_url || undefined,
+    business_latitude: settings.business_latitude || '27.7172',
+    business_longitude: settings.business_longitude || '85.3240',
+    business_location_name: settings.business_location_name || 'Kathmandu, Nepal',
   };
 };
