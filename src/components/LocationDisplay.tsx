@@ -68,8 +68,6 @@ const LocationDisplay = () => {
           <MapPin className="h-4 w-4 text-emerald-600 mr-2" />
           <span className="text-emerald-800 text-sm font-medium">Find Us</span>
         </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Our Location</h3>
-        <p className="text-lg text-gray-600">{location.locationName}</p>
       </div>
 
       
@@ -81,7 +79,8 @@ const LocationDisplay = () => {
           <ExternalLink className="h-4 w-4 mr-2" />
           View on Google Maps
         </button>
-        <button
+       </div> 
+        <div>        <button
           onClick={openDirections}
           className="flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
         >
