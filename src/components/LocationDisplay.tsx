@@ -71,7 +71,6 @@ const LocationDisplay = () => {
           Get Directions
         </button>
       </div>
-    </div>
   );
 };
 
