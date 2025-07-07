@@ -182,5 +182,4 @@ const Index = () => {
         onClose={() => setIsChargingModalOpen(false)} 
       />
       <MenuModal 
-        isOpen={*
-
+        isOpen={isMenuModalOpen}
