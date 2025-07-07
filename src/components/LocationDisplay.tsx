@@ -62,7 +62,7 @@ const LocationDisplay = () => {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+    <div>
       <div className="text-center mb-6">
         <div className="inline-flex items-center px-4 py-2 bg-emerald-100 rounded-full mb-4">
           <MapPin className="h-4 w-4 text-emerald-600 mr-2" />
