@@ -323,12 +323,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Location Section */}
-      <section className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
-        <div className="max-w-7xl mx-auto px-4">
-          <LocationDisplay />
-        </div>
-      </section>
+
 
       {/* Footer */}
       <footer className={`relative z-10 mt-16 border-t ${theme === 'light' ? 'border-gray-200 bg-white/20' : 'border-white/10 bg-black/20'} backdrop-blur-sm`}>
@@ -361,7 +356,7 @@ const Index = () => {
               <div className={`space-y-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 <div className="flex items-center space-x-2">
                   <Phone className="h-4 w-4" />
-                  <span>{businessSettings?.contact_phone || '+977-1-4567890'}</span>
+                  <span>{businessSettings?.contact_phone || '+977-9841426598'}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Mail className="h-4 w-4" />
@@ -369,7 +364,7 @@ const Index = () => {
                 </div>
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4" />
-                  <span>{businessSettings?.business_address || 'Kathmandu, Nepal'}</span>
+                  <span>{businessSettings?.business_address || 'Bhiman, Sindhuli, Nepal'}</span>
                 </div>
               </div>
             </div>
@@ -379,6 +374,12 @@ const Index = () => {
               <div className={`flex items-center space-x-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 <Clock className="h-4 w-4" />
                 <span>{businessSettings?.opening_hours || '24/7 Available'}</span>
+                {/* Location Section */}
+      <section className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <LocationDisplay />
+        </div>
+      </section>
               </div>
             </div>
           </div>
