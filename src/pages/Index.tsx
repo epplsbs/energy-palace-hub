@@ -349,6 +349,13 @@ const Index = () => {
               <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 Nepal's premier EV charging destination with luxury dining experience.
               </p>
+                          <div className="space-y-4">
+              <h4 className={`font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Operating Hours</h4>
+              <div className={`flex items-center space-x-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
+                <Clock className="h-4 w-4" />
+                <span>{businessSettings?.opening_hours || '24/7 Available'}</span>
+              </div>
+              <div>
             </div>
 
             <div className="space-y-4">
@@ -369,14 +376,8 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h4 className={`font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Operating Hours</h4>
-              <div className={`flex items-center space-x-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
-                <Clock className="h-4 w-4" />
-                <span>{businessSettings?.opening_hours || '24/7 Available'}</span>
-              </div>
-              <div>
-              {/* Location Section */}
+
+      {/* Location Section */}
       <section className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
         <div className="max-w-7xl mx-auto px-4">
           <LocationDisplay />
