@@ -25,7 +25,6 @@ const Index = () => {
   useEffect(() => {
     loadSettings();
     loadAboutContent();
-    // eslint-disable-next-line
   }, []);
 
   const loadSettings = async () => {
@@ -81,24 +80,24 @@ const Index = () => {
 
       {/* Grid Pattern Overlay (only show if no background image) */}
       {!(businessSettings?.background_image_url || backgroundImageUrl) && (
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,white,transparent_80%)] pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
       )}
 
       {/* Header */}
       <header className="relative z-20 p-6">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            {businessSettings?.logo_url ? (
-              <img 
-                src={businessSettings.logo_url} 
-                alt="Logo" 
-                className="h-12 w-12 object-contain rounded-xl"
-              />
-            ) : (
-              <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
-                <Zap className="h-8 w-8 text-white" />
-              </div>
-            )}
+            <div className="flex items-center space-x-3">
+              {businessSettings?.logo_url ? (
+                <img 
+                  src={businessSettings.logo_url} 
+                  alt="Logo" 
+                  className="h-12 w-12 object-contain rounded-xl"
+                />
+              ) : (
+                <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
+                  <Zap className="h-8 w-8 text-white" />
+                </div>
+              )}
             <div>
               <h1 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 {businessSettings?.business_name || 'Energy Palace'}
@@ -174,7 +173,202 @@ const Index = () => {
       </header>
 
       {/* Main Hero Section */}
-      {/* ... rest of your code remains unchanged ... */}
+      <main className="relative z-10 min-h-screen flex items-center justify-center px-4">
+        <div className="max-w-4xl mx-auto text-center space-y-12">
+          {/* Hero Content */}
+          <div className="space-y-6">
+            <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full glass border ${theme === 'light' ? 'border-gray-200 text-gray-700' : 'border-white/20 text-white/80'} mb-8`}>
+              <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
+              <span>Live Charging Status Available</span>
+            </div>
+
+            <h1 className={`text-6xl md:text-8xl font-black leading-tight ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+              <span className={`block ${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent'}`}>
+                Charge
+              </span>
+              <span className={`block ${theme === 'light' ? 'text-gray-800' : 'text-white/90'}`}>
+                And Dine
+              </span>
+            </h1>
+
+            <p className={`text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
+              Experience the next generation of EV charging with premium dining and hospitality services.
+            </p>
+          </div>
+
+          {/* Main CTA Buttons */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            {/* Book Charger */}
+            <div className={`glass rounded-2xl p-8 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} hover:border-emerald-500/50 transition-all duration-300 hover:scale-105 group`}>
+              <div className="flex flex-col items-center space-y-4">
+                <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 neon-glow-green group-hover:scale-110 transition-transform">
+                  <Zap className="h-12 w-12 text-emerald-400" />
+                </div>
+                <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Book Charger</h3>
+                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Reserve your charging station and get real-time updates</p>
+                <Button 
+                  onClick={() => setIsChargingModalOpen(true)}
+                  className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/25"
+                >
+                  <span>Book Now</span>
+                  <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Menu */}
+            <div className={`glass rounded-2xl p-8 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} hover:border-blue-500/50 transition-all duration-300 hover:scale-105 group`}>
+              <div className="flex flex-col items-center space-y-4">
+                <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500/20 to-blue-600/20 neon-glow group-hover:scale-110 transition-transform">
+                  <Coffee className="h-12 w-12 text-blue-400" />
+                </div>
+                <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Menu</h3>
+                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Explore our premium dining options while you charge</p>
+                <Button 
+                  onClick={() => setIsMenuModalOpen(true)}
+                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
+                >
+                  <span>View Menu</span>
+                  <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Reserve Now */}
+            <div className={`glass rounded-2xl p-8 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} hover:border-purple-500/50 transition-all duration-300 hover:scale-105 group`}>
+              <div className="flex flex-col items-center space-y-4">
+                <div className="p-4 rounded-xl bg-gradient-to-r from-purple-500/20 to-purple-600/20 group-hover:scale-110 transition-transform">
+                  <Car className="h-12 w-12 text-purple-400" />
+                </div>
+                <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Reserve Now</h3>
+                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Book your table for the ultimate dining experience</p>
+                <Button 
+                  onClick={() => setIsReservationModalOpen(true)}
+                  className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
+                >
+                  <span>Reserve Table</span>
+                  <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 max-w-4xl mx-auto">
+            <div className="text-center space-y-2">
+              <div className="text-4xl font-bold text-emerald-400">12+</div>
+              <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Charging Ports</div>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="text-4xl font-bold text-blue-400">150kW</div>
+              <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Max Power</div>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="text-4xl font-bold text-purple-400">{businessSettings?.opening_hours || '24/7'}</div>
+              <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Available</div>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="text-4xl font-bold text-yellow-400">~30min</div>
+              <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Fast Charging</div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* About Us Section */}
+      <section id="about" className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className={`text-5xl font-bold mb-6 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+              <span className={`${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
+                {aboutContent?.title || 'About Energy Palace'}
+              </span>
+            </h2>
+            <p className={`text-xl max-w-3xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
+              {aboutContent?.company_story || 'Leading the way in sustainable transportation with cutting-edge EV charging technology and exceptional hospitality.'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
+              <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                <Zap className="h-8 w-8 text-emerald-400" />
+              </div>
+              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Innovation</h4>
+              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Leading the way in sustainable energy solutions</p>
+            </div>
+            <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
+              <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                <Car className="h-8 w-8 text-blue-400" />
+              </div>
+              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Sustainability</h4>
+              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Committed to environmental responsibility</p>
+            </div>
+            <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
+              <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                <Users className="h-8 w-8 text-purple-400" />
+              </div>
+              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Community</h4>
+              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Building connections and supporting the EV community</p>
+            </div>
+            <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
+              <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                <Coffee className="h-8 w-8 text-yellow-400" />
+              </div>
+              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Excellence</h4>
+              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Delivering exceptional service and premium experiences</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Location Section */}
+      <section className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <LocationDisplay />
+        </div>
+      </section>
+
+
+      {/* Footer */}
+      <footer className={`relative z-10 mt-16 border-t ${theme === 'light' ? 'border-gray-200 bg-white/20' : 'border-white/10 bg-black/20'} backdrop-blur-sm`}>
+@@ -361,15 +356,15 @@
+              <div className={`space-y-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
+                <div className="flex items-center space-x-2">
+                  <Phone className="h-4 w-4" />
+                  <span>{businessSettings?.contact_phone || '+977-1-4567890'}</span>
+                  <span>{businessSettings?.contact_phone || '+977-9841426598'}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Mail className="h-4 w-4" />
+                  <span>{businessSettings?.contact_email || 'info@energypalace.com'}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <MapPin className="h-4 w-4" />
+                  <span>{businessSettings?.business_address || 'Kathmandu, Nepal'}</span>
+                  <span>{businessSettings?.business_address || 'Bhiman, Sindhuli, Nepal'}</span>
+                </div>
+              </div>
+            </div>
+@@ -379,31 +374,37 @@
+              <div className={`flex items-center space-x-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
+                <Clock className="h-4 w-4" />
+                <span>{businessSettings?.opening_hours || '24/7 Available'}</span>
+                {/* Location Section */}
+      <section className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <LocationDisplay />
+        </div>
+      </section>
+              </div>
+            </div>
+          </div>
+
+          <div className={`border-t ${theme === 'light' ? 'border-gray-200' : 'border-white/10'} mt-8 pt-8 text-center ${theme === 'light' ? 'text-gray-500' : 'text-white/40'}`}>
+            <p>&copy; 2024 {businessSettings?.business_name || 'Energy Palace'}. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
 
       {/* Modals */}
       <ChargingStationSelectorModal 
@@ -182,5 +376,15 @@ const Index = () => {
         onClose={() => setIsChargingModalOpen(false)} 
       />
       <MenuModal 
-        isOpen={isMenuModalOpen}
-/>
+        isOpen={isMenuModalOpen} 
+        onClose={() => setIsMenuModalOpen(false)} 
+      />
+      <ReservationModal 
+        isOpen={isReservationModalOpen} 
+        onClose={() => setIsReservationModalOpen(false)} 
+      />
+    </div>
+  );
+};
+
+export default Index;
