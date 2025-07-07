@@ -62,37 +62,7 @@ const LocationDisplay = () => {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center px-4 py-2 bg-emerald-100 rounded-full mb-4">
-          <MapPin className="h-4 w-4 text-emerald-600 mr-2" />
-          <span className="text-emerald-800 text-sm font-medium">Find Us</span>
-        </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Our Location</h3>
-        <p className="text-lg text-gray-600">{location.locationName}</p>
-      </div>
-
-      <div className="bg-gray-50 rounded-xl p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <div>
-            <span className="text-gray-600">Latitude:</span>
-            <p className="font-mono text-gray-900">{location.latitude}</p>
-          </div>
-          <div>
-            <span className="text-gray-600">Longitude:</span>
-            <p className="font-mono text-gray-900">{location.longitude}</p>
-          </div>
-        </div>
-      </div>
-
       <div className="flex flex-col sm:flex-row gap-3">
-        <button
-          onClick={openInGoogleMaps}
-          className="flex items-center justify-center px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-medium"
-        >
-          <ExternalLink className="h-4 w-4 mr-2" />
-          View on Google Maps
-        </button>
         <button
           onClick={openDirections}
           className="flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
