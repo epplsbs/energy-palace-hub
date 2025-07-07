@@ -72,19 +72,7 @@ const LocationDisplay = () => {
         <p className="text-lg text-gray-600">{location.locationName}</p>
       </div>
 
-      <div className="bg-gray-50 rounded-xl p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <div>
-            <span className="text-gray-600">Latitude:</span>
-            <p className="font-mono text-gray-900">{location.latitude}</p>
-          </div>
-          <div>
-            <span className="text-gray-600">Longitude:</span>
-            <p className="font-mono text-gray-900">{location.longitude}</p>
-          </div>
-        </div>
-      </div>
-
+      
       <div className="flex flex-col sm:flex-row gap-3">
         <button
           onClick={openInGoogleMaps}
