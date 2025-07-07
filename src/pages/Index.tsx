@@ -242,9 +242,12 @@ const Index = () => {
                   <Car className="h-12 w-12 text-purple-400" />
                 </div>
                 <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Reserve Now</h3>
-                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Let's Get to the destionation</p>
-
-                  <span><LocationDisplay /></span>
+                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Book your table for the ultimate dining experience</p>
+                <Button 
+                  onClick={() => setIsReservationModalOpen(true)}
+                  className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
+                >
+                  <span>Reserve Table</span>
                   <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </div>
