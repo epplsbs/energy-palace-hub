@@ -371,7 +371,7 @@ const Index = () => {
               <h4 className={`font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Operating Hours</h4>
               <div className={`flex items-center space-x-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 <Clock className="h-4 w-4" />
-                <span>{businessSettings?.opening_hours || '24/7 Available'}</span>
+                <span>{businessSettings?.opening_hours || '24/7 Available'}</span><br></br>
                 <div><span><LocationDisplay /></span></div>
               </div>
             </div>
