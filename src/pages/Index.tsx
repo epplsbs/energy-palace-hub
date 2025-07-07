@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Zap, Car, Coffee, ChevronRight, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon, Menu, X } from 'lucide-react';
@@ -181,7 +182,7 @@ const Index = () => {
               <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
               <span>Live Charging Status Available</span>
             </div>
-
+            
             <h1 className={`text-6xl md:text-8xl font-black leading-tight ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
               <span className={`block ${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent'}`}>
                 Charge
@@ -190,7 +191,7 @@ const Index = () => {
                 And Dine
               </span>
             </h1>
-
+            
             <p className={`text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
               Experience the next generation of EV charging with premium dining and hospitality services.
             </p>
@@ -288,7 +289,7 @@ const Index = () => {
               {aboutContent?.company_story || 'Leading the way in sustainable transportation with cutting-edge EV charging technology and exceptional hospitality.'}
             </p>
           </div>
-
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
               <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
@@ -329,15 +330,38 @@ const Index = () => {
         </div>
       </section>
 
-
       {/* Footer */}
       <footer className={`relative z-10 mt-16 border-t ${theme === 'light' ? 'border-gray-200 bg-white/20' : 'border-white/10 bg-black/20'} backdrop-blur-sm`}>
-@@ -361,15 +356,15 @@
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                {businessSettings?.logo_url ? (
+                  <img 
+                    src={businessSettings.logo_url} 
+                    alt="Logo" 
+                    className="h-10 w-10 object-contain rounded-xl"
+                  />
+                ) : (
+                  <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500">
+                    <Zap className="h-6 w-6 text-white" />
+                  </div>
+                )}
+                <span className={`text-xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
+                  {businessSettings?.business_name || 'Energy Palace'}
+                </span>
+              </div>
+              <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
+                Nepal's premier EV charging destination with luxury dining experience.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className={`font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Contact Info</h4>
               <div className={`space-y-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 <div className="flex items-center space-x-2">
                   <Phone className="h-4 w-4" />
                   <span>{businessSettings?.contact_phone || '+977-1-4567890'}</span>
-                  <span>{businessSettings?.contact_phone || '+977-9841426598'}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Mail className="h-4 w-4" />
@@ -346,20 +370,15 @@ const Index = () => {
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4" />
                   <span>{businessSettings?.business_address || 'Kathmandu, Nepal'}</span>
-                  <span>{businessSettings?.business_address || 'Bhiman, Sindhuli, Nepal'}</span>
                 </div>
               </div>
             </div>
-@@ -379,31 +374,37 @@
+
+            <div className="space-y-4">
+              <h4 className={`font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Operating Hours</h4>
               <div className={`flex items-center space-x-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 <Clock className="h-4 w-4" />
                 <span>{businessSettings?.opening_hours || '24/7 Available'}</span>
-                {/* Location Section */}
-      <section className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
-        <div className="max-w-7xl mx-auto px-4">
-          <LocationDisplay />
-        </div>
-      </section>
               </div>
             </div>
           </div>
