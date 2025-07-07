@@ -324,6 +324,12 @@ const Index = () => {
       </section>
 
 
+      {/* Location Section */}
+      <section className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <LocationDisplay />
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className={`relative z-10 mt-16 border-t ${theme === 'light' ? 'border-gray-200 bg-white/20' : 'border-white/10 bg-black/20'} backdrop-blur-sm`}>
