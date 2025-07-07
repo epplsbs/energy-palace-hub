@@ -10,6 +10,7 @@ import { getAboutUsContent, type AboutUsContent } from '@/services/aboutUsServic
 import { useTheme } from '@/contexts/ThemeContext';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
+import LocationDisplay from '@/components/LocationDisplay';
 
 const Index = () => {
   const [isChargingModalOpen, setIsChargingModalOpen] = useState(false);
@@ -319,6 +320,13 @@ const Index = () => {
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Delivering exceptional service and premium experiences</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Location Section */}
+      <section className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <LocationDisplay />
         </div>
       </section>
 

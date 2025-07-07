@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Edit, Save, Phone, Mail, MapPin, Building, Loader2, Clock, Tag, Image, Upload } from 'lucide-react';
+import { Edit, Save, Phone, Mail, MapPin, Building, Loader2, Clock, Tag, Image, Upload, Settings, Globe } from 'lucide-react';
 
 interface BusinessSetting {
   id: string;
@@ -79,6 +79,36 @@ const BusinessSettingsManager = () => {
       setting_key: 'business_location_name',
       setting_value: 'Kathmandu, Nepal',
       description: 'Business location display name'
+    },
+    {
+      setting_key: 'email_from_address',
+      setting_value: 'noreply@energypalace.com',
+      description: 'Email sender address for order confirmations'
+    },
+    {
+      setting_key: 'email_from_name',
+      setting_value: 'Energy Palace',
+      description: 'Email sender name for order confirmations'
+    },
+    {
+      setting_key: 'email_smtp_host',
+      setting_value: '',
+      description: 'SMTP server host for email delivery'
+    },
+    {
+      setting_key: 'email_smtp_port',
+      setting_value: '587',
+      description: 'SMTP server port'
+    },
+    {
+      setting_key: 'email_smtp_user',
+      setting_value: '',
+      description: 'SMTP username'
+    },
+    {
+      setting_key: 'email_smtp_password',
+      setting_value: '',
+      description: 'SMTP password'
     }
   ];
 
@@ -297,6 +327,18 @@ const BusinessSettingsManager = () => {
         return <MapPin className="h-5 w-5 text-red-600" />;
       case 'business_location_name':
         return <MapPin className="h-5 w-5 text-red-600" />;
+      case 'email_from_address':
+        return <Mail className="h-5 w-5 text-green-600" />;
+      case 'email_from_name':
+        return <Settings className="h-5 w-5 text-blue-600" />;
+      case 'email_smtp_host':
+        return <Globe className="h-5 w-5 text-purple-600" />;
+      case 'email_smtp_port':
+        return <Settings className="h-5 w-5 text-orange-600" />;
+      case 'email_smtp_user':
+        return <Settings className="h-5 w-5 text-cyan-600" />;
+      case 'email_smtp_password':
+        return <Settings className="h-5 w-5 text-red-600" />;
       default:
         return <Edit className="h-5 w-5 text-gray-600" />;
     }
@@ -326,6 +368,18 @@ const BusinessSettingsManager = () => {
         return 'Location Longitude';
       case 'business_location_name':
         return 'Location Name';
+      case 'email_from_address':
+        return 'Email From Address';
+      case 'email_from_name':
+        return 'Email From Name';
+      case 'email_smtp_host':
+        return 'SMTP Host';
+      case 'email_smtp_port':
+        return 'SMTP Port';
+      case 'email_smtp_user':
+        return 'SMTP Username';
+      case 'email_smtp_password':
+        return 'SMTP Password';
       default:
         return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     }
@@ -422,7 +476,19 @@ const BusinessSettingsManager = () => {
                       </div>
                     )}
                   </div>
-                ) : (
+                 ) : (setting.setting_key === 'email_smtp_password') ? (
+                   <Input
+                     id={setting.setting_key}
+                     type="password"
+                     value={editingSettings[setting.setting_key] || ''}
+                     onChange={(e) => setEditingSettings(prev => ({
+                       ...prev,
+                       [setting.setting_key]: e.target.value
+                     }))}
+                     placeholder="Enter password"
+                     className="mt-1 border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                   />
+                 ) : (
                   <Input
                     id={setting.setting_key}
                     value={editingSettings[setting.setting_key] || ''}
@@ -473,6 +539,12 @@ const BusinessSettingsManager = () => {
             <p>• <strong>Location Latitude:</strong> GPS latitude coordinate for map integration</p>
             <p>• <strong>Location Longitude:</strong> GPS longitude coordinate for map integration</p>
             <p>• <strong>Location Name:</strong> Display name for business location</p>
+            <p>• <strong>Email From Address:</strong> Email address used to send order confirmations</p>
+            <p>• <strong>Email From Name:</strong> Name displayed as sender for order confirmations</p>
+            <p>• <strong>SMTP Host:</strong> Email server hostname (e.g., smtp.gmail.com)</p>
+            <p>• <strong>SMTP Port:</strong> Email server port (usually 587 for TLS or 465 for SSL)</p>
+            <p>• <strong>SMTP Username:</strong> Username for email server authentication</p>
+            <p>• <strong>SMTP Password:</strong> Password for email server authentication</p>
           </div>
         </CardContent>
       </Card>
