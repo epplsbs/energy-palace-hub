@@ -216,27 +216,7 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-          {/* Main CTA Buttons */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {/* Book Charger */}
-            <div className={`glass rounded-2xl p-8 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} hover:border-emerald-500/50 transition-all duration-300 hover:scale-105 group`}>
-              <div className="flex flex-col items-center space-y-4">
-                <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 neon-glow-green group-hover:scale-110 transition-transform">
-                  <Zap className="h-12 w-12 text-emerald-400" />
-                </div>
-                <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Book Charger</h3>
-                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Reserve your charging station and get real-time updates</p>
-                <Button 
-                  onClick={() => setIsChargingModalOpen(true)}
-                  className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/25"
-                >
-                  <span>Book Now</span>
-                  <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </div>
-            </div>
-
-
+    
             {/* Menu */}
             <div className={`glass rounded-2xl p-8 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} hover:border-blue-500/50 transition-all duration-300 hover:scale-105 group`}>
               <div className="flex flex-col items-center space-y-4">
