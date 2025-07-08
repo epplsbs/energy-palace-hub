@@ -257,16 +257,20 @@ const Index = () => {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 max-w-4xl mx-auto">
             <div className="text-center space-y-2">
-              <div className="text-4xl font-bold text-emerald-400">12+</div>
+              <div className="text-4xl font-bold text-emerald-400">4+</div>
               <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Charging Ports</div>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-4xl font-bold text-blue-400">150kW</div>
+              <div className="text-4xl font-bold text-blue-400">180kW</div>
               <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Max Power</div>
             </div>
             <div className="text-center space-y-2">
               <div className="text-4xl font-bold text-purple-400">{businessSettings?.opening_hours || '24/7'}</div>
               <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Available</div>
+            </div>
+            <div className="text-center space-y-2">
+              <div className="text-4xl font-bold text-yellow-400">~30min</div>
+              <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Fast Charging</div>
             </div>
             <div className="text-center space-y-2">
               <div className="text-4xl font-bold text-yellow-400">~30min</div>
