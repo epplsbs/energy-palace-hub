@@ -295,7 +295,7 @@ const Index = () => {
               <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Zap className="h-8 w-8 text-emerald-400" />
               </div>
-              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Innovation</h4>
+             <a href="/blog"> <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Blog</h4></a>
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Leading the way in sustainable energy solutions</p>
             </div>
             <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
