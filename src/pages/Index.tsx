@@ -273,8 +273,8 @@ const Index = () => {
               <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Fast Charging</div>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-4xl font-bold text-yellow-400">~30min</div>
-              <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Fast Charging</div>
+              <div className="text-4xl font-bold text-yellow-400"><LocationDisplay/></div>
+              <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Take me to Station</div>
             </div>
           </div>
         </div>
