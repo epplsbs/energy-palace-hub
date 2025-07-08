@@ -300,6 +300,7 @@ const Index = () => {
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Leading the way in sustainable energy solutions</p>
             </div>
             </a>
+            <a href="/LocationDisplay">
             <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
               <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Car className="h-8 w-8 text-blue-400" />
@@ -307,6 +308,7 @@ const Index = () => {
               <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}><LocationDisplay/></h4>
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Committed to environmental responsibility</p>
             </div>
+           </a>   
            <a href="/contacts">  
             <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
               <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
@@ -351,7 +353,7 @@ const Index = () => {
                 </span>
               </div>
               <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
-                Nepal's premier EV charging destination with luxury dining experience.
+                Nepal's premium EV charging destination with luxury dining experience.
               </p>
             </div>
 
