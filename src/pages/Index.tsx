@@ -303,9 +303,10 @@ const Index = () => {
               <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Car className="h-8 w-8 text-blue-400" />
               </div>
-              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Sustainability</h4>
+              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Let's Drive<LocationDisplay/></h4>
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Committed to environmental responsibility</p>
             </div>
+           <a href="/contacts">  
             <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
               <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Users className="h-8 w-8 text-purple-400" />
@@ -313,6 +314,8 @@ const Index = () => {
               <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Community</h4>
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Building connections and supporting the EV community</p>
             </div>
+           </a>
+           <a href="/about"></a>
             <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
               <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Coffee className="h-8 w-8 text-yellow-400" />
@@ -320,6 +323,7 @@ const Index = () => {
               <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Excellence</h4>
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Delivering exceptional service and premium experiences</p>
             </div>
+            </a>
           </div>
         </div>
       </section>
