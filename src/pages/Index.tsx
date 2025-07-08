@@ -378,7 +378,6 @@ const Index = () => {
               <div className={`flex items-center space-x-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 <Clock className="h-4 w-4" />
                 <span>{businessSettings?.opening_hours || '24/7 Available'}</span>
-                <div><span><LocationDisplay /></span></div>
               </div>
             </div>
           </div>
