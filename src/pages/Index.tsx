@@ -304,7 +304,7 @@ const Index = () => {
               <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Car className="h-8 w-8 text-blue-400" />
               </div>
-              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Let's Drive</h4>
+              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}><LocationDisplay/></h4>
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Committed to environmental responsibility</p>
             </div>
            <a href="/contacts">  
