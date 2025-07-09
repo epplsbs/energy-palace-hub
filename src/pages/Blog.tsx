@@ -100,20 +100,20 @@ const Blog = () => {
               <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+              <h1 className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 Energy Palace
               </h1>
-              <p className="text-sm text-white/60">Our Story in Pictures</p>
+              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Our Story in Pictures</p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-4 md:space-x-8 text-white/80">
-            <a href="/" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
+          <div className={`flex items-center space-x-4 md:space-x-8 ${theme === 'light' ? 'text-gray-700' : 'text-white/80'}`}>
+            <a href="/" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors flex items-center gap-2`}>
               <ArrowLeft className="h-4 w-4" />
               <span className="hidden sm:inline">Back to Home</span>
             </a>
-            <a href="/contacts" className="hover:text-emerald-400 transition-colors">Contacts</a>
-            <a href="/about" className="hover:text-emerald-400 transition-colors">About</a>
+            <a href="/contacts" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors`}>Contacts</a>
+            <a href="/about" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors`}>About</a>
           </div>
         </nav>
       </header>
@@ -121,12 +121,12 @@ const Blog = () => {
       {/* Main Content */}
       <main className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:py-16">
         <div className="text-center mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mb-6">
-            <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className={`text-4xl md:text-5xl lg:text-7xl font-black leading-tight mb-6 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+            <span className={`${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent'}`}>
               Our Journey
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto">
+          <p className={`text-lg md:text-xl max-w-3xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
             Discover the story behind Energy Palace through our gallery. From groundbreaking ceremonies to premium facilities, witness our commitment to sustainable energy and exceptional hospitality.
           </p>
         </div>
@@ -135,8 +135,8 @@ const Blog = () => {
           <div className="text-center py-16">
             <div className="glass border border-white/20 rounded-2xl p-8 md:p-12 backdrop-blur-xl">
               <Tag className="h-12 md:h-16 w-12 md:w-16 text-white/40 mx-auto mb-6" />
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-4">Coming Soon</h3>
-              <p className="text-white/70">
+              <h3 className={`text-xl md:text-2xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Coming Soon</h3>
+              <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
                 Our gallery is being curated. Check back soon to see our amazing journey through pictures!
               </p>
             </div>
@@ -158,12 +158,12 @@ const Blog = () => {
                     <Calendar className="h-4 w-4" />
                     <span>{new Date(item.created_at).toLocaleDateString()}</span>
                   </div>
-                  <CardTitle className="text-lg md:text-xl text-white group-hover:text-emerald-400 transition-colors line-clamp-2">
+                  <CardTitle className={`text-lg md:text-xl group-hover:text-emerald-400 transition-colors line-clamp-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
                     {item.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="bg-gray-900/80 backdrop-blur-sm p-4">
-                  <p className="text-gray-300 leading-relaxed mb-4 text-sm md:text-base">
+                  <p className={`leading-relaxed mb-4 text-sm md:text-base ${theme === 'light' ? 'text-gray-600' : 'text-gray-300'}`}>
                     {truncateText(item.description)}
                   </p>
                   {item.description.length > 150 && (
@@ -184,12 +184,12 @@ const Blog = () => {
         {/* Call to Action */}
         <div className="text-center mt-12 md:mt-16">
           <div className="glass border border-white/20 rounded-2xl p-6 md:p-8 backdrop-blur-xl">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+            <h3 className={`text-2xl md:text-3xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+              <span className={`${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 Experience Energy Palace
               </span>
             </h3>
-            <p className="text-white/70 mb-6 max-w-2xl mx-auto">
+            <p className={`mb-6 max-w-2xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
               Ready to be part of our story? Visit us for an unforgettable EV charging and dining experience.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -215,11 +215,11 @@ const Blog = () => {
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden bg-gray-900/95 backdrop-blur-xl border-white/20 text-white">
           <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-white/20">
             <div className="flex-1">
-              <DialogTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+              <DialogTitle className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 {selectedPost?.title}
               </DialogTitle>
               {selectedPost && (
-                <div className="flex items-center gap-2 text-sm text-gray-400 mt-2">
+                <div className={`flex items-center gap-2 text-sm mt-2 ${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>
                   <Calendar className="h-4 w-4" />
                   <span>{new Date(selectedPost.created_at).toLocaleDateString()}</span>
                 </div>
@@ -229,7 +229,7 @@ const Blog = () => {
               onClick={closeModal}
               variant="ghost"
               size="sm"
-              className="text-white/60 hover:text-white"
+              className={`${theme === 'light' ? 'text-gray-600 hover:text-gray-900' : 'text-white/60 hover:text-white'}`}
             >
               <X className="h-5 w-5" />
             </Button>
@@ -246,7 +246,7 @@ const Blog = () => {
               </div>
               
               <div className="prose prose-invert max-w-none">
-                <div className="text-white/90 leading-relaxed whitespace-pre-wrap">
+                <div className={`leading-relaxed whitespace-pre-wrap ${theme === 'light' ? 'text-gray-800' : 'text-white/90'}`}>
                   {selectedPost.description}
                 </div>
               </div>

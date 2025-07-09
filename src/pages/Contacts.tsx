@@ -107,20 +107,20 @@ const Contacts = () => {
               <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+              <h1 className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 Energy Palace
               </h1>
-              <p className="text-sm text-white/60">Get in Touch</p>
+              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Get in Touch</p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-4 md:space-x-8 text-white/80">
-            <a href="/" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
+          <div className={`flex items-center space-x-4 md:space-x-8 ${theme === 'light' ? 'text-gray-700' : 'text-white/80'}`}>
+            <a href="/" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors flex items-center gap-2`}>
               <ArrowLeft className="h-4 w-4" />
               <span className="hidden sm:inline">Back to Home</span>
             </a>
-            <a href="/about" className="hover:text-emerald-400 transition-colors">About</a>
-            <a href="/blog" className="hover:text-emerald-400 transition-colors">Blog</a>
+            <a href="/about" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors`}>About</a>
+            <a href="/blog" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors`}>Blog</a>
           </div>
         </nav>
       </header>
@@ -128,12 +128,12 @@ const Contacts = () => {
       {/* Main Content */}
       <main className="relative z-10 max-w-7xl mx-auto px-4 py-8 md:py-16">
         <div className="text-center mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-tight mb-6">
-            <span className="bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className={`text-4xl md:text-5xl lg:text-7xl font-black leading-tight mb-6 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+            <span className={`${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent'}`}>
               Contact Us
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-white/70 max-w-3xl mx-auto">
+          <p className={`text-lg md:text-xl max-w-3xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
             Ready to power your journey? Get in touch with our team for exceptional EV charging and hospitality services.
           </p>
         </div>
@@ -145,8 +145,8 @@ const Contacts = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MapPin className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Visit Us</h3>
-              <p className="text-white/70">
+              <h3 className={`text-xl font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Visit Us</h3>
+              <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
                 {businessSettings.business_address || 'Kathmandu, Nepal'}<br />
                 Premium EV Charging Station
               </p>
@@ -158,8 +158,8 @@ const Contacts = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Phone className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Call Us</h3>
-              <p className="text-white/70">
+              <h3 className={`text-xl font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Call Us</h3>
+              <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
                 {businessSettings.contact_phone || '+977-1-XXXXXX'}<br />
                 Available 24/7
               </p>
@@ -171,8 +171,8 @@ const Contacts = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Clock className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Open Hours</h3>
-              <p className="text-white/70">
+              <h3 className={`text-xl font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Open Hours</h3>
+              <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
                 24/7 Charging Available<br />
                 Restaurant: 7 AM - 10 PM
               </p>
@@ -184,8 +184,8 @@ const Contacts = () => {
         {contacts.length > 0 && (
           <div className="mb-12 md:mb-16">
             <div className="text-center mb-8 md:mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Our Team</h2>
-              <p className="text-white/70 max-w-2xl mx-auto">
+              <h2 className={`text-2xl md:text-3xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Our Team</h2>
+              <p className={`max-w-2xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
                 Meet our dedicated professionals who are here to serve you
               </p>
             </div>
@@ -206,7 +206,7 @@ const Contacts = () => {
                           <User className="h-10 w-10 text-emerald-400" />
                         </div>
                       )}
-                      <h3 className="text-lg font-bold text-white mb-1">{contact.name}</h3>
+                      <h3 className={`text-lg font-bold mb-1 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{contact.name}</h3>
                       {contact.position && (
                         <p className="text-emerald-400 font-semibold text-sm mb-2">{contact.position}</p>
                       )}
@@ -216,19 +216,19 @@ const Contacts = () => {
                       {contact.email && (
                         <div className="flex items-center gap-3">
                           <Mail className="h-4 w-4 text-blue-400 flex-shrink-0" />
-                          <span className="text-white text-sm break-all">{contact.email}</span>
+                          <span className={`text-sm break-all ${theme === 'light' ? 'text-gray-700' : 'text-white'}`}>{contact.email}</span>
                         </div>
                       )}
                       {contact.phone && (
                         <div className="flex items-center gap-3">
                           <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
-                          <span className="text-white text-sm">{contact.phone}</span>
+                          <span className={`text-sm ${theme === 'light' ? 'text-gray-700' : 'text-white'}`}>{contact.phone}</span>
                         </div>
                       )}
                       {contact.department && (
                         <div className="flex items-center gap-3">
                           <Building className="h-4 w-4 text-purple-400 flex-shrink-0" />
-                          <span className="text-white text-sm">{contact.department}</span>
+                          <span className={`text-sm ${theme === 'light' ? 'text-gray-700' : 'text-white'}`}>{contact.department}</span>
                         </div>
                       )}
                     </div>
@@ -242,12 +242,12 @@ const Contacts = () => {
         {/* Call to Action */}
         <div className="text-center">
           <div className="glass border border-white/20 rounded-2xl p-6 md:p-12 backdrop-blur-xl">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+            <h3 className={`text-2xl md:text-3xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+              <span className={`${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 Ready to Get Started?
               </span>
             </h3>
-            <p className="text-white/70 mb-6 max-w-2xl mx-auto">
+            <p className={`mb-6 max-w-2xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
               Experience the future of EV charging with our premium services. Book your charging session or make a restaurant reservation today.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
