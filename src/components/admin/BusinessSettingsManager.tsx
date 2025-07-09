@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -385,6 +384,37 @@ const BusinessSettingsManager = () => {
     }
   };
 
+  const testSMTPConnection = async () => {
+    try {
+      const testEmailData = {
+        type: 'test',
+        customerName: 'Test User',
+        customerEmail: editingSettings.email_from_address || 'test@example.com',
+        orderDetails: {
+          message: 'This is a test email to verify SMTP configuration.'
+        }
+      };
+
+      const { data, error } = await supabase.functions.invoke('send-confirmation-email', {
+        body: testEmailData
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "SMTP Test Successful",
+        description: "Test email sent successfully. Check your inbox.",
+      });
+    } catch (error: any) {
+      console.error('SMTP test error:', error);
+      toast({
+        title: "SMTP Test Failed",
+        description: error.message || "Failed to send test email. Please check your SMTP settings.",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -504,19 +534,31 @@ const BusinessSettingsManager = () => {
               {setting.description && (
                 <p className="text-sm text-gray-600">{setting.description}</p>
               )}
-              <Button 
-                onClick={() => updateSetting(setting.setting_key)}
-                disabled={isSaving || editingSettings[setting.setting_key] === setting.setting_value}
-                size="sm"
-                className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700"
-              >
-                {isSaving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4" />
+              <div className="flex items-center">
+                <Button 
+                  onClick={() => updateSetting(setting.setting_key)}
+                  disabled={isSaving || editingSettings[setting.setting_key] === setting.setting_value}
+                  size="sm"
+                  className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700"
+                >
+                  {isSaving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4" />
+                  )}
+                  {isSaving ? 'Saving...' : 'Update'}
+                </Button>
+                {setting.setting_key === 'email_smtp_password' && (
+                  <Button
+                    onClick={testSMTPConnection}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2 ml-2"
+                  >
+                    Test SMTP
+                  </Button>
                 )}
-                {isSaving ? 'Saving...' : 'Update'}
-              </Button>
+              </div>
             </CardContent>
           </Card>
         ))}
