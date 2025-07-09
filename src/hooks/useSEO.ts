@@ -21,7 +21,7 @@ export const useSEO = (pagePath: string) => {
           .select('*')
           .eq('page_path', pagePath)
           .eq('is_active', true)
-          .single();
+          .maybeSingle();
 
         if (error && error.code !== 'PGRST116') {
           console.error('Error loading SEO settings:', error);
