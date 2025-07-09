@@ -122,6 +122,19 @@ export interface Contact {
   updated_at: string;
 }
 
+export interface Testimonial {
+  id: string;
+  customer_name: string;
+  customer_title?: string;
+  customer_email?: string;
+  content: string;
+  rating: number;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 // File upload helper
 export const uploadFile = async (file: File, bucket: string, path?: string): Promise<string> => {
   const fileExt = file.name.split('.').pop();
@@ -563,6 +576,50 @@ export const updateContact = async (id: string, contact: Partial<Contact>): Prom
 export const deleteContact = async (id: string): Promise<void> => {
   const { error } = await supabase
     .from('contacts')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
+// Testimonial functions
+export const getTestimonials = async (): Promise<Testimonial[]> => {
+  const { data, error } = await supabase
+    .from('testimonials')
+    .select('*')
+    .eq('is_active', true)
+    .order('display_order');
+  
+  if (error) throw error;
+  return data || [];
+};
+
+export const createTestimonial = async (testimonial: Omit<Testimonial, 'id' | 'created_at' | 'updated_at'>): Promise<Testimonial> => {
+  const { data, error } = await supabase
+    .from('testimonials')
+    .insert(testimonial)
+    .select()
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateTestimonial = async (id: string, testimonial: Partial<Testimonial>): Promise<void> => {
+  const { error } = await supabase
+    .from('testimonials')
+    .update({
+      ...testimonial,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
+export const deleteTestimonial = async (id: string): Promise<void> => {
+  const { error } = await supabase
+    .from('testimonials')
     .delete()
     .eq('id', id);
   

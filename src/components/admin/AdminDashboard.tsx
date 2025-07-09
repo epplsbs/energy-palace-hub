@@ -16,7 +16,8 @@ import {
   Settings,
   Menu,
   X,
-  UserCheck
+  UserCheck,
+  Quote
 } from 'lucide-react';
 import MenuManager from './MenuManager';
 import GalleryManager from './GalleryManager';
@@ -28,6 +29,7 @@ import ReservationManager from './ReservationManager';
 import BusinessSettingsManager from './BusinessSettingsManager';
 import SEOManager from './SEOManager';
 import AboutUsManager from './AboutUsManager';
+import TestimonialManager from './TestimonialManager';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -39,6 +41,7 @@ const AdminDashboard = () => {
     { id: 'gallery', label: 'Gallery', icon: Image },
     { id: 'about', label: 'About Us', icon: UserCheck },
     { id: 'contacts', label: 'Contacts', icon: Phone },
+    { id: 'testimonials', label: 'Testimonials', icon: Quote },
     { id: 'charging', label: 'Charging Stations', icon: Zap },
     { id: 'charging-orders', label: 'Charging Orders', icon: Zap },
     { id: 'orders', label: 'Orders', icon: ShoppingCart },
@@ -57,6 +60,8 @@ const AdminDashboard = () => {
         return <AboutUsManager />;
       case 'contacts':
         return <ContactsManager />;
+      case 'testimonials':
+        return <TestimonialManager />;
       case 'charging':
         return <ChargingStationManager />;
       case 'charging-orders':
