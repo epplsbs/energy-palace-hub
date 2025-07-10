@@ -24,6 +24,12 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>https://energypalace.com.np/media</loc>
+    <lastmod>2024-07-16</lastmod> <!-- Update this date when content changes -->
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
   <!--
     Instructions for the user:
     For dynamic content, such as individual blog posts, new URLs should be added here.

@@ -338,7 +338,7 @@ const Index = () => {
       {/* Footer */}
       <footer className={`relative z-10 mt-16 border-t ${theme === 'light' ? 'border-gray-200 bg-white/20' : 'border-white/10 bg-black/20'} backdrop-blur-sm`}>
         <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 {businessSettings?.logo_url ? (
@@ -385,6 +385,17 @@ const Index = () => {
                 <Clock className="h-4 w-4" />
                 <span>{businessSettings?.opening_hours || '24/7 Available'}</span>
               </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className={`font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Quick Links</h4>
+              <ul className={`space-y-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
+                <li><a href="/about" className="hover:text-emerald-400 transition-colors">About Us</a></li>
+                <li><a href="/blog" className="hover:text-emerald-400 transition-colors">Blog</a></li>
+                <li><a href="/contacts" className="hover:text-emerald-400 transition-colors">Contact Us</a></li>
+                <li><a href="/media" className="hover:text-emerald-400 transition-colors">Media & Press</a></li>
+                {/* Add other important links here, e.g., Terms of Service, Privacy Policy if they exist */}
+              </ul>
             </div>
           </div>
 

@@ -191,7 +191,7 @@ const Contacts = () => {
         </div>
 
         {/* Contact Information */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12 md:mb-16">
           <Card className="glass border border-white/20 backdrop-blur-xl bg-gray-900/50 text-center">
             <CardContent className="p-6 md:p-8">
               <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -225,9 +225,43 @@ const Contacts = () => {
               </div>
               <h3 className={`text-xl font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Open Hours</h3>
               <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
-                24/7 Charging Available<br />
-                Restaurant: 7 AM - 10 PM
+                {businessSettings.opening_hours || '24/7 Available'}<br />
+                {/* Consider making restaurant hours dynamic if they differ and are managed in CMS */}
+                Restaurant: 7 AM - 10 PM (Example)
               </p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border border-white/20 backdrop-blur-xl bg-gray-900/50 text-center">
+            <CardContent className="p-6 md:p-8">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Mail className="h-8 w-8 text-white" />
+              </div>
+              <h3 className={`text-xl font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Email Us</h3>
+              <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
+                {businessSettings.contact_email || 'info@energypalace.com.np'}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Google Map Placeholder */}
+        <div className="mb-12 md:mb-16">
+          <div className="text-center mb-8">
+            <h2 className={`text-2xl md:text-3xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Find Us On Map</h2>
+          </div>
+          <Card className="glass border border-white/20 backdrop-blur-xl bg-gray-900/50">
+            <CardContent className="p-6 md:p-8">
+              <div
+                className={`aspect-video ${theme === 'light' ? 'bg-gray-200' : 'bg-gray-700'} rounded-lg flex items-center justify-center`}
+                aria-label="Location map placeholder"
+              >
+                <p className={`${theme === 'light' ? 'text-gray-500' : 'text-gray-400'}`}>
+                  Google Map will be embedded here.
+                  <br />
+                  (User: Please add your Google Maps iframe embed code, or make this section dynamic based on a maps URL in business settings.)
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
