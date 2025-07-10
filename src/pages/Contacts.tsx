@@ -7,7 +7,7 @@ import { Phone, Mail, MapPin, Clock, User, Building, Zap, Home, BookOpen, Info, 
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
-import GoogleMapEmbed from '@/components/GoogleMapEmbed'; // Import the map component
+import GoogleMapEmbed from '../components/GoogleMapEmbed'; // Import the map component using relative path
 
 interface Contact {
   id: string;
