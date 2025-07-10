@@ -10,7 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { Star, Plus, Edit, Trash2, Quote } from 'lucide-react';
 import { 
-  getTestimonials, 
+  getAllTestimonialsForAdmin, // Changed to use this function
   createTestimonial, 
   updateTestimonial, 
   deleteTestimonial,
@@ -39,7 +39,8 @@ const TestimonialManager = () => {
 
   const loadData = async () => {
     try {
-      const data = await getTestimonials();
+      // Use the new function to load all testimonials for admin view
+      const data = await getAllTestimonialsForAdmin();
       setTestimonials(data);
     } catch (error) {
       console.error('Error loading testimonials:', error);

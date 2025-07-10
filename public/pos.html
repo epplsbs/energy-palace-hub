@@ -416,6 +416,7 @@
       return `
         <form id="charging-form" onsubmit="submitCharging(event)">
           <div class="mb-2">
+            <input type="email" id="ch-email" placeholder="Customer Email (Optional)" class="input input-bordered w-full mb-2"/>
             <input type="number" min="0" max="100" step="0.1" id="ch-start" placeholder="Start %" class="input input-bordered w-full mb-2"/>
             <input type="number" min="0" max="100" step="0.1" id="ch-end" placeholder="End %" class="input input-bordered w-full mb-2"/>
             <input type="number" min="0" id="ch-perpct" placeholder="Per % rate" class="input input-bordered w-full mb-2"/>
@@ -452,6 +453,7 @@
       const kcal = $('#ch-kcal').value, perunit = $('#ch-perunit').value;
       const paymode = $('#ch-paymode').value;
       const amount = $('#ch-amount').value;
+      const email = $('#ch-email').value; // Get email value
       if (!amount || !paymode) {
         $('#charging-message').textContent = "Fill at least one charging mode and payment!";
         return;
@@ -460,6 +462,7 @@
       const formData = new FormData();
       formData.append('action','submitCharging');
       formData.append('date',date);
+      formData.append('email', email); // Add email to formData
       formData.append('start',start);
       formData.append('end',end);
       formData.append('perpct',perpct);
