@@ -7,8 +7,12 @@ import MenuModal from '@/components/modals/MenuModal';
 import ReservationModal from '@/components/modals/ReservationModal';
 import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
 import { getAboutUsContent, type AboutUsContent } from '@/services/aboutUsService';
+import { getTestimonials, type Testimonial } from '@/services/contentService'; // Import Testimonials
 import { useTheme } from '@/contexts/ThemeContext';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
+// Ensure Card, CardContent, Star, ChevronLeft, ChevronRight, Quote are imported or add them
+import { Card, CardContent } from '@/components/ui/card'; // Assuming these are used by testimonial slider
+import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react'; // Icons for testimonials
 import { useSEO } from '@/hooks/useSEO';
 import LocationDisplay from '@/components/LocationDisplay';
 
@@ -19,31 +23,53 @@ const Index = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [businessSettings, setBusinessSettings] = useState<BusinessSettings | null>(null);
   const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  // Consider a unified loading state or separate ones if fetches are independent
+  const [loading, setLoading] = useState(true);
+
   const { theme, toggleTheme } = useTheme();
   const backgroundImageUrl = useBackgroundImage();
   useSEO('/');
 
   useEffect(() => {
-    loadSettings();
-    loadAboutContent();
+    const loadPageData = async () => {
+      setLoading(true);
+      try {
+        const [settingsData, aboutData, testimonialsData] = await Promise.all([
+          getBusinessSettings(),
+          getAboutUsContent(),
+          getTestimonials()
+        ]);
+        setBusinessSettings(settingsData);
+        setAboutContent(aboutData);
+        setTestimonials(testimonialsData || []);
+      } catch (error) {
+        console.error('Error loading page data for Index:', error);
+        // Set default/empty states if necessary
+        setTestimonials([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPageData();
   }, []);
 
-  const loadSettings = async () => {
-    try {
-      const settings = await getBusinessSettings();
-      setBusinessSettings(settings);
-    } catch (error) {
-      console.error('Error loading business settings:', error);
+  useEffect(() => {
+    if (testimonials.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+      }, 5000); // Auto-scroll every 5 seconds
+      return () => clearInterval(interval);
     }
+  }, [testimonials.length]);
+
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
   };
 
-  const loadAboutContent = async () => {
-    try {
-      const content = await getAboutUsContent();
-      setAboutContent(content);
-    } catch (error) {
-      console.error('Error loading about content:', error);
-    }
+  const prevTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
   const backgroundStyle = businessSettings?.background_image_url ? {
@@ -85,78 +111,88 @@ const Index = () => {
       )}
 
       {/* Header */}
-      <header className="relative z-20 p-6">
+      {/* Standardized Header like About.tsx - Note: businessSettings are used for logo/name, which is fine */}
+      <header className="relative z-20 p-4 md:p-6 bg-black/10 backdrop-blur-md border-b border-white/10">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              {businessSettings?.logo_url ? (
-                <img 
-                  src={businessSettings.logo_url} 
-                  alt={businessSettings?.business_name ? `${businessSettings.business_name} Logo` : 'Energy Palace Logo'}
-                  className="h-12 w-12 object-contain rounded-xl"
-                />
-              ) : (
-                <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
-                  <Zap className="h-8 w-8 text-white" />
-                </div>
-              )}
+          <div className="flex items-center space-x-3">
+            {/* Logo and Business Name from businessSettings - this part is good and specific to Index.tsx */}
+            {businessSettings?.logo_url ? (
+              <img
+                src={businessSettings.logo_url}
+                alt={businessSettings?.business_name ? `${businessSettings.business_name} Logo` : 'Energy Palace Logo'}
+                className="h-10 md:h-12 w-10 md:w-12 object-contain rounded-xl" // Slightly adjusted size for consistency
+              />
+            ) : (
+              <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
+                <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
+              </div>
+            )}
             <div>
-              <div className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
+              {/* Site title (not H1 on homepage) */}
+              <div className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 {businessSettings?.business_name || 'Energy Palace'}
               </div>
+              {/* Tagline can remain if desired, or be removed for closer match to About.tsx header style */}
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 {businessSettings?.business_tagline || 'EV Charging, Restaurant & Coffee Shop'}
               </p>
             </div>
           </div>
 
-          <div className={`hidden md:flex items-center space-x-8 ${theme === 'light' ? 'text-gray-700' : 'text-white/80'}`}>
-            <a href="/blog" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
+          {/* Desktop Navigation - Standardized */}
+          <div className={`hidden md:flex items-center space-x-6 ${theme === 'light' ? 'text-gray-800' : 'text-white'}`}>
+            <a href="/about" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
+              <Info className="h-4 w-4" />
+              <span>About</span>
+            </a>
+            <a href="/blog" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
+              <BookOpen className="h-4 w-4" /> {/* Changed from Users to BookOpen for Blog */}
               <span>Blog</span>
             </a>
-            <a href="/contacts" className="hover:text-emerald-400 transition-colors flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              <span>Contacts</span>
+            <a href="/contacts" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
+              <Phone className="h-4 w-4" /> {/* Changed from Users to Phone for Contacts */}
+              <span>Contact</span>
             </a>
-            <a 
-              href="/about"
-              className="hover:text-emerald-400 transition-colors flex items-center gap-2"
-            >
-              <Info className="h-4 w-4" />
-              <span>Portfolio</span>
+            <a href="/media" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
+              <Zap className="h-4 w-4" /> {/* Placeholder icon, can be changed */}
+              <span>Media</span>
             </a>
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className={`p-2 rounded-lg ${theme === 'light' ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'} transition-all duration-300`}
             >
               {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Standardized */}
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
+            className={`md:hidden p-2 rounded-lg ${theme === 'light' ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'} transition-all duration-300`}
           >
             {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </nav>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Standardized */}
         {showMobileMenu && (
-          <div className={`md:hidden absolute top-full left-0 right-0 ${theme === 'light' ? 'bg-white/95' : 'bg-black/95'} backdrop-blur-md shadow-lg border-t z-50`}>
+          <div className={`md:hidden absolute top-full left-0 right-0 ${theme === 'light' ? 'bg-white/95' : 'bg-black/95'} backdrop-blur-md shadow-lg border-t border-white/10 z-50`}>
             <nav className="py-4">
-              <a href="/blog" className={`block px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
-                Blog
+              <a href="/about" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
+                <Info className="h-4 w-4" />
+                <span>About</span>
               </a>
-              <a href="/contacts" className={`block px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
-                Contacts
+              <a href="/blog" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
+                <BookOpen className="h-4 w-4" />
+                <span>Blog</span>
               </a>
-              <a 
-                href="/about"
-                className={`block px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
-                onClick={() => setShowMobileMenu(false)}
-              >
-                Portfolio
+              <a href="/contacts" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
+                <Phone className="h-4 w-4" />
+                <span>Contact</span>
+              </a>
+              <a href="/media" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
+                <Zap className="h-4 w-4" /> {/* Placeholder icon */}
+                <span>Media</span>
               </a>
               <button
                 onClick={() => {
@@ -334,6 +370,102 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Testimonials Section - Copied and Adapted from About.tsx */}
+      {testimonials.length > 0 && !loading && (
+        <section id="testimonials" className={`relative z-10 py-20 ${theme === 'light' ? 'bg-gray-50/50' : 'bg-black/30'} backdrop-blur-sm`}>
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-12 md:mb-16">
+              <h2 className={`text-4xl md:text-5xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+                What Our Customers Say
+              </h2>
+              <p className={`text-lg md:text-xl max-w-3xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
+                Hear from our satisfied customers about their experience at Energy Palace.
+              </p>
+            </div>
+
+            <div className="relative max-w-4xl mx-auto">
+              <Card className={`glass border ${theme === 'light' ? 'border-gray-200 bg-white/60' : 'border-white/20 bg-gray-900/60'} backdrop-blur-xl overflow-hidden shadow-xl`}>
+                <CardContent className="p-8 md:p-12 text-center relative">
+                  <Quote className={`h-10 w-10 md:h-12 md:w-12 mx-auto mb-6 ${theme === 'light' ? 'text-emerald-500' : 'text-emerald-400'} opacity-75`} />
+
+                  <div className="min-h-[150px] md:min-h-[200px] flex items-center justify-center"> {/* Adjusted min-height */}
+                    <div className="space-y-4 md:space-y-6">
+                      <p className={`text-md md:text-xl italic leading-relaxed ${theme === 'light' ? 'text-gray-700' : 'text-white/90'}`}>
+                        "{testimonials[currentTestimonial]?.content}"
+                      </p>
+
+                      <div className="flex items-center justify-center space-x-1 mb-2 md:mb-4">
+                        {[...Array(testimonials[currentTestimonial]?.rating || 5)].map((_, i) => (
+                          <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+
+                      <div>
+                        <h4 className={`font-bold text-md md:text-lg ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+                          {testimonials[currentTestimonial]?.customer_name}
+                        </h4>
+                        {testimonials[currentTestimonial]?.customer_title && (
+                          <p className={`text-sm ${theme === 'light' ? 'text-gray-500' : 'text-white/60'}`}>
+                            {testimonials[currentTestimonial].customer_title}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Navigation Buttons */}
+                  {testimonials.length > 1 && (
+                    <>
+                      <div className="absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2">
+                        <Button
+                          onClick={prevTestimonial}
+                          variant="outline"
+                          size="icon" // Changed to icon size
+                          className={`rounded-full w-8 h-8 md:w-10 md:h-10 p-0 ${theme === 'light' ? 'bg-white/50 hover:bg-gray-100 border-gray-300' : 'bg-white/10 border-white/20 hover:bg-white/20 text-white'}`}
+                        >
+                          <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" />
+                        </Button>
+                      </div>
+
+                      <div className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2">
+                        <Button
+                          onClick={nextTestimonial}
+                          variant="outline"
+                          size="icon" // Changed to icon size
+                          className={`rounded-full w-8 h-8 md:w-10 md:h-10 p-0 ${theme === 'light' ? 'bg-white/50 hover:bg-gray-100 border-gray-300' : 'bg-white/10 border-white/20 hover:bg-white/20 text-white'}`}
+                        >
+                          <ChevronRight className="h-4 w-4 md:h-5 md:w-5" />
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Dots Indicator */}
+              {testimonials.length > 1 && (
+                <div className="flex justify-center space-x-2 mt-6">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentTestimonial(index)}
+                      className={`w-2.5 h-2.5 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
+                        index === currentTestimonial
+                          ? 'bg-emerald-500 scale-125'
+                          : theme === 'light'
+                            ? 'bg-gray-300 hover:bg-gray-400'
+                            : 'bg-white/30 hover:bg-white/50'
+                      }`}
+                      aria-label={`Go to testimonial ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Footer */}
       <footer className={`relative z-10 mt-16 border-t ${theme === 'light' ? 'border-gray-200 bg-white/20' : 'border-white/10 bg-black/20'} backdrop-blur-sm`}>
