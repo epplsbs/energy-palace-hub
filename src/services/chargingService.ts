@@ -80,6 +80,60 @@ export const getAvailableChargingStations = async () => {
   return data || [];
 };
 
+// For SalesTerminal: logging a completed on-site transaction
+export interface PosChargingTransactionData {
+  customer_name?: string;
+  customer_phone?: string;
+  customer_email?: string;
+  vehicle_number?: string;
+  charging_station_id: string; // Should be mandatory
+  total_amount: number;
+  payment_mode: string;
+  details?: { // To store calculation inputs like start_%, end_%, kwh_consumed etc.
+    start_percentage?: number;
+    end_percentage?: number;
+    per_percentage_rate?: number;
+    kwh_consumed?: number;
+    per_kwh_rate?: number;
+  };
+  // order_number will be generated
+  // start_time, end_time, status, payment_status will be set by the function
+}
+
+export const logPosChargingTransaction = async (transaction: PosChargingTransactionData): Promise<any> => { // Consider defining a return type
+  const orderNumber = `CHG-${Date.now().toString().slice(-6)}`;
+  const currentTime = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from('pos_charging_orders')
+    .insert([{
+      order_number: orderNumber,
+      customer_name: transaction.customer_name || 'Walk-in Customer',
+      customer_phone: transaction.customer_phone,
+      customer_email: transaction.customer_email,
+      vehicle_number: transaction.vehicle_number,
+      charging_station_id: transaction.charging_station_id,
+      start_time: currentTime, // For a POS transaction, start and end might be the same
+      end_time: currentTime,
+      status: 'completed',
+      payment_status: 'paid',
+      total_amount: transaction.total_amount,
+      payment_mode: transaction.payment_mode,
+      details: transaction.details, // Store calculation inputs
+      // Ensure your table has a 'details' column of type JSONB or similar
+      // Or map transaction.details fields to individual columns if they exist
+    }])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error logging POS charging transaction:', error);
+    throw error;
+  }
+  console.log('POS Charging transaction logged successfully:', data);
+  return data;
+};
+
 export const getChargingBookings = async () => {
   console.log('Fetching charging bookings...');
   
