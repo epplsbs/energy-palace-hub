@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, X, ArrowLeft } from "lucide-react"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
@@ -103,13 +103,37 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
     }
   };
 
+  const handleClose = () => {
+    setFormData({
+      customerName: '',
+      customerEmail: '',
+      customerPhone: '',
+      date: '',
+      time: '',
+      guests: '2',
+      specialRequests: ''
+    });
+    onClose();
+  };
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl bg-white dark:bg-white">
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="max-w-4xl max-h-[90vh] bg-white dark:bg-white overflow-hidden">
         <DialogHeader>
-          <DialogTitle className="text-gray-900">Make a Reservation</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-gray-900 text-xl md:text-2xl">Make a Reservation</DialogTitle>
+            <Button
+              onClick={handleClose}
+              variant="ghost"
+              size="sm"
+              className="text-gray-600 hover:text-gray-900"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="grid gap-4 py-4">
+        
+        <div className="overflow-y-auto max-h-[calc(90vh-120px)] px-1">
+          <form onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="customerName" className="text-gray-700">Name</Label>
@@ -180,13 +204,23 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
               className="bg-white"
             />
           </div>
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+          </form>
+        </div>
+        
+        <div className="flex justify-end gap-2 pt-4 border-t bg-white sticky bottom-0">
+          <Button type="button" variant="outline" onClick={handleClose} className="flex items-center gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSubmit}
+            disabled={isLoading}
+            className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700"
+          >
             <Button type="submit" disabled={isLoading}>
               {isLoading ? 'Submitting...' : 'Submit Reservation'}
             </Button>
-          </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
