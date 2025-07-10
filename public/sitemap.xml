@@ -36,7 +36,7 @@
     For example:
     <url>
       <loc>https://energypalace.com.np/blog/your-blog-post-slug</loc>
-      <lastmod>YYYY-MM-DD</lastmod> <!-- Date of last modification for the blog post -->
+      <lastmod>YYYY-MM-DD</lastmod>
       <changefreq>yearly</changefreq> <!-- Or 'never' if content is static after publishing -->
       <priority>0.6</priority>
     </url>
