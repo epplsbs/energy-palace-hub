@@ -216,7 +216,7 @@ const About = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-purple-600 mb-4">Our Values</h3>
                 <div className="space-y-3">
-                  {content.values.slice(0, 2).map((value, index) => (
+                  {content.values.map((value, index) => (
                     <div key={index}>
                       <h4 className={`font-semibold ${theme === 'light' ? 'text-gray-800' : 'text-white'}`}>{value.title}</h4>
                       <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>{value.description}</p>

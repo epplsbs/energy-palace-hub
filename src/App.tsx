@@ -10,7 +10,8 @@ import Blog from "./pages/Blog";
 import Admin from "./pages/Admin";
 import Contacts from "./pages/Contacts";
 import POS from "./pages/POS";
-import AboutUs from "./components/AboutUs";
+import AboutPage from "./pages/About"; // Corrected import for the About page
+import Media from "./pages/Media"; // Import the new Media page
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,7 +29,8 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/pos" element={<POS />} />
-            <Route path="/about" element={<AboutUs />} />
+            <Route path="/about" element={<AboutPage />} /> {/* Corrected element for About page */}
+            <Route path="/media" element={<Media />} /> {/* Added route for Media page */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
