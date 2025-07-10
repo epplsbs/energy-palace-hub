@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Zap, X, ArrowLeft, Clock, Power } from 'lucide-react';
+import { Zap, X, ArrowLeft, Clock, Power, RefreshCw } from 'lucide-react';
 import { createChargingBooking, getAvailableChargingStations } from '@/services/chargingService';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -179,7 +179,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
 
   return (
     <Dialog open={isOpen} onOpenChange={handleModalClose}>
-      <DialogContent className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl">
+      <DialogContent className="max-w-4xl max-h-[90vh] mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
         <DialogHeader className="text-center pb-4">
           <div className="mx-auto w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center mb-4">
             <Zap className="h-8 w-8 text-white" />
@@ -194,7 +194,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
 
         {step === 'select' ? (
           // Station Selection View
-          <div className="space-y-6">
+          <div className="space-y-6 overflow-y-auto max-h-[calc(90vh-200px)]">
             {loading ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
@@ -204,12 +204,13 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
               <div className="text-center py-8">
                 <Zap className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600">No charging stations available at the moment</p>
-                <Button onClick={loadStations} variant="outline" className="mt-4">
-                  Refresh
+                <Button onClick={loadStations} variant="outline" className="mt-4 flex items-center gap-2">
+                  <RefreshCw className="h-4 w-4" />
+                  <span>Refresh</span>
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {stations.map((station) => (
                   <div
                     key={station.id}
@@ -252,7 +253,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
               </div>
             )}
 
-            <div className="flex justify-center pt-4">
+            <div className="flex justify-center pt-4 border-t bg-white sticky bottom-0">
               <Button onClick={handleModalClose} variant="outline">
                 <X className="h-4 w-4 mr-2" />
                 Cancel
@@ -261,7 +262,8 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
           </div>
         ) : (
           // Booking Form View
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex flex-col max-h-[calc(90vh-200px)]">
+            <form onSubmit={handleSubmit} className="space-y-6 overflow-y-auto flex-1 px-1">
             <div className="bg-gray-50 rounded-lg p-4 mb-6">
               <h4 className="font-semibold text-gray-900 mb-2">Selected Station:</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
@@ -344,7 +346,9 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
               </div>
             </div>
 
-            <div className="flex gap-3 pt-4">
+            </form>
+            
+            <div className="flex gap-3 pt-4 border-t bg-white sticky bottom-0">
               <Button
                 type="button"
                 onClick={handleBack}
@@ -355,7 +359,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
                 Back to Stations
               </Button>
               <Button
-                type="submit"
+                onClick={handleSubmit}
                 disabled={loading}
                 className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white"
               >
@@ -372,7 +376,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
                 )}
               </Button>
             </div>
-          </form>
+          </div>
         )}
       </DialogContent>
     </Dialog>
