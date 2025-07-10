@@ -7,6 +7,7 @@ import { Phone, Mail, MapPin, Clock, User, Building, Zap, Home, BookOpen, Info, 
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
+import GoogleMapEmbed from '@/components/GoogleMapEmbed'; // Import the map component
 
 interface Contact {
   id: string;
@@ -252,16 +253,15 @@ const Contacts = () => {
           </div>
           <Card className="glass border border-white/20 backdrop-blur-xl bg-gray-900/50">
             <CardContent className="p-6 md:p-8">
-              <div
-                className={`aspect-video ${theme === 'light' ? 'bg-gray-200' : 'bg-gray-700'} rounded-lg flex items-center justify-center`}
-                aria-label="Location map placeholder"
-              >
-                <p className={`${theme === 'light' ? 'text-gray-500' : 'text-gray-400'}`}>
-                  Google Map will be embedded here.
-                  <br />
-                  (User: Please add your Google Maps iframe embed code, or make this section dynamic based on a maps URL in business settings.)
-                </p>
-              </div>
+              <GoogleMapEmbed
+                apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""} // Pass explicitly or ensure component handles undefined gracefully
+                lat={27.108917}
+                lng={85.963333}
+                zoom={16}
+                businessName={businessSettings?.business_name || "Energy Palace"}
+                businessAddress={businessSettings?.business_address || "Bhiman, Sindhuli, Bagmati, Nepal"}
+                businessLogoUrl={businessSettings?.logo_url || "https://energypalace.com.np/logo.png"} // Default placeholder
+              />
             </CardContent>
           </Card>
         </div>
