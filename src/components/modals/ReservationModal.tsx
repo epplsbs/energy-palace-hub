@@ -117,53 +117,53 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
   };
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] bg-white dark:bg-white overflow-hidden">
+      <DialogContent className="max-w-4xl max-h-[90vh] bg-gray-50 dark:bg-gray-900 overflow-hidden">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-gray-900 text-xl md:text-2xl">Make a Reservation</DialogTitle>
+          <div className="flex items-center justify-between px-6 pt-6">
+            <DialogTitle className="text-gray-900 dark:text-gray-100 text-xl md:text-2xl">Make a Reservation</DialogTitle>
             <Button
               onClick={handleClose}
               variant="ghost"
               size="sm"
-              className="text-gray-600 hover:text-gray-900"
+              className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
             >
               <X className="h-5 w-5" />
             </Button>
           </div>
         </DialogHeader>
         
-        <div className="overflow-y-auto max-h-[calc(90vh-120px)] px-1">
-          <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="overflow-y-auto max-h-[calc(90vh-120px)] p-6">
+          <form onSubmit={handleSubmit} id="reservationForm" className="grid gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="customerName" className="text-gray-700">Name</Label>
-              <Input type="text" id="customerName" value={formData.customerName} onChange={handleChange} required className="bg-white" />
+              <Label htmlFor="customerName" className="text-gray-700 dark:text-gray-300">Name</Label>
+              <Input type="text" id="customerName" value={formData.customerName} onChange={handleChange} required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
             </div>
             <div>
-              <Label htmlFor="customerEmail" className="text-gray-700">Email</Label>
-              <Input type="email" id="customerEmail" value={formData.customerEmail} onChange={handleChange} required className="bg-white" />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="customerPhone" className="text-gray-700">Phone</Label>
-              <Input type="tel" id="customerPhone" value={formData.customerPhone} onChange={handleChange} className="bg-white" />
-            </div>
-            <div>
-              <Label htmlFor="guests" className="text-gray-700">Guests</Label>
-              <Input type="number" id="guests" value={formData.guests} onChange={handleChange} min="1" required className="bg-white" />
+              <Label htmlFor="customerEmail" className="text-gray-700 dark:text-gray-300">Email</Label>
+              <Input type="email" id="customerEmail" value={formData.customerEmail} onChange={handleChange} required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="date" className="text-gray-700">Date</Label>
+              <Label htmlFor="customerPhone" className="text-gray-700 dark:text-gray-300">Phone</Label>
+              <Input type="tel" id="customerPhone" value={formData.customerPhone} onChange={handleChange} className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
+            </div>
+            <div>
+              <Label htmlFor="guests" className="text-gray-700 dark:text-gray-300">Guests</Label>
+              <Input type="number" id="guests" value={formData.guests} onChange={handleChange} min="1" required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label htmlFor="date" className="text-gray-700 dark:text-gray-300">Date</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-[240px] justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
+                      "w-[240px] justify-start text-left font-normal dark:bg-gray-800 dark:border-gray-700 dark:text-gray-50",
+                      !date && "text-muted-foreground dark:text-gray-400"
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -184,42 +184,42 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                     disabled={(date) =>
                       date < new Date()
                     }
-                    className="rounded-md border"
+                    className="rounded-md border bg-white dark:bg-gray-800 dark:text-gray-50"
                   />
                 </PopoverContent>
               </Popover>
             </div>
             <div>
-              <Label htmlFor="time" className="text-gray-700">Time</Label>
-              <Input type="time" id="time" value={formData.time} onChange={handleChange} required className="bg-white" />
+              <Label htmlFor="time" className="text-gray-700 dark:text-gray-300">Time</Label>
+              <Input type="time" id="time" value={formData.time} onChange={handleChange} required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
             </div>
           </div>
           <div>
-            <Label htmlFor="specialRequests" className="text-gray-700">Special Requests</Label>
+            <Label htmlFor="specialRequests" className="text-gray-700 dark:text-gray-300">Special Requests</Label>
             <Input
               id="specialRequests"
               value={formData.specialRequests}
               onChange={handleChange}
               placeholder="Any special requests?"
-              className="bg-white"
+              className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
             />
           </div>
           </form>
         </div>
         
-        <div className="flex justify-end gap-2 pt-4 border-t bg-white sticky bottom-0">
-          <Button type="button" variant="outline" onClick={handleClose} className="flex items-center gap-2">
+        <div className="flex justify-end gap-2 px-6 py-4 border-t bg-gray-50 dark:bg-gray-900 sticky bottom-0 dark:border-gray-700">
+          <Button type="button" variant="outline" onClick={handleClose} className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700">
             <ArrowLeft className="h-4 w-4" />
             Cancel
           </Button>
           <Button 
-            onClick={handleSubmit}
+            type="submit"
+            form="reservationForm"
             disabled={isLoading}
-            className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700"
+            className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white"
           >
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Submitting...' : 'Submit Reservation'}
-            </Button>
+            {isLoading ? 'Submitting...' : 'Submit Reservation'}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
@@ -227,6 +227,3 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
 };
 
 export default ReservationModal;
-
-  )
-}
