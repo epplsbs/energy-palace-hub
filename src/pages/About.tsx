@@ -6,15 +6,16 @@ import { getTestimonials, type Testimonial } from '@/services/contentService';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Zap, ArrowLeft, Users, Coffee, Car, Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { Zap, Users, Coffee, Car, Star, ChevronLeft, ChevronRight, Quote, Home, BookOpen, Phone, MapPin, Calendar, Sun, Moon, Menu, X } from 'lucide-react';
 
 const About = () => {
   const [content, setContent] = useState<AboutUsContent | null>(null);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const backgroundImageUrl = useBackgroundImage();
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   useSEO('/about');
 
   useEffect(() => {
@@ -92,7 +93,7 @@ const About = () => {
 
       {/* Header */}
       <header className="relative z-20 p-4 md:p-6">
-        <nav className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <nav className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
               <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
@@ -105,15 +106,66 @@ const About = () => {
             </div>
           </div>
 
-          <div className={`flex items-center space-x-4 md:space-x-8 ${theme === 'light' ? 'text-gray-700' : 'text-white/80'}`}>
+          {/* Desktop Navigation */}
+          <div className={`hidden md:flex items-center space-x-6 ${theme === 'light' ? 'text-gray-700' : 'text-white/80'}`}>
             <a href="/" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors flex items-center gap-2`}>
-              <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Back to Home</span>
+              <Home className="h-4 w-4" />
+              <span>Home</span>
             </a>
-            <a href="/contacts" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors`}>Contacts</a>
-            <a href="/blog" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors`}>Blog</a>
+            <a href="/blog" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors flex items-center gap-2`}>
+              <BookOpen className="h-4 w-4" />
+              <span>Blog</span>
+            </a>
+            <a href="/contacts" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors flex items-center gap-2`}>
+              <Phone className="h-4 w-4" />
+              <span>Contact</span>
+            </a>
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            >
+              {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+            </button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
+          >
+            {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </nav>
+
+        {/* Mobile Menu */}
+        {showMobileMenu && (
+          <div className={`md:hidden absolute top-full left-0 right-0 ${theme === 'light' ? 'bg-white/95' : 'bg-black/95'} backdrop-blur-md shadow-lg border-t z-50`}>
+            <nav className="py-4">
+              <a href="/" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
+                <Home className="h-4 w-4" />
+                <span>Home</span>
+              </a>
+              <a href="/blog" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
+                <BookOpen className="h-4 w-4" />
+                <span>Blog</span>
+              </a>
+              <a href="/contacts" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
+                <Phone className="h-4 w-4" />
+                <span>Contact</span>
+              </a>
+              <button
+                onClick={() => {
+                  toggleTheme();
+                  setShowMobileMenu(false);
+                }}
+                className={`flex items-center gap-3 w-full text-left px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
+              >
+                {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+                <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+              </button>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Main Content */}
@@ -317,6 +369,74 @@ const About = () => {
             </Card>
           </div>
         )}
+
+        {/* Interesting Action Buttons Section */}
+        <div className="mb-16">
+          <div className="text-center mb-8">
+            <h3 className={`text-2xl md:text-3xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+              <span className={`${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
+                Explore More
+              </span>
+            </h3>
+            <p className={`max-w-2xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
+              Discover what makes Energy Palace special
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Book Charger */}
+            <a href="/" className="group">
+              <Card className={`glass border border-white/20 backdrop-blur-xl ${theme === 'light' ? 'bg-white/50' : 'bg-gray-900/50'} hover:border-emerald-500/50 transition-all duration-300 hover:scale-105`}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <Zap className="h-8 w-8 text-emerald-400" />
+                  </div>
+                  <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Book Charger</h4>
+                  <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Reserve your charging station now</p>
+                </CardContent>
+              </Card>
+            </a>
+
+            {/* Visit Us */}
+            <a href="/contacts" className="group">
+              <Card className={`glass border border-white/20 backdrop-blur-xl ${theme === 'light' ? 'bg-white/50' : 'bg-gray-900/50'} hover:border-blue-500/50 transition-all duration-300 hover:scale-105`}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500/20 to-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <MapPin className="h-8 w-8 text-blue-400" />
+                  </div>
+                  <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Visit Us</h4>
+                  <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Find our location and directions</p>
+                </CardContent>
+              </Card>
+            </a>
+
+            {/* Our Story */}
+            <a href="/blog" className="group">
+              <Card className={`glass border border-white/20 backdrop-blur-xl ${theme === 'light' ? 'bg-white/50' : 'bg-gray-900/50'} hover:border-purple-500/50 transition-all duration-300 hover:scale-105`}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500/20 to-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <BookOpen className="h-8 w-8 text-purple-400" />
+                  </div>
+                  <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Our Story</h4>
+                  <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Explore our journey in pictures</p>
+                </CardContent>
+              </Card>
+            </a>
+
+            {/* Make Reservation */}
+            <a href="/" className="group">
+              <Card className={`glass border border-white/20 backdrop-blur-xl ${theme === 'light' ? 'bg-white/50' : 'bg-gray-900/50'} hover:border-yellow-500/50 transition-all duration-300 hover:scale-105`}>
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <Calendar className="h-8 w-8 text-yellow-400" />
+                  </div>
+                  <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Reserve Table</h4>
+                  <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Book your dining experience</p>
+                </CardContent>
+              </Card>
+            </a>
+          </div>
+        </div>
 
         {/* Call to Action */}
         <div className="text-center">
