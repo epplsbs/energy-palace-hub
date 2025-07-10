@@ -62,11 +62,19 @@ const LocationDisplay = () => {
   }
 
   return (
-        <button
-          onClick={openDirections}
-        >
-          Drive to Energy Palce
-        </button>
+    <div className="text-center">
+      {location.locationName && (
+        <p className="text-sm mb-2">
+          <MapPin className="inline h-4 w-4 mr-1" /> {location.locationName}
+        </p>
+      )}
+      <button
+        onClick={openDirections}
+        className="text-emerald-500 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-500 font-semibold flex items-center justify-center mx-auto text-sm py-1 px-3 rounded-md hover:bg-emerald-500/10 dark:hover:bg-emerald-400/10 transition-colors"
+      >
+        <Navigation className="inline h-4 w-4 mr-1.5" /> Drive to Energy Palace
+      </button>
+    </div>
   );
 };
 

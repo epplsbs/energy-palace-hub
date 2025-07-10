@@ -62,6 +62,9 @@ const updateSEOTags = (seoData: SEOData) => {
   
   // Update canonical URL
   updateCanonicalLink(seoData.canonical_url);
+
+  // Update Schema Markup
+  updateSchemaMarkup(seoData.schema_markup);
 };
 
 const updateMetaTag = (name: string, content?: string) => {
@@ -98,4 +101,43 @@ const updateCanonicalLink = (href?: string) => {
     document.head.appendChild(link);
   }
   link.href = href;
+};
+
+const updateSchemaMarkup = (schemaMarkup?: any) => {
+  if (!schemaMarkup) {
+    // If schemaMarkup is explicitly null or undefined, remove any existing schema script
+    const existingScript = document.querySelector('script[type="application/ld+json"]');
+    if (existingScript && existingScript.parentNode) {
+      existingScript.parentNode.removeChild(existingScript);
+    }
+    return;
+  }
+
+  let script = document.querySelector('script[type="application/ld+json"]') as HTMLScriptElement;
+  if (!script) {
+    script = document.createElement('script');
+    script.type = 'application/ld+json';
+    document.head.appendChild(script);
+  }
+
+  try {
+    if (typeof schemaMarkup === 'string') {
+      // Validate if it's a JSON string by parsing
+      JSON.parse(schemaMarkup); // This will throw an error if invalid JSON
+      script.textContent = schemaMarkup;
+    } else if (typeof schemaMarkup === 'object') {
+      script.textContent = JSON.stringify(schemaMarkup);
+    } else {
+      console.error('Schema markup is not a valid type (string or object).');
+      if (script.parentNode) { // Clean up by removing the script if type is invalid
+        script.parentNode.removeChild(script);
+      }
+    }
+  } catch (error) {
+    console.error('Error processing schema markup:', error);
+    // Clean up by removing the script if JSON is invalid
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+  }
 };

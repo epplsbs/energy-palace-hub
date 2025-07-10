@@ -91,7 +91,7 @@ const Index = () => {
               {businessSettings?.logo_url ? (
                 <img 
                   src={businessSettings.logo_url} 
-                  alt="Logo" 
+                  alt={businessSettings?.business_name ? `${businessSettings.business_name} Logo` : 'Energy Palace Logo'}
                   className="h-12 w-12 object-contain rounded-xl"
                 />
               ) : (
@@ -104,7 +104,7 @@ const Index = () => {
                 {businessSettings?.business_name || 'Energy Palace'}
               </h1>
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
-                {businessSettings?.business_tagline || 'Premium EV Charging & Dining'}
+                {businessSettings?.business_tagline || 'EV Charging, Restaurant & Coffee Shop'}
               </p>
             </div>
           </div>
@@ -193,7 +193,7 @@ const Index = () => {
             </h1>
             
             <p className={`text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
-              Experience the next generation of EV charging with premium dining and hospitality services.
+              Power up your EV, savor exceptional meals at our restaurant, and relax with specialty coffees at our on-site coffee shop. Energy Palace is your complete destination.
             </p>
           </div>
 
@@ -224,7 +224,7 @@ const Index = () => {
                   <Coffee className="h-12 w-12 text-blue-400" />
                 </div>
                 <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Menu</h3>
-                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Explore our premium dining options while you charge</p>
+                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Discover our full restaurant menu and enjoy fresh coffee & snacks from our coffee shop while your EV charges.</p>
                 <Button 
                   onClick={() => setIsMenuModalOpen(true)}
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
@@ -305,8 +305,12 @@ const Index = () => {
               <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Car className="h-8 w-8 text-blue-400" />
               </div>
-              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}><LocationDisplay/></h4>
-              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Committed to environmental responsibility</p>
+              <h4 className={`text-xl font-bold mb-3 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+                Our Location
+              </h4>
+              <LocationDisplay />
+              {/* Thematic description for the card, can be adjusted if needed */}
+              <p className={`text-sm mt-3 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Accessible & Convenient Charging</p>
             </div>
            
            <a href="/contacts">  
@@ -340,7 +344,7 @@ const Index = () => {
                 {businessSettings?.logo_url ? (
                   <img 
                     src={businessSettings.logo_url} 
-                    alt="Logo" 
+                    alt={businessSettings?.business_name ? `${businessSettings.business_name} Logo` : 'Energy Palace Logo'}
                     className="h-10 w-10 object-contain rounded-xl"
                   />
                 ) : (
@@ -353,7 +357,7 @@ const Index = () => {
                 </span>
               </div>
               <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
-                Nepal's premium EV charging destination with luxury dining experience.
+                Nepal's premier EV charging station, complete with a full-service restaurant and a welcoming coffee shop.
               </p>
             </div>
 
