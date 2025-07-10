@@ -92,7 +92,7 @@ const About = () => {
       )}
 
       {/* Header */}
-      <header className="relative z-20 p-4 md:p-6">
+      <header className="relative z-20 p-4 md:p-6 bg-black/10 backdrop-blur-md border-b border-white/10">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
@@ -107,22 +107,22 @@ const About = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className={`hidden md:flex items-center space-x-6 ${theme === 'light' ? 'text-gray-700' : 'text-white/80'}`}>
-            <a href="/" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors flex items-center gap-2`}>
+          <div className={`hidden md:flex items-center space-x-6 ${theme === 'light' ? 'text-gray-800' : 'text-white'}`}>
+            <a href="/" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium`}>
               <Home className="h-4 w-4" />
               <span>Home</span>
             </a>
-            <a href="/blog" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors flex items-center gap-2`}>
+            <a href="/blog" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium`}>
               <BookOpen className="h-4 w-4" />
               <span>Blog</span>
             </a>
-            <a href="/contacts" className={`${theme === 'light' ? 'hover:text-emerald-600' : 'hover:text-emerald-400'} transition-colors flex items-center gap-2`}>
+            <a href="/contacts" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium`}>
               <Phone className="h-4 w-4" />
               <span>Contact</span>
             </a>
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className={`p-2 rounded-lg ${theme === 'light' ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'} transition-all duration-300`}
             >
               {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
             </button>
@@ -131,7 +131,7 @@ const About = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
+            className={`md:hidden p-2 rounded-lg ${theme === 'light' ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'} transition-all duration-300`}
           >
             {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -139,17 +139,17 @@ const About = () => {
 
         {/* Mobile Menu */}
         {showMobileMenu && (
-          <div className={`md:hidden absolute top-full left-0 right-0 ${theme === 'light' ? 'bg-white/95' : 'bg-black/95'} backdrop-blur-md shadow-lg border-t z-50`}>
+          <div className={`md:hidden absolute top-full left-0 right-0 ${theme === 'light' ? 'bg-white/95' : 'bg-black/95'} backdrop-blur-md shadow-lg border-t border-white/10 z-50`}>
             <nav className="py-4">
-              <a href="/" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
+              <a href="/" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium`}>
                 <Home className="h-4 w-4" />
                 <span>Home</span>
               </a>
-              <a href="/blog" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
+              <a href="/blog" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium`}>
                 <BookOpen className="h-4 w-4" />
                 <span>Blog</span>
               </a>
-              <a href="/contacts" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}>
+              <a href="/contacts" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium`}>
                 <Phone className="h-4 w-4" />
                 <span>Contact</span>
               </a>
@@ -158,7 +158,7 @@ const About = () => {
                   toggleTheme();
                   setShowMobileMenu(false);
                 }}
-                className={`flex items-center gap-3 w-full text-left px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
+                className={`flex items-center gap-3 w-full text-left px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium`}
               >
                 {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
                 <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
