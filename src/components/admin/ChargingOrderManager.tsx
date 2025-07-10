@@ -3,6 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { supabase } from '@/integrations/supabase/client';
 import { Clock, User, Car, Zap, Eye, CheckCircle, XCircle, Calendar, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -13,6 +24,7 @@ interface ChargingOrder {
   order_number: string;
   customer_name: string;
   customer_phone: string;
+  customer_email?: string; // Added customer_email
   vehicle_number: string;
   charging_station_id: string;
   start_time: string;
@@ -35,6 +47,7 @@ const ChargingOrderManager = () => {
   const [loading, setLoading] = useState(true);
   const [editingExpectedEnd, setEditingExpectedEnd] = useState<string | null>(null);
   const [expectedEndTime, setExpectedEndTime] = useState('');
+  const [orderToDelete, setOrderToDelete] = useState<ChargingOrder | null>(null);
 
   useEffect(() => {
     fetchOrders();
@@ -123,13 +136,25 @@ const ChargingOrderManager = () => {
   const sendConfirmationEmail = async (orderId: string, type: 'charging' | 'reservation') => {
     try {
       const order = orders.find(o => o.id === orderId);
-      if (!order) return;
+      if (!order) {
+        toast({ title: "Error", description: "Order not found.", variant: "destructive" });
+        return;
+      }
+
+      if (!order.customer_email) {
+        toast({
+          title: "Missing Information",
+          description: "Customer email is not available for this order. Cannot send email.",
+          variant: "destructive",
+        });
+        return;
+      }
 
       const { data, error } = await supabase.functions.invoke('send-confirmation-email', {
         body: {
           type: 'charging',
           customerName: order.customer_name,
-          customerEmail: order.customer_phone, // Assuming phone for now, should be email
+          customerEmail: order.customer_email, // Corrected to use customer_email
           orderDetails: {
             orderNumber: order.order_number,
             stationId: order.charging_stations?.station_id,
@@ -387,14 +412,16 @@ const ChargingOrderManager = () => {
                       </Button>
                     )}
                     {(order.status === 'cancelled' || order.status === 'completed') && (
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => deleteOrder(order.id)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Delete
-                      </Button>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => setOrderToDelete(order)}
+                        >
+                          <Trash2 className="h-4 w-4 mr-1" />
+                          Delete
+                        </Button>
+                      </AlertDialogTrigger>
                     )}
                   </div>
                 </div>
@@ -403,6 +430,32 @@ const ChargingOrderManager = () => {
           ))
         )}
       </div>
+
+      {orderToDelete && (
+        <AlertDialog open={!!orderToDelete} onOpenChange={() => setOrderToDelete(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the charging order #{orderToDelete.order_number}
+                and remove its data from our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setOrderToDelete(null)}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  deleteOrder(orderToDelete.id);
+                  setOrderToDelete(null);
+                }}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                Yes, delete order
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </div>
   );
 };

@@ -7,7 +7,8 @@ import { Phone, Mail, MapPin, Clock, User, Building, Zap, Home, BookOpen, Info, 
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
-import GoogleMapEmbed from '../components/GoogleMapEmbed'; // Import the map component using relative path
+import GoogleMapEmbed from '../components/GoogleMapEmbed'; // Import the map component
+import SubmitReviewForm from '@/components/forms/SubmitReviewForm'; // Import the review form
 
 interface Contact {
   id: string;
@@ -324,6 +325,21 @@ const Contacts = () => {
             </div>
           </div>
         )}
+
+        {/* Submit Review Form Section */}
+        <div className="mb-12 md:mb-16">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className={`text-2xl md:text-3xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Leave Us a Review</h2>
+            <p className={`max-w-2xl mx-auto mt-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
+              We'd love to hear about your experience at Energy Palace!
+            </p>
+          </div>
+          <Card className={`glass border ${theme === 'light' ? 'border-gray-200 bg-white/70' : 'border-white/20 bg-gray-900/70'} backdrop-blur-lg max-w-2xl mx-auto shadow-xl`}>
+            <CardContent className="p-6 md:p-8">
+              <SubmitReviewForm />
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Call to Action */}
         <div className="text-center">
