@@ -10,6 +10,7 @@ interface SEOData {
   og_image?: string;
   canonical_url?: string;
   robots_directives?: string;
+  schema_markup?: any;
 }
 
 export const useSEO = (pagePath: string) => {

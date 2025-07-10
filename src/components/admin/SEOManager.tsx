@@ -52,7 +52,8 @@ const SEOManager = () => {
     og_description: '',
     og_image: '',
     canonical_url: '',
-    robots_directives: 'index,follow'
+    robots_directives: 'index,follow',
+    schema_markup: ''
   });
   const [aiPrompt, setAiPrompt] = useState('');
   const [generatingContent, setGeneratingContent] = useState(false);
@@ -139,7 +140,8 @@ const SEOManager = () => {
         og_description: '',
         og_image: '',
         canonical_url: '',
-        robots_directives: 'index,follow'
+        robots_directives: 'index,follow',
+        schema_markup: ''
       });
       setEditingPage(null);
       fetchSEOSettings();
@@ -165,7 +167,8 @@ const SEOManager = () => {
       og_description: seoSetting.og_description || '',
       og_image: seoSetting.og_image || '',
       canonical_url: seoSetting.canonical_url || '',
-      robots_directives: seoSetting.robots_directives || 'index,follow'
+      robots_directives: seoSetting.robots_directives || 'index,follow',
+      schema_markup: seoSetting.schema_markup ? (typeof seoSetting.schema_markup === 'string' ? seoSetting.schema_markup : JSON.stringify(seoSetting.schema_markup, null, 2)) : ''
     });
   };
 
@@ -376,6 +379,18 @@ const SEOManager = () => {
                   />
                 </div>
 
+                <div>
+                  <Label htmlFor="schema_markup">Schema Markup (JSON-LD)</Label>
+                  <Textarea
+                    id="schema_markup"
+                    value={formData.schema_markup}
+                    onChange={(e) => setFormData(prev => ({ ...prev, schema_markup: e.target.value }))}
+                    placeholder='{\n  "@context": "https://schema.org",\n  "@type": "LocalBusiness",\n  "name": "Your Business Name"\n}'
+                    rows={10}
+                    className="font-mono text-sm"
+                  />
+                </div>
+
                 <div className="flex gap-2">
                   <Button type="submit" disabled={loading}>
                     {editingPage ? 'Update' : 'Create'} SEO Settings
@@ -395,7 +410,8 @@ const SEOManager = () => {
                           og_description: '',
                           og_image: '',
                           canonical_url: '',
-                          robots_directives: 'index,follow'
+                          robots_directives: 'index,follow',
+                          schema_markup: ''
                         });
                       }}
                     >

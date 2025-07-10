@@ -100,9 +100,9 @@ const Index = () => {
                 </div>
               )}
             <div>
-              <h1 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
+              <div className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 {businessSettings?.business_name || 'Energy Palace'}
-              </h1>
+              </div>
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 {businessSettings?.business_tagline || 'EV Charging, Restaurant & Coffee Shop'}
               </p>
