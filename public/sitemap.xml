@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://energypalace.com.np/media</loc>
-    <lastmod>2024-07-16</lastmod> <!-- Update this date when content changes -->
+    <lastmod>2024-07-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -38,7 +38,8 @@
   <url>
     <loc>https://energypalace.com.np/blog/your-blog-post-slug</loc>
     <lastmod>YYYY-MM-DD</lastmod>
-    <changefreq>yearly</changefreq> <!-- Or 'never' if content is static after publishing -->
+    <!-- changefreq can be 'yearly' or 'never' if content is static after publishing -->
+    <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   The <lastmod> date should be the date the content of that page was last significantly updated.
