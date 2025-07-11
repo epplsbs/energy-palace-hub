@@ -381,6 +381,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
             </div>
           </div>
         )}
+        </div> {/* Closes the div for "flex-1 overflow-y-auto p-6" */}
       </DialogContent>
     </Dialog>
   );
