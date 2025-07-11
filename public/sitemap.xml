@@ -30,22 +30,22 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
-  <!--
-    Instructions for the user:
-    For dynamic content, such as individual blog posts, new URLs should be added here.
-    For example:
-    <url>
-      <loc>https://energypalace.com.np/blog/your-blog-post-slug</loc>
-      <lastmod>YYYY-MM-DD</lastmod>
-      <changefreq>yearly</changefreq> <!-- Or 'never' if content is static after publishing -->
-      <priority>0.6</priority>
-    </url>
-    The <lastmod> date should be the date the content of that page was last significantly updated.
-    The <changefreq> can be always, hourly, daily, weekly, monthly, yearly, never.
-    The <priority> is a relative priority (0.0 to 1.0) for URLs on your site.
-    It's recommended to automate the generation of this sitemap if you have many dynamic pages (e.g., many blog posts).
-    The `SEOManager` component in your admin panel, which manages SEO settings per page_path,
-    could potentially be extended in the future to help generate this sitemap dynamically
-    by querying all active `page_path` entries from your `seo_settings` table.
-  -->
 </urlset>
+<!--
+  Instructions for the user:
+  For dynamic content, such as individual blog posts, new URLs should be added here.
+  For example:
+  <url>
+    <loc>https://energypalace.com.np/blog/your-blog-post-slug</loc>
+    <lastmod>YYYY-MM-DD</lastmod>
+    <changefreq>yearly</changefreq> <!-- Or 'never' if content is static after publishing -->
+    <priority>0.6</priority>
+  </url>
+  The <lastmod> date should be the date the content of that page was last significantly updated.
+  The <changefreq> can be always, hourly, daily, weekly, monthly, yearly, never.
+  The <priority> is a relative priority (0.0 to 1.0) for URLs on your site.
+  It's recommended to automate the generation of this sitemap if you have many dynamic pages (e.g., many blog posts).
+  The `SEOManager` component in your admin panel, which manages SEO settings per page_path,
+  could potentially be extended in the future to help generate this sitemap dynamically
+  by querying all active `page_path` entries from your `seo_settings` table.
+-->
