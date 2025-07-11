@@ -66,9 +66,13 @@ interface CartItem {
 
 type Order = CartItem[];
 
-const OrdersManager: React.FC = () => {
+interface OrdersManagerProps {
+  posUserId: string; // This is the ID from the public.pos_users table
+}
+
+const OrdersManager: React.FC<OrdersManagerProps> = ({ posUserId }) => {
   const { toast } = useToast();
-  const [user, setUser] = useState<any>(null); // Actual user object from Supabase auth
+  // const [user, setUser] = useState<any>(null); // No longer needed if posUserId is passed directly
 
   const [categories, setCategories] = useState<POSMenuCategory[]>([]);
   const [menuItems, setMenuItems] = useState<POSMenuItem[]>([]);
@@ -85,13 +89,13 @@ const OrdersManager: React.FC = () => {
   const [loadingMenuItems, setLoadingMenuItems] = useState(true);
   const [submittingOrder, setSubmittingOrder] = useState(false);
 
-  useEffect(() => {
-    const getInitialUser = async () => {
-        const { data: { user: currentUser } } = await supabase.auth.getUser();
-        setUser(currentUser);
-    };
-    getInitialUser();
-  }, []);
+  // useEffect(() => { // Not needed anymore, posUserId comes from props
+  //   const getInitialUser = async () => {
+  //       const { data: { user: currentUser } } = await supabase.auth.getUser();
+  //       setUser(currentUser);
+  //   };
+  //   getInitialUser();
+  // }, []);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -428,10 +432,16 @@ const OrdersManager: React.FC = () => {
                       <p className="font-medium text-sm">{cartItem.name}</p>
                       <p className="text-xs text-muted-foreground">Rs. {cartItem.unit_price.toFixed(2)} x {cartItem.quantity}</p>
                     </div>
-                    <div className="flex items-center gap-2">
-                       <span className="text-sm font-semibold w-16 text-right">Rs. {(cartItem.unit_price * cartItem.quantity).toFixed(2)}</span>
-                       <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => handleUpdateQuantity(index, -1)}><Trash2 className="h-3.5 w-3.5" /></Button>
-                       {/* Simplified to just remove for now, can add +/- later */}
+                    <div className="flex items-center space-x-2">
+                        <div className="flex items-center gap-1">
+                           <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => handleUpdateQuantity(index, -1)} disabled={cartItem.quantity <= 1}>-</Button>
+                           <span className="text-sm w-6 text-center tabular-nums">{cartItem.quantity}</span>
+                           <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => handleUpdateQuantity(index, 1)}>+</Button>
+                        </div>
+                        <span className="text-sm font-semibold w-20 text-right tabular-nums">Rs. {cartItem.line_total_inclusive_vat.toFixed(2)}</span>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500 hover:text-red-700" onClick={() => handleRemoveFromCart(index)} title="Remove Item">
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
                     </div>
                   </div>
                 ))}
@@ -439,9 +449,17 @@ const OrdersManager: React.FC = () => {
             )}
 
             <div className="border-t pt-4 space-y-3">
-              <div className="flex justify-between items-center font-semibold text-lg">
-                <span>Total:</span>
-                <span>Rs. {overallTotalAmount.toFixed(2)}</span>
+              <div className="flex justify-between items-center text-sm text-muted-foreground">
+                <span>Subtotal (ex. VAT):</span>
+                <span className="tabular-nums">Rs. {overallSubtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between items-center text-sm text-muted-foreground">
+                <span>Total VAT:</span>
+                <span className="tabular-nums">Rs. {overallVatAmount.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between items-center font-bold text-xl">
+                <span>Grand Total:</span>
+                <span className="tabular-nums">Rs. {overallTotalAmount.toFixed(2)}</span>
               </div>
 
               <div>
