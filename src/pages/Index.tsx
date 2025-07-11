@@ -5,6 +5,7 @@ import { Zap, Car, Coffee, ChevronRight, Phone, Mail, MapPin, Clock, Users, Info
 import ChargingStationSelectorModal from '@/components/modals/ChargingStationSelectorModal';
 import MenuModal from '@/components/modals/MenuModal';
 import ReservationModal from '@/components/modals/ReservationModal';
+import { useQuery } from '@tanstack/react-query';
 import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
 import { getAboutUsContent, type AboutUsContent } from '@/services/aboutUsService';
 import { getTestimonials, type Testimonial } from '@/services/contentService'; // Import Testimonials
@@ -21,39 +22,49 @@ const Index = () => {
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [businessSettings, setBusinessSettings] = useState<BusinessSettings | null>(null);
-  const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  // const [businessSettings, setBusinessSettings] = useState<BusinessSettings | null>(null); // Replaced by useQuery
+  const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null); // Keep for now, or convert to useQuery too
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]); // Keep for now, or convert to useQuery too
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  // Consider a unified loading state or separate ones if fetches are independent
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true); // Replaced by useQuery's isLoading
 
   const { theme, toggleTheme } = useTheme();
   const backgroundImageUrl = useBackgroundImage();
   useSEO('/');
 
+  const { data: businessSettings, isLoading: isLoadingBusinessSettings, error: businessSettingsError } = useQuery<BusinessSettings, Error>({
+    queryKey: ['businessSettings'],
+    queryFn: getBusinessSettings,
+  });
+
+  // For AboutContent and Testimonials, you might want to convert them to useQuery as well for consistency
+  // For now, keeping their existing useEffect-based loading.
+  // A combined loading state would be: isLoadingBusinessSettings || loadingAbout || loadingTestimonials
+  const [loadingCombined, setLoadingCombined] = useState(true);
+
+
   useEffect(() => {
-    const loadPageData = async () => {
-      setLoading(true);
+    const loadOtherData = async () => {
+      // setLoading(true); // isLoadingBusinessSettings handles its part
       try {
-        const [settingsData, aboutData, testimonialsData] = await Promise.all([
-          getBusinessSettings(),
+        // Only fetch AboutContent and Testimonials here
+        const [aboutData, testimonialsData] = await Promise.all([
           getAboutUsContent(),
           getTestimonials()
         ]);
-        setBusinessSettings(settingsData);
         setAboutContent(aboutData);
         setTestimonials(testimonialsData || []);
       } catch (error) {
-        console.error('Error loading page data for Index:', error);
-        // Set default/empty states if necessary
-        setTestimonials([]);
+        console.error('Error loading page data for Index (About/Testimonials):', error);
+        setTestimonials([]); // Set default/empty states if necessary
       } finally {
-        setLoading(false);
+        // setLoading(false); // isLoadingBusinessSettings handles its part
+        setLoadingCombined(false); // Update combined loading state
       }
     };
-    loadPageData();
+    loadOtherData();
   }, []);
+
 
   useEffect(() => {
     if (testimonials.length > 0) {
