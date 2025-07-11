@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { User } from '@supabase/supabase-js';
+import { useTheme } from '@/contexts/ThemeContext'; // Import useTheme
 import AdminDashboard from '@/components/admin/AdminDashboard';
 import MenuManager from '@/components/admin/MenuManager';
 import OrderManager from '@/components/admin/OrderManager';
@@ -21,10 +22,37 @@ const Admin = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const { theme: globalTheme, toggleTheme } = useTheme(); // Get global theme state
 
   useEffect(() => {
     checkUser();
-  }, []);
+
+    // Force light theme for admin panel
+    const originalGlobalTheme = globalTheme; // Capture theme at the time of mounting Admin
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
+
+    return () => {
+      // On unmount, restore the original global theme preference
+      document.documentElement.classList.remove('light', 'dark'); // Clear our forced theme
+      // Re-apply the theme that was active globally before admin was mounted,
+      // or the current global theme if it somehow changed (e.g. user used OS toggle)
+      // The ThemeProvider's own useEffect will also re-evaluate based on its 'theme' state.
+      // Forcing it based on 'originalGlobalTheme' is a good immediate step.
+      if (originalGlobalTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.add('light');
+      }
+      // Potentially, if the ThemeProvider's theme state itself needs to be 'refreshed'
+      // so its useEffect runs, that's more complex. But changing classes should suffice.
+    };
+  }, []); // Empty dependency array means this runs once on mount and cleanup on unmount
+
+  // If we want the admin panel to also sync if the global theme *could* be changed
+  // by other means while admin is open (e.g. OS preference change, which our current
+  // ThemeProvider doesn't listen to), we might add `globalTheme` to dependency array.
+  // But for now, the goal is to *force* light and restore the theme that was active *before* admin.
 
   const checkUser = async () => {
     try {
