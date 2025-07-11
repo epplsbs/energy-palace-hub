@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,6 +23,7 @@ const BusinessSettingsManager = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [editingSettings, setEditingSettings] = useState<Record<string, string>>({});
   const [uploading, setUploading] = useState<Record<string, boolean>>({});
+  const queryClient = useQueryClient();
 
   const defaultSettings = [
     {
@@ -244,6 +246,9 @@ const BusinessSettingsManager = () => {
           : setting
       ));
 
+      // Invalidate the businessSettings query to refetch on other pages
+      queryClient.invalidateQueries({ queryKey: ['businessSettings'] });
+
       toast({
         title: "Success",
         description: "Setting updated successfully",
@@ -270,14 +275,14 @@ const BusinessSettingsManager = () => {
       const fileName = `${settingKey}_${Date.now()}.${fileExt}`;
       
       const { data, error } = await supabase.storage
-        .from('contacts')
+        .from('public_assets')
         .upload(fileName, file);
 
       if (error) throw error;
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
-        .from('contacts')
+        .from('public_assets')
         .getPublicUrl(fileName);
 
       setEditingSettings(prev => ({
