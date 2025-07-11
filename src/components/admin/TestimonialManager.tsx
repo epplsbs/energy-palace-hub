@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { Star, Plus, Edit, Trash2, Quote } from 'lucide-react';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
+import { EmptyState } from '@/components/common/EmptyState';
 import { 
   getTestimonials, 
   createTestimonial, 
@@ -30,7 +32,13 @@ const TestimonialManager = () => {
     content: '',
     rating: 5,
     is_active: true,
-    display_order: 0
+    display_order: 0,
+  });
+  const [formErrors, setFormErrors] = useState({
+    customer_name: '',
+    customer_email: '',
+    content: '',
+    display_order: '',
   });
 
   useEffect(() => {
@@ -53,13 +61,49 @@ const TestimonialManager = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = { customer_name: '', customer_email: '', content: '', display_order: '' };
+    let isValid = true;
+
+    if (!formData.customer_name.trim()) {
+      errors.customer_name = 'Customer name is required.';
+      isValid = false;
+    } else if (formData.customer_name.trim().length > 100) {
+      errors.customer_name = 'Customer name must be 100 characters or less.';
+      isValid = false;
+    }
+
+    if (!formData.content.trim()) {
+      errors.content = 'Testimonial content is required.';
+      isValid = false;
+    } else if (formData.content.trim().length < 10) {
+      errors.content = 'Content must be at least 10 characters long.';
+      isValid = false;
+    } else if (formData.content.trim().length > 1000) {
+      errors.content = 'Content must be 1000 characters or less.';
+      isValid = false;
+    }
+
+    if (formData.customer_email.trim() && !/^\S+@\S+\.\S+$/.test(formData.customer_email.trim())) {
+      errors.customer_email = 'Please enter a valid email address.';
+      isValid = false;
+    }
+
+    if (formData.display_order < 0) {
+        errors.display_order = 'Display order must be a non-negative number.';
+        isValid = false;
+    }
+
+    setFormErrors(errors);
+    return isValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.customer_name || !formData.content) {
+    if (!validateForm()) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: "Validation Error",
+        description: "Please correct the errors in the form.",
         variant: "destructive",
       });
       return;
@@ -67,13 +111,13 @@ const TestimonialManager = () => {
 
     try {
       const testimonialData = {
-        customer_name: formData.customer_name,
-        customer_title: formData.customer_title || null,
-        customer_email: formData.customer_email || null,
-        content: formData.content,
+        customer_name: formData.customer_name.trim(),
+        customer_title: formData.customer_title?.trim() || null,
+        customer_email: formData.customer_email?.trim() || null,
+        content: formData.content.trim(),
         rating: formData.rating,
         is_active: formData.is_active,
-        display_order: formData.display_order
+        display_order: formData.display_order,
       };
 
       if (editingTestimonial) {
@@ -161,24 +205,26 @@ const TestimonialManager = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-4 md:p-6">
         <h2 className="text-2xl font-bold text-gray-900">Testimonial Management</h2>
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading testimonials...</p>
-        </div>
+        <LoadingSpinner fullPage={false} text="Loading testimonials..." size={32} />
       </div>
     );
   }
 
+  const openAddDialog = () => {
+    resetForm();
+    setIsDialogOpen(true);
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-2xl font-bold text-gray-900">Testimonial Management</h2>
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={resetForm} className="bg-emerald-500 hover:bg-emerald-600">
+            <Button onClick={openAddDialog} className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Add Testimonial
             </Button>
@@ -200,8 +246,8 @@ const TestimonialManager = () => {
                     value={formData.customer_name}
                     onChange={(e) => setFormData(prev => ({ ...prev, customer_name: e.target.value }))}
                     placeholder="Customer name"
-                    required
                   />
+                  {formErrors.customer_name && <p className="text-sm text-red-500 mt-1">{formErrors.customer_name}</p>}
                 </div>
                 <div>
                   <Label htmlFor="customer_title">Customer Title</Label>
@@ -223,6 +269,7 @@ const TestimonialManager = () => {
                   onChange={(e) => setFormData(prev => ({ ...prev, customer_email: e.target.value }))}
                   placeholder="customer@example.com"
                 />
+                {formErrors.customer_email && <p className="text-sm text-red-500 mt-1">{formErrors.customer_email}</p>}
               </div>
 
               <div>
@@ -233,8 +280,8 @@ const TestimonialManager = () => {
                   onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
                   placeholder="Customer testimonial content"
                   rows={4}
-                  required
                 />
+                {formErrors.content && <p className="text-sm text-red-500 mt-1">{formErrors.content}</p>}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -244,14 +291,14 @@ const TestimonialManager = () => {
                     id="rating"
                     value={formData.rating}
                     onChange={(e) => setFormData(prev => ({ ...prev, rating: parseInt(e.target.value) }))}
-                    className="w-full p-2 border border-gray-300 rounded-md"
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
                   >
                     {[1, 2, 3, 4, 5].map(num => (
                       <option key={num} value={num}>{num} Star{num > 1 ? 's' : ''}</option>
                     ))}
                   </select>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 pt-6"> {/* Adjusted pt for alignment */}
                   <Switch
                     id="is_active"
                     checked={formData.is_active}
@@ -268,14 +315,22 @@ const TestimonialManager = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))}
                     placeholder="0"
                   />
+                  {formErrors.display_order && <p className="text-sm text-red-500 mt-1">{formErrors.display_order}</p>}
                 </div>
               </div>
 
               <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setIsDialogOpen(false);
+                    setFormErrors({ customer_name: '', customer_email: '', content: '', display_order: '' });
+                  }}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600">
+                <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700">
                   {editingTestimonial ? 'Update Testimonial' : 'Add Testimonial'}
                 </Button>
               </div>
@@ -292,11 +347,19 @@ const TestimonialManager = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {testimonials.length === 0 ? (
-            <div className="text-center py-8">
-              <Quote className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">No testimonials found. Add your first testimonial to get started!</p>
-            </div>
+          {testimonials.length === 0 && !loading ? (
+            <EmptyState
+              icon={<Quote />}
+              title="No Testimonials Yet"
+              description="Share what your customers are saying! Add your first testimonial."
+              className="my-8"
+              ctaButton={{
+                text: 'Add Testimonial',
+                onClick: openAddDialog,
+                icon: <Plus />,
+                buttonClassName: "bg-emerald-500 hover:bg-emerald-600"
+              }}
+            />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {testimonials.map((testimonial) => (
