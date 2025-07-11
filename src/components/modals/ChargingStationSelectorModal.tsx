@@ -179,34 +179,32 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
 
   return (
     <Dialog open={isOpen} onOpenChange={handleModalClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-        <DialogHeader className="text-center p-6 border-b dark:border-gray-700 flex-shrink-0">
-          <div className="mx-auto w-12 h-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center mb-3">
-            <Zap className="h-6 w-6 text-white" />
+      <DialogContent className="max-w-4xl max-h-[90vh] mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <DialogHeader className="text-center pb-4">
+          <div className="mx-auto w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center mb-4">
+            <Zap className="h-8 w-8 text-white" />
           </div>
-          <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          <DialogTitle className="text-2xl font-bold text-gray-900">
             {step === 'select' ? 'Select Charging Station' : `Book ${selectedStation?.station_id}`}
           </DialogTitle>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-gray-600">
             {step === 'select' ? 'Choose an available charging station' : 'Complete your booking details'}
           </p>
         </DialogHeader>
 
-        {/* This div becomes the main scrollable content area */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {step === 'select' ? (
-            // Station Selection View - remove max-h from here, parent div handles scroll
-            <div className="space-y-6">
-              {loading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-                <p className="text-gray-600 dark:text-gray-400">Loading available stations...</p>
+        {step === 'select' ? (
+          // Station Selection View
+          <div className="space-y-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+            {loading ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading available stations...</p>
               </div>
             ) : stations.length === 0 ? (
               <div className="text-center py-8">
-                <Zap className="h-12 w-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-                <p className="text-gray-600 dark:text-gray-400">No charging stations available at the moment</p>
-                <Button onClick={loadStations} variant="outline" className="mt-4 flex items-center gap-2 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
+                <Zap className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600">No charging stations available at the moment</p>
+                <Button onClick={loadStations} variant="outline" className="mt-4 flex items-center gap-2">
                   <RefreshCw className="h-4 w-4" />
                   <span>Refresh</span>
                 </Button>
@@ -216,30 +214,30 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
                 {stations.map((station) => (
                   <div
                     key={station.id}
-                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer bg-white dark:bg-gray-800/30 hover:dark:bg-gray-800/60"
+                    className="border border-gray-200 rounded-lg p-4 hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer"
                     onClick={() => handleStationSelect(station)}
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-bold text-lg text-gray-900 dark:text-gray-100">{station.station_id}</h3>
-                      <div className="flex items-center space-x-1 text-emerald-600 dark:text-emerald-400">
+                      <h3 className="font-bold text-lg text-gray-900">{station.station_id}</h3>
+                      <div className="flex items-center space-x-1 text-emerald-600">
                         <Power className="h-4 w-4" />
                         <span className="text-sm font-medium">{station.power}</span>
                       </div>
                     </div>
                     
-                    <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="space-y-2 text-sm text-gray-600">
                       <div className="flex items-center justify-between">
                         <span>Type:</span>
-                        <span className="font-medium text-gray-800 dark:text-gray-200">{station.type}</span>
+                        <span className="font-medium">{station.type}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span>Connector:</span>
-                        <span className="font-medium text-gray-800 dark:text-gray-200">{station.connector}</span>
+                        <span className="font-medium">{station.connector}</span>
                       </div>
                       {station.estimated_time && (
                         <div className="flex items-center justify-between">
                           <span>Est. Time:</span>
-                          <span className="flex items-center font-medium text-gray-800 dark:text-gray-200">
+                          <span className="flex items-center font-medium">
                             <Clock className="h-3 w-3 mr-1" />
                             {station.estimated_time}
                           </span>
@@ -247,29 +245,28 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
                       )}
                     </div>
 
-                    <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white">
+                    <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-600">
                       Select Station
                     </Button>
                   </div>
                 ))}
               </div>
             )}
-            {/* This sticky footer was part of station selection, needs to be outside the main scrollable area or part of its own non-scrolling section */}
-            {/* For now, removing sticky and border-t if it's inside the main scrollable p-6 area */}
-            <div className="flex justify-center pt-6">
-              <Button onClick={handleModalClose} variant="outline" className="dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700">
+
+            <div className="flex justify-center pt-4 border-t bg-white sticky bottom-0">
+              <Button onClick={handleModalClose} variant="outline">
                 <X className="h-4 w-4 mr-2" />
                 Cancel
               </Button>
             </div>
           </div>
         ) : (
-          // Booking Form View: This structure should make the form scrollable and footer sticky
-          <div className="flex flex-col flex-1 h-full"> {/* Use h-full if parent (p-6 div) defines context */}
-            <form onSubmit={handleSubmit} className="space-y-6 overflow-y-auto flex-1 pr-2"> {/* Added pr-2 for scrollbar */}
-            <div className="bg-gray-100 dark:bg-gray-700/50 rounded-lg p-4 mb-6">
-              <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">Selected Station:</h4>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+          // Booking Form View
+          <div className="flex flex-col max-h-[calc(90vh-200px)]">
+            <form onSubmit={handleSubmit} className="space-y-6 overflow-y-auto flex-1 px-1">
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+              <h4 className="font-semibold text-gray-900 mb-2">Selected Station:</h4>
+              <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-gray-600">Station ID:</span>
                   <span className="font-medium ml-2">{selectedStation?.station_id}</span>
@@ -381,7 +378,6 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
             </div>
           </div>
         )}
-        </div> {/* Closes the div for "flex-1 overflow-y-auto p-6" */}
       </DialogContent>
     </Dialog>
   );

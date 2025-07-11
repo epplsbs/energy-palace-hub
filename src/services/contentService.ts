@@ -211,17 +211,6 @@ export const getGalleryItems = async (): Promise<GalleryItem[]> => {
   return data || [];
 };
 
-// New function for admin to get all testimonials
-export const getAllTestimonialsForAdmin = async (): Promise<Testimonial[]> => {
-  const { data, error } = await supabase
-    .from('testimonials')
-    .select('*')
-    .order('created_at', { ascending: false }); // Order by newest first, admin can then use display_order
-
-  if (error) throw error;
-  return data || [];
-};
-
 export const createGalleryItem = async (item: Omit<GalleryItem, 'id' | 'created_at'>): Promise<GalleryItem> => {
   const { data, error } = await supabase
     .from('gallery_items')

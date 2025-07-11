@@ -17,8 +17,7 @@ import {
   Menu,
   X,
   UserCheck,
-  Quote,
-  Receipt // Added for Sales Terminal
+  Quote
 } from 'lucide-react';
 import MenuManager from './MenuManager';
 import GalleryManager from './GalleryManager';
@@ -46,7 +45,6 @@ const AdminDashboard = () => {
     { id: 'charging', label: 'Charging Stations', icon: Zap },
     { id: 'charging-orders', label: 'Charging Orders', icon: Zap },
     { id: 'orders', label: 'Orders', icon: ShoppingCart },
-    { id: 'sales', label: 'Sales Terminal', icon: Receipt }, // Added Sales Terminal
     { id: 'reservations', label: 'Reservations', icon: Calendar },
     { id: 'settings', label: 'Settings', icon: Settings },
     { id: 'seo', label: 'SEO', icon: Search },
@@ -70,8 +68,6 @@ const AdminDashboard = () => {
         return <ChargingOrderManager />;
       case 'orders':
         return <OrderManager />;
-      case 'sales': // Added case for Sales Terminal
-        return <SalesTerminal />;
       case 'reservations':
         return <ReservationManager />;
       case 'settings':

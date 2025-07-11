@@ -6,8 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-// import { supabase } from '@/integrations/supabase/client'; // Replaced with createOrder service
-import { createOrder } from '@/services/contentService'; // Import createOrder
+import { supabase } from '@/integrations/supabase/client';
 import { ShoppingCart, Plus, Minus, Utensils } from 'lucide-react';
 
 interface MenuModalProps {
@@ -133,12 +132,12 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
         order_source: 'website'
       };
 
-      // Use the createOrder service function
-      const newOrder = await createOrder(orderData);
+      const { data, error } = await supabase
+        .from('orders')
+        .insert(orderData)
+        .select();
 
-      if (!newOrder || !newOrder.id) { // Check if order creation was successful based on return
-        throw new Error("Order creation did not return expected data.");
-      }
+      if (error) throw error;
 
       toast({
         title: "Order Placed Successfully!",
