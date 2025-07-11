@@ -48,16 +48,9 @@ const POSLayout: React.FC = () => {
 
     fetchInitialSession();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       setAuthUser(session?.user ?? null);
-      // If login happens, loading might need to be reset or handled too
-      // but for now, this ensures user state is updated.
-      if (event === "SIGNED_IN") {
-        setLoadingAuth(false);
-      }
-      if (event === "SIGNED_OUT") {
-        setLoadingAuth(false);
-      }
+      setLoadingAuth(false); // Always update loading status after any auth event or initial check
     });
 
     return () => {
