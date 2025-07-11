@@ -605,17 +605,6 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
   return data || [];
 };
 
-// New function for admin to get all testimonials
-export const getAllTestimonialsForAdmin = async (): Promise<Testimonial[]> => {
-  const { data, error } = await supabase
-    .from('testimonials')
-    .select('*')
-    .order('created_at', { ascending: false }); // Order by newest first, admin can then use display_order
-
-  if (error) throw error;
-  return data || [];
-};
-
 export const createTestimonial = async (testimonial: Omit<Testimonial, 'id' | 'created_at' | 'updated_at'>): Promise<Testimonial> => {
   const { data, error } = await supabase
     .from('testimonials')
