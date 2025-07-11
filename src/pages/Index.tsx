@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Zap, Car, Coffee, ChevronRight, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon, Menu, X, BookOpen } from 'lucide-react'; // Added BookOpen
@@ -11,7 +10,6 @@ import { getAboutUsContent, type AboutUsContent } from '@/services/aboutUsServic
 import { getTestimonials, type Testimonial } from '@/services/contentService'; // Import Testimonials
 import { useTheme } from '@/contexts/ThemeContext';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
-import { cn } from '@/lib/utils';
 // Ensure Card, CardContent, Star, ChevronLeft, ChevronRight, Quote are imported or add them
 import { Card, CardContent } from '@/components/ui/card'; // Assuming these are used by testimonial slider
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react'; // Icons for testimonials
@@ -74,31 +72,28 @@ const Index = () => {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
+  const backgroundStyle = businessSettings?.background_image_url ? {
+    backgroundImage: `url(${businessSettings.background_image_url})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed'
+  } : {};
+
   return (
     <div 
-      className={cn(
-        "min-h-screen relative overflow-hidden",
-        theme === 'light' ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-futuristic'
-      )}
+      className={`min-h-screen ${theme === 'light' ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-futuristic'} relative overflow-hidden`}
       style={backgroundImageUrl ? {
         backgroundImage: `url(${backgroundImageUrl})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
-      } : businessSettings?.background_image_url ? {
-        backgroundImage: `url(${businessSettings.background_image_url})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      } : {}}
+        ...backgroundStyle
+      } : backgroundStyle}
     >
       {/* Theme overlay for better readability when background image is present */}
       {(businessSettings?.background_image_url || backgroundImageUrl) && (
-        <div className={cn(
-          "absolute inset-0",
-          theme === 'light' ? 'bg-white/80' : 'bg-black/60'
-        )}></div>
+        <div className={`absolute inset-0 ${theme === 'light' ? 'bg-white/80' : 'bg-black/60'}`}></div>
       )}
 
       {/* Animated Background Elements (only show if no background image) */}
@@ -124,7 +119,7 @@ const Index = () => {
             {businessSettings?.logo_url ? (
               <img
                 src={businessSettings.logo_url}
-                alt={cn(businessSettings?.business_name ? `${businessSettings.business_name} Logo` : 'Energy Palace Logo')}
+                alt={businessSettings?.business_name ? `${businessSettings.business_name} Logo` : 'Energy Palace Logo'}
                 className="h-10 md:h-12 w-10 md:w-12 object-contain rounded-xl" // Slightly adjusted size for consistency
               />
             ) : (
@@ -134,61 +129,37 @@ const Index = () => {
             )}
             <div>
               {/* Site title (not H1 on homepage) */}
-              <div className={cn(
-                "text-xl md:text-2xl font-bold",
-                theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'
-              )}>
+              <div className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 {businessSettings?.business_name || 'Energy Palace'}
               </div>
               {/* Tagline can remain if desired, or be removed for closer match to About.tsx header style */}
-              <p className={cn(
-                "text-sm",
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>
+              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 {businessSettings?.business_tagline || 'EV Charging, Restaurant & Coffee Shop'}
               </p>
             </div>
           </div>
 
           {/* Desktop Navigation - Standardized */}
-          <div className={cn(
-            "hidden md:flex items-center space-x-6",
-            theme === 'light' ? 'text-gray-800' : 'text-white'
-          )}>
-            <a href="/about" className={cn(
-              "transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer",
-              theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'
-            )}>
+          <div className={`hidden md:flex items-center space-x-6 ${theme === 'light' ? 'text-gray-800' : 'text-white'}`}>
+            <a href="/about" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
               <Info className="h-4 w-4" />
               <span>About</span>
             </a>
-            <a href="/blog" className={cn(
-              "transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer",
-              theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'
-            )}>
+            <a href="/blog" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
               <BookOpen className="h-4 w-4" /> {/* Changed from Users to BookOpen for Blog */}
               <span>Blog</span>
             </a>
-            <a href="/contacts" className={cn(
-              "transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer",
-              theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'
-            )}>
+            <a href="/contacts" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
               <Phone className="h-4 w-4" /> {/* Changed from Users to Phone for Contacts */}
               <span>Contact</span>
             </a>
-            <a href="/media" className={cn(
-              "transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer",
-              theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'
-            )}>
+            <a href="/media" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
               <Zap className="h-4 w-4" /> {/* Placeholder icon, can be changed */}
               <span>Media</span>
             </a>
             <button
               onClick={toggleTheme}
-              className={cn(
-                "p-2 rounded-lg transition-all duration-300",
-                theme === 'light' ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'
-              )}
+              className={`p-2 rounded-lg ${theme === 'light' ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'} transition-all duration-300`}
             >
               {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
             </button>
@@ -197,10 +168,7 @@ const Index = () => {
           {/* Mobile Menu Button - Standardized */}
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className={cn(
-              "md:hidden p-2 rounded-lg transition-all duration-300",
-              theme === 'light' ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'
-            )}
+            className={`md:hidden p-2 rounded-lg ${theme === 'light' ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'} transition-all duration-300`}
           >
             {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -208,36 +176,21 @@ const Index = () => {
 
         {/* Mobile Menu - Standardized */}
         {showMobileMenu && (
-          <div className={cn(
-            "md:hidden absolute top-full left-0 right-0 backdrop-blur-md shadow-lg border-t border-white/10 z-50",
-            theme === 'light' ? 'bg-white/95' : 'bg-black/95'
-          )}>
+          <div className={`md:hidden absolute top-full left-0 right-0 ${theme === 'light' ? 'bg-white/95' : 'bg-black/95'} backdrop-blur-md shadow-lg border-t border-white/10 z-50`}>
             <nav className="py-4">
-              <a href="/about" className={cn(
-                "flex items-center gap-3 px-6 py-3 transition-colors font-medium cursor-pointer",
-                theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'
-              )} onClick={() => setShowMobileMenu(false)}>
+              <a href="/about" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
                 <Info className="h-4 w-4" />
                 <span>About</span>
               </a>
-              <a href="/blog" className={cn(
-                "flex items-center gap-3 px-6 py-3 transition-colors font-medium cursor-pointer",
-                theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'
-              )} onClick={() => setShowMobileMenu(false)}>
+              <a href="/blog" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
                 <BookOpen className="h-4 w-4" />
                 <span>Blog</span>
               </a>
-              <a href="/contacts" className={cn(
-                "flex items-center gap-3 px-6 py-3 transition-colors font-medium cursor-pointer",
-                theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'
-              )} onClick={() => setShowMobileMenu(false)}>
+              <a href="/contacts" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
                 <Phone className="h-4 w-4" />
                 <span>Contact</span>
               </a>
-              <a href="/media" className={cn(
-                "flex items-center gap-3 px-6 py-3 transition-colors font-medium cursor-pointer",
-                theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'
-              )} onClick={() => setShowMobileMenu(false)}>
+              <a href="/media" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
                 <Zap className="h-4 w-4" /> {/* Placeholder icon */}
                 <span>Media</span>
               </a>
@@ -246,10 +199,7 @@ const Index = () => {
                   toggleTheme();
                   setShowMobileMenu(false);
                 }}
-                className={cn(
-                  "flex items-center w-full text-left px-6 py-3 transition-colors",
-                  theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'
-                )}
+                className={`flex items-center w-full text-left px-6 py-3 ${theme === 'light' ? 'text-gray-700 hover:bg-gray-100' : 'text-white/80 hover:bg-white/10'} transition-colors`}
               >
                 {theme === 'light' ? <Moon className="h-5 w-5 mr-2" /> : <Sun className="h-5 w-5 mr-2" />}
                 {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
@@ -264,36 +214,21 @@ const Index = () => {
         <div className="max-w-4xl mx-auto text-center space-y-12">
           {/* Hero Content */}
           <div className="space-y-6">
-            <div className={cn(
-              "inline-flex items-center gap-2 px-6 py-3 rounded-full glass border mb-8",
-              theme === 'light' ? 'border-gray-200 text-gray-700' : 'border-white/20 text-white/80'
-            )}>
+            <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full glass border ${theme === 'light' ? 'border-gray-200 text-gray-700' : 'border-white/20 text-white/80'} mb-8`}>
               <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
               <span>Live Charging Status Available</span>
             </div>
             
-            <h1 className={cn(
-              "text-6xl md:text-8xl font-black leading-tight",
-              theme === 'light' ? 'text-gray-900' : 'text-white'
-            )}>
-              <span className={cn(
-                "block",
-                theme === 'light' ? 'bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent'
-              )}>
+            <h1 className={`text-6xl md:text-8xl font-black leading-tight ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+              <span className={`block ${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent'}`}>
                 Charge
               </span>
-              <span className={cn(
-                "block",
-                theme === 'light' ? 'text-gray-800' : 'text-white/90'
-              )}>
+              <span className={`block ${theme === 'light' ? 'text-gray-800' : 'text-white/90'}`}>
                 And Dine
               </span>
             </h1>
             
-            <p className={cn(
-              "text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed",
-              theme === 'light' ? 'text-gray-600' : 'text-white/70'
-            )}>
+            <p className={`text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
               Power up your EV, savor exceptional meals at our restaurant, and relax with specialty coffees at our on-site coffee shop. Energy Palace is your complete destination.
             </p>
           </div>
@@ -301,22 +236,13 @@ const Index = () => {
           {/* Main CTA Buttons */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {/* Book Charger */}
-            <div className={cn(
-              "glass rounded-2xl p-8 border hover:border-emerald-500/50 transition-all duration-300 hover:scale-105 group",
-              theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'
-            )}>
+            <div className={`glass rounded-2xl p-8 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} hover:border-emerald-500/50 transition-all duration-300 hover:scale-105 group`}>
               <div className="flex flex-col items-center space-y-4">
                 <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 neon-glow-green group-hover:scale-110 transition-transform">
                   <Zap className="h-12 w-12 text-emerald-400" />
                 </div>
-                <h3 className={cn(
-                  "text-2xl font-bold",
-                  theme === 'light' ? 'text-gray-900' : 'text-white'
-                )}>Book Charger</h3>
-                <p className={cn(
-                  "text-center",
-                  theme === 'light' ? 'text-gray-600' : 'text-white/60'
-                )}>Reserve your charging station and get real-time updates</p>
+                <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Book Charger</h3>
+                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Reserve your charging station and get real-time updates</p>
                 <Button 
                   onClick={() => setIsChargingModalOpen(true)}
                   className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/25"
@@ -328,22 +254,13 @@ const Index = () => {
             </div>
     
             {/* Menu */}
-            <div className={cn(
-              "glass rounded-2xl p-8 border hover:border-blue-500/50 transition-all duration-300 hover:scale-105 group",
-              theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'
-            )}>
+            <div className={`glass rounded-2xl p-8 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} hover:border-blue-500/50 transition-all duration-300 hover:scale-105 group`}>
               <div className="flex flex-col items-center space-y-4">
                 <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500/20 to-blue-600/20 neon-glow group-hover:scale-110 transition-transform">
                   <Coffee className="h-12 w-12 text-blue-400" />
                 </div>
-                <h3 className={cn(
-                  "text-2xl font-bold",
-                  theme === 'light' ? 'text-gray-900' : 'text-white'
-                )}>Menu</h3>
-                <p className={cn(
-                  "text-center",
-                  theme === 'light' ? 'text-gray-600' : 'text-white/60'
-                )}>Discover our full restaurant menu and enjoy fresh coffee & snacks from our coffee shop while your EV charges.</p>
+                <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Menu</h3>
+                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Discover our full restaurant menu and enjoy fresh coffee & snacks from our coffee shop while your EV charges.</p>
                 <Button 
                   onClick={() => setIsMenuModalOpen(true)}
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
@@ -355,22 +272,13 @@ const Index = () => {
             </div>
 
             {/* Reserve Now */}
-            <div className={cn(
-              "glass rounded-2xl p-8 border hover:border-purple-500/50 transition-all duration-300 hover:scale-105 group",
-              theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'
-            )}>
+            <div className={`glass rounded-2xl p-8 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} hover:border-purple-500/50 transition-all duration-300 hover:scale-105 group`}>
               <div className="flex flex-col items-center space-y-4">
                 <div className="p-4 rounded-xl bg-gradient-to-r from-purple-500/20 to-purple-600/20 group-hover:scale-110 transition-transform">
                   <Car className="h-12 w-12 text-purple-400" />
                 </div>
-                <h3 className={cn(
-                  "text-2xl font-bold",
-                  theme === 'light' ? 'text-gray-900' : 'text-white'
-                )}>Reserve Now</h3>
-                <p className={cn(
-                  "text-center",
-                  theme === 'light' ? 'text-gray-600' : 'text-white/60'
-                )}>Book your table for the ultimate dining experience</p>
+                <h3 className={`text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Reserve Now</h3>
+                <p className={`text-center ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Book your table for the ultimate dining experience</p>
                 <Button 
                   onClick={() => setIsReservationModalOpen(true)}
                   className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
@@ -394,134 +302,69 @@ const Index = () => {
             </div>
             <div className="text-center space-y-2">
               <div className="text-4xl font-bold text-purple-400">{businessSettings?.opening_hours || '24/7'}</div>
-              <div className={cn(
-                "text-sm uppercase tracking-wider",
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>Available</div>
+              <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Available</div>
             </div>
             <div className="text-center space-y-2">
               <div className="text-4xl font-bold text-yellow-400">~30min</div>
-              <div className={cn(
-                "text-sm uppercase tracking-wider",
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>Fast Charging</div>
+              <div className={`text-sm uppercase tracking-wider ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Fast Charging</div>
             </div>
           </div>
         </div>
       </main>
 
       {/* About Us Section */}
-      <section id="about" className={cn(
-        "relative z-10 py-20 backdrop-blur-sm",
-        theme === 'light' ? 'bg-white/20' : 'bg-black/20'
-      )}>
+      <section id="about" className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className={cn(
-              "text-5xl font-bold mb-6",
-              theme === 'light' ? 'text-gray-900' : 'text-white'
-            )}>
-              <span className={cn(
-                theme === 'light' ? 'bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'
-              )}>
+            <h2 className={`text-5xl font-bold mb-6 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+              <span className={`${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                 {aboutContent?.title || 'About Energy Palace'}
               </span>
             </h2>
-            <p className={cn(
-              "text-xl max-w-3xl mx-auto",
-              theme === 'light' ? 'text-gray-600' : 'text-white/70'
-            )}>
+            <p className={`text-xl max-w-3xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
               {aboutContent?.company_story || 'Leading the way in sustainable transportation with cutting-edge EV charging technology and exceptional hospitality.'}
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <a href="/blog">
-              <div className={cn(
-                "glass rounded-2xl p-6 border text-center",
-                theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'
-              )}>
-              <div className={cn(
-                "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4",
-                theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'
-              )}>
+              <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
+              <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Zap className="h-8 w-8 text-emerald-400" />
               </div>
-              <h4 className={cn(
-                "text-lg font-bold mb-2",
-                theme === 'light' ? 'text-gray-900' : 'text-white'
-              )}>Innovation</h4>
-              <p className={cn(
-                "text-sm",
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>Leading the way in sustainable energy solutions</p>
+              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Innovation</h4>
+              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Leading the way in sustainable energy solutions</p>
             </div>
             </a>
             
-            <div className={cn(
-              "glass rounded-2xl p-6 border text-center",
-              theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'
-            )}>
-              <div className={cn(
-                "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4",
-                theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'
-              )}>
+            <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
+              <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Car className="h-8 w-8 text-blue-400" />
               </div>
-              <h4 className={cn(
-                "text-xl font-bold mb-3",
-                theme === 'light' ? 'text-gray-900' : 'text-white'
-              )}>
+              <h4 className={`text-xl font-bold mb-3 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
                 Our Location
               </h4>
               <LocationDisplay />
               {/* Thematic description for the card, can be adjusted if needed */}
-              <p className={cn(
-                "text-sm mt-3",
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>Accessible & Convenient Charging</p>
+              <p className={`text-sm mt-3 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Accessible & Convenient Charging</p>
             </div>
            
            <a href="/contacts">  
-            <div className={cn(
-              "glass rounded-2xl p-6 border text-center",
-              theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'
-            )}>
-              <div className={cn(
-                "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4",
-                theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'
-              )}>
+            <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
+              <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Users className="h-8 w-8 text-purple-400" />
               </div>
-              <h4 className={cn(
-                "text-lg font-bold mb-2",
-                theme === 'light' ? 'text-gray-900' : 'text-white'
-              )}>Community</h4>
-              <p className={cn(
-                "text-sm",
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>Building connections and supporting the EV community</p>
+              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Community</h4>
+              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Building connections and supporting the EV community</p>
             </div>
            </a>
            <a href="/about">
-            <div className={cn(
-              "glass rounded-2xl p-6 border text-center",
-              theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'
-            )}>
-              <div className={cn(
-                "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4",
-                theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'
-              )}>
+            <div className={`glass rounded-2xl p-6 border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/20'} text-center`}>
+              <div className={`w-16 h-16 ${theme === 'light' ? 'bg-gradient-to-r from-emerald-100 to-blue-100' : 'bg-gradient-to-r from-emerald-100/20 to-blue-100/20'} rounded-full flex items-center justify-center mx-auto mb-4`}>
                 <Coffee className="h-8 w-8 text-yellow-400" />
               </div>
-              <h4 className={cn(
-                "text-lg font-bold mb-2",
-                theme === 'light' ? 'text-gray-900' : 'text-white'
-              )}>Excellence</h4>
-              <p className={cn(
-                "text-sm",
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>Delivering exceptional service and premium experiences</p>
+              <h4 className={`text-lg font-bold mb-2 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Excellence</h4>
+              <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Delivering exceptional service and premium experiences</p>
             </div>
             </a>
           </div>
@@ -530,43 +373,25 @@ const Index = () => {
 
       {/* Testimonials Section - Copied and Adapted from About.tsx */}
       {testimonials.length > 0 && !loading && (
-        <section id="testimonials" className={cn(
-          "relative z-10 py-20 backdrop-blur-sm",
-          theme === 'light' ? 'bg-gray-50/50' : 'bg-black/30'
-        )}>
+        <section id="testimonials" className={`relative z-10 py-20 ${theme === 'light' ? 'bg-gray-50/50' : 'bg-black/30'} backdrop-blur-sm`}>
           <div className="max-w-7xl mx-auto px-4">
             <div className="text-center mb-12 md:mb-16">
-              <h2 className={cn(
-                "text-4xl md:text-5xl font-bold mb-4",
-                theme === 'light' ? 'text-gray-900' : 'text-white'
-              )}>
+              <h2 className={`text-4xl md:text-5xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
                 What Our Customers Say
               </h2>
-              <p className={cn(
-                "text-lg md:text-xl max-w-3xl mx-auto",
-                theme === 'light' ? 'text-gray-600' : 'text-white/70'
-              )}>
+              <p className={`text-lg md:text-xl max-w-3xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
                 Hear from our satisfied customers about their experience at Energy Palace.
               </p>
             </div>
 
             <div className="relative max-w-4xl mx-auto">
-              <Card className={cn(
-                "glass border backdrop-blur-xl overflow-hidden shadow-xl",
-                theme === 'light' ? 'border-gray-200 bg-white/60' : 'border-white/20 bg-gray-900/60'
-              )}>
+              <Card className={`glass border ${theme === 'light' ? 'border-gray-200 bg-white/60' : 'border-white/20 bg-gray-900/60'} backdrop-blur-xl overflow-hidden shadow-xl`}>
                 <CardContent className="p-8 md:p-12 text-center relative">
-                  <Quote className={cn(
-                    "h-10 w-10 md:h-12 md:w-12 mx-auto mb-6 opacity-75",
-                    theme === 'light' ? 'text-emerald-500' : 'text-emerald-400'
-                  )} />
+                  <Quote className={`h-10 w-10 md:h-12 md:w-12 mx-auto mb-6 ${theme === 'light' ? 'text-emerald-500' : 'text-emerald-400'} opacity-75`} />
 
                   <div className="min-h-[150px] md:min-h-[200px] flex items-center justify-center"> {/* Adjusted min-height */}
                     <div className="space-y-4 md:space-y-6">
-                      <p className={cn(
-                        "text-md md:text-xl italic leading-relaxed",
-                        theme === 'light' ? 'text-gray-700' : 'text-white/90'
-                      )}>
+                      <p className={`text-md md:text-xl italic leading-relaxed ${theme === 'light' ? 'text-gray-700' : 'text-white/90'}`}>
                         "{testimonials[currentTestimonial]?.content}"
                       </p>
 
@@ -577,17 +402,11 @@ const Index = () => {
                       </div>
 
                       <div>
-                        <h4 className={cn(
-                          "font-bold text-md md:text-lg",
-                          theme === 'light' ? 'text-gray-900' : 'text-white'
-                        )}>
+                        <h4 className={`font-bold text-md md:text-lg ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
                           {testimonials[currentTestimonial]?.customer_name}
                         </h4>
                         {testimonials[currentTestimonial]?.customer_title && (
-                          <p className={cn(
-                            "text-sm",
-                            theme === 'light' ? 'text-gray-500' : 'text-white/60'
-                          )}>
+                          <p className={`text-sm ${theme === 'light' ? 'text-gray-500' : 'text-white/60'}`}>
                             {testimonials[currentTestimonial].customer_title}
                           </p>
                         )}
@@ -603,10 +422,7 @@ const Index = () => {
                           onClick={prevTestimonial}
                           variant="outline"
                           size="icon" // Changed to icon size
-                          className={cn(
-                            "rounded-full w-8 h-8 md:w-10 md:h-10 p-0",
-                            theme === 'light' ? 'bg-white/50 hover:bg-gray-100 border-gray-300' : 'bg-white/10 border-white/20 hover:bg-white/20 text-white'
-                          )}
+                          className={`rounded-full w-8 h-8 md:w-10 md:h-10 p-0 ${theme === 'light' ? 'bg-white/50 hover:bg-gray-100 border-gray-300' : 'bg-white/10 border-white/20 hover:bg-white/20 text-white'}`}
                         >
                           <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" />
                         </Button>
@@ -617,10 +433,7 @@ const Index = () => {
                           onClick={nextTestimonial}
                           variant="outline"
                           size="icon" // Changed to icon size
-                          className={cn(
-                            "rounded-full w-8 h-8 md:w-10 md:h-10 p-0",
-                            theme === 'light' ? 'bg-white/50 hover:bg-gray-100 border-gray-300' : 'bg-white/10 border-white/20 hover:bg-white/20 text-white'
-                          )}
+                          className={`rounded-full w-8 h-8 md:w-10 md:h-10 p-0 ${theme === 'light' ? 'bg-white/50 hover:bg-gray-100 border-gray-300' : 'bg-white/10 border-white/20 hover:bg-white/20 text-white'}`}
                         >
                           <ChevronRight className="h-4 w-4 md:h-5 md:w-5" />
                         </Button>
@@ -655,10 +468,7 @@ const Index = () => {
       )}
 
       {/* Footer */}
-      <footer className={cn(
-        "relative z-10 mt-16 border-t backdrop-blur-sm",
-        theme === 'light' ? 'border-gray-200 bg-white/20' : 'border-white/10 bg-black/20'
-      )}>
+      <footer className={`relative z-10 mt-16 border-t ${theme === 'light' ? 'border-gray-200 bg-white/20' : 'border-white/10 bg-black/20'} backdrop-blur-sm`}>
         <div className="max-w-7xl mx-auto px-4 py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             <div className="space-y-4">
@@ -674,29 +484,18 @@ const Index = () => {
                     <Zap className="h-6 w-6 text-white" />
                   </div>
                 )}
-                <span className={cn(
-                  "text-xl font-bold",
-                  theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'
-                )}>
+                <span className={`text-xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
                   {businessSettings?.business_name || 'Energy Palace'}
                 </span>
               </div>
-              <p className={cn(
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>
+              <p className={`${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 Nepal's premier EV charging station, complete with a full-service restaurant and a welcoming coffee shop.
               </p>
             </div>
 
             <div className="space-y-4">
-              <h4 className={cn(
-                "font-semibold",
-                theme === 'light' ? 'text-gray-900' : 'text-white'
-              )}>Contact Info</h4>
-              <div className={cn(
-                "space-y-2",
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>
+              <h4 className={`font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Contact Info</h4>
+              <div className={`space-y-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 <div className="flex items-center space-x-2">
                   <Phone className="h-4 w-4" />
                   <span>{businessSettings?.contact_phone || '+9779841426598'}</span>
@@ -713,28 +512,16 @@ const Index = () => {
             </div>
 
             <div className="space-y-4">
-              <h4 className={cn(
-                "font-semibold",
-                theme === 'light' ? 'text-gray-900' : 'text-white'
-              )}>Operating Hours</h4>
-              <div className={cn(
-                "flex items-center space-x-2",
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>
+              <h4 className={`font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Operating Hours</h4>
+              <div className={`flex items-center space-x-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 <Clock className="h-4 w-4" />
                 <span>{businessSettings?.opening_hours || '24/7 Available'}</span>
               </div>
             </div>
 
             <div className="space-y-4">
-              <h4 className={cn(
-                "font-semibold",
-                theme === 'light' ? 'text-gray-900' : 'text-white'
-              )}>Quick Links</h4>
-              <ul className={cn(
-                "space-y-2",
-                theme === 'light' ? 'text-gray-600' : 'text-white/60'
-              )}>
+              <h4 className={`font-semibold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Quick Links</h4>
+              <ul className={`space-y-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 <li><a href="/about" className="hover:text-emerald-400 transition-colors">About Us</a></li>
                 <li><a href="/blog" className="hover:text-emerald-400 transition-colors">Blog</a></li>
                 <li><a href="/contacts" className="hover:text-emerald-400 transition-colors">Contact Us</a></li>
@@ -744,10 +531,7 @@ const Index = () => {
             </div>
           </div>
 
-          <div className={cn(
-            "border-t mt-8 pt-8 text-center",
-            theme === 'light' ? 'border-gray-200 text-gray-500' : 'border-white/10 text-white/40'
-          )}>
+          <div className={`border-t ${theme === 'light' ? 'border-gray-200' : 'border-white/10'} mt-8 pt-8 text-center ${theme === 'light' ? 'text-gray-500' : 'text-white/40'}`}>
             <p>&copy; 2024 {businessSettings?.business_name || 'Energy Palace'}. All rights reserved.</p>
           </div>
         </div>
