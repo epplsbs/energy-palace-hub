@@ -10,7 +10,9 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { Utensils, Plus, Edit, Trash2, Upload, X } from 'lucide-react';
+import { Utensils, Plus, Edit, Trash2, Upload, X, Loader2 } from 'lucide-react';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
+import { EmptyState } from '@/components/common/EmptyState';
 import { 
   getMenuCategories, 
   getMenuItems, 
@@ -37,7 +39,13 @@ const MenuManager = () => {
     category_id: '',
     image_url: '',
     is_available: true,
-    display_order: 0
+    display_order: 0,
+  });
+  const [formErrors, setFormErrors] = useState({
+    name: '',
+    price: '',
+    category_id: '',
+    display_order: '',
   });
 
   useEffect(() => {
@@ -88,13 +96,49 @@ const MenuManager = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors = { name: '', price: '', category_id: '', display_order: '' };
+    let isValid = true;
+
+    if (!formData.name.trim()) {
+      errors.name = 'Name is required.';
+      isValid = false;
+    } else if (formData.name.trim().length < 3) {
+      errors.name = 'Name must be at least 3 characters long.';
+      isValid = false;
+    } else if (formData.name.trim().length > 100) {
+      errors.name = 'Name must be 100 characters or less.';
+      isValid = false;
+    }
+
+    if (!formData.price) {
+      errors.price = 'Price is required.';
+      isValid = false;
+    } else if (isNaN(parseFloat(formData.price)) || parseFloat(formData.price) <= 0) {
+      errors.price = 'Price must be a positive number.';
+      isValid = false;
+    }
+
+    if (!formData.category_id) {
+      errors.category_id = 'Category is required.';
+      isValid = false;
+    }
+
+    if (formData.display_order < 0) {
+        errors.display_order = 'Display order must be a non-negative number.';
+        isValid = false;
+    }
+
+    setFormErrors(errors);
+    return isValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.name || !formData.price || !formData.category_id) {
+    if (!validateForm()) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: "Validation Error",
+        description: "Please correct the errors in the form.",
         variant: "destructive",
       });
       return;
@@ -102,13 +146,13 @@ const MenuManager = () => {
 
     try {
       const itemData = {
-        name: formData.name,
-        description: formData.description || null,
+        name: formData.name.trim(),
+        description: formData.description?.trim() || null,
         price: parseFloat(formData.price),
         category_id: formData.category_id,
         image_url: formData.image_url || null,
         is_available: formData.is_available,
-        display_order: formData.display_order
+        display_order: formData.display_order,
       };
 
       if (editingItem) {
@@ -192,12 +236,9 @@ const MenuManager = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 md:space-y-6 p-4 md:p-6">
         <h2 className="text-xl md:text-2xl font-bold text-gray-900">Menu Management</h2>
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading menu items...</p>
-        </div>
+        <LoadingSpinner fullPage={false} text="Loading menu items..." size={32} iconClassName="text-orange-600" />
       </div>
     );
   }
@@ -209,7 +250,7 @@ const MenuManager = () => {
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={resetForm} className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600">
+            <Button onClick={resetForm} className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700">
               <Plus className="h-4 w-4 mr-2" />
               Add Menu Item
             </Button>
@@ -231,8 +272,8 @@ const MenuManager = () => {
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                     placeholder="Item name"
-                    required
                   />
+                  {formErrors.name && <p className="text-sm text-red-500 mt-1">{formErrors.name}</p>}
                 </div>
                 <div>
                   <Label htmlFor="price">Price *</Label>
@@ -243,15 +284,18 @@ const MenuManager = () => {
                     value={formData.price}
                     onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
                     placeholder="0.00"
-                    required
                   />
+                  {formErrors.price && <p className="text-sm text-red-500 mt-1">{formErrors.price}</p>}
                 </div>
               </div>
 
               <div>
                 <Label htmlFor="category">Category *</Label>
-                <Select value={formData.category_id} onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}>
-                  <SelectTrigger>
+                <Select
+                  value={formData.category_id}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}
+                >
+                  <SelectTrigger className={formErrors.category_id ? 'border-red-500' : ''}>
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -262,6 +306,7 @@ const MenuManager = () => {
                     ))}
                   </SelectContent>
                 </Select>
+                {formErrors.category_id && <p className="text-sm text-red-500 mt-1">{formErrors.category_id}</p>}
               </div>
 
               <div>
@@ -286,8 +331,8 @@ const MenuManager = () => {
                   />
                   
                   {uploading && (
-                    <div className="flex items-center gap-2">
-                      <Upload className="h-4 w-4 animate-spin" />
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Loader2 className="h-4 w-4 animate-spin text-orange-600" />
                       <span>Uploading image...</span>
                     </div>
                   )}
@@ -331,14 +376,22 @@ const MenuManager = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))}
                     placeholder="0"
                   />
+                  {formErrors.display_order && <p className="text-sm text-red-500 mt-1">{formErrors.display_order}</p>}
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setIsDialogOpen(false);
+                    setFormErrors({ name: '', price: '', category_id: '', display_order: '' }); // Reset errors on cancel
+                  }}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-orange-500 hover:bg-orange-600" disabled={uploading}>
+                <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700" disabled={uploading}>
                   {editingItem ? 'Update Item' : 'Add Item'}
                 </Button>
               </div>
@@ -355,11 +408,13 @@ const MenuManager = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="p-4 md:p-6">
-          {menuItems.length === 0 ? (
-            <div className="text-center py-8">
-              <Utensils className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">No menu items found. Add your first item to get started!</p>
-            </div>
+          {menuItems.length === 0 && !loading ? (
+            <EmptyState
+              icon={<Utensils />}
+              title="No Menu Items Yet"
+              description="Add your first menu item to get started. Click the button above!"
+              className="my-8" // Added margin for better spacing within card
+            />
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {menuItems.map((item) => (

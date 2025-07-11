@@ -8,7 +8,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, Globe, Brain, Sparkles, Target, TrendingUp } from 'lucide-react';
+import { Search, Globe, Brain, Sparkles, Target, TrendingUp, Plus, Loader2 } from 'lucide-react';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
+import { EmptyState } from '@/components/common/EmptyState';
 
 interface SEOSetting {
   id: string;
@@ -54,6 +56,14 @@ const SEOManager = () => {
     canonical_url: '',
     robots_directives: 'index,follow',
     schema_markup: ''
+  });
+  const [formErrors, setFormErrors] = useState({
+    page_path: '',
+    meta_title: '',
+    meta_description: '',
+    og_image: '',
+    canonical_url: '',
+    schema_markup: '',
   });
   const [aiPrompt, setAiPrompt] = useState('');
   const [generatingContent, setGeneratingContent] = useState(false);
@@ -101,15 +111,87 @@ const SEOManager = () => {
     }
   };
 
+  const validateSEOForm = () => {
+    const errors = { page_path: '', meta_title: '', meta_description: '', og_image: '', canonical_url: '', schema_markup: '' };
+    let isValid = true;
+
+    if (!formData.page_path.trim()) {
+      errors.page_path = 'Page path is required.';
+      isValid = false;
+    } else if (!formData.page_path.startsWith('/')) {
+      errors.page_path = 'Page path must start with a leading slash (e.g., /about).';
+      isValid = false;
+    }
+
+    if (formData.meta_title.trim().length > 70) {
+      errors.meta_title = 'Meta title should ideally be 70 characters or less.';
+      // Not setting isValid = false, as it's a recommendation
+    }
+    if (formData.meta_description.trim().length > 160) {
+      errors.meta_description = 'Meta description should ideally be 160 characters or less.';
+      // Not setting isValid = false, as it's a recommendation
+    }
+
+    const urlFieldsToValidate = [
+      { key: 'og_image', value: formData.og_image, errorField: 'og_image' },
+      { key: 'canonical_url', value: formData.canonical_url, errorField: 'canonical_url' },
+    ];
+
+    for (const field of urlFieldsToValidate) {
+      if (field.value.trim()) {
+        try {
+          new URL(field.value.trim());
+        } catch (_) {
+          errors[field.errorField] = 'Please enter a valid URL.';
+          isValid = false;
+        }
+      }
+    }
+
+    if (formData.schema_markup.trim()) {
+      try {
+        JSON.parse(formData.schema_markup.trim());
+      } catch (e) {
+        errors.schema_markup = 'Schema markup must be valid JSON.';
+        isValid = false;
+      }
+    }
+
+    setFormErrors(errors);
+    return isValid;
+  };
+
   const handleSEOSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (!validateSEOForm()) {
+      toast({
+        title: "Validation Error",
+        description: "Please correct the errors in the form.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setLoading(true); // Keep this for submission loading state
 
     try {
+      const dataToSave = {
+        ...formData,
+        page_path: formData.page_path.trim(),
+        meta_title: formData.meta_title.trim(),
+        meta_description: formData.meta_description.trim(),
+        meta_keywords: formData.meta_keywords.trim(),
+        og_title: formData.og_title.trim(),
+        og_description: formData.og_description.trim(),
+        og_image: formData.og_image.trim(),
+        canonical_url: formData.canonical_url.trim(),
+        robots_directives: formData.robots_directives.trim(),
+        schema_markup: formData.schema_markup.trim() ? JSON.parse(formData.schema_markup.trim()) : null,
+      };
+
       if (editingPage) {
         const { error } = await supabase
           .from('seo_settings')
-          .update(formData)
+          .update(dataToSave)
           .eq('id', editingPage.id);
 
         if (error) throw error;
@@ -252,16 +334,23 @@ const SEOManager = () => {
     }
   };
 
-  if (loading && seoSettings.length === 0) {
+  // Combined loading state for initial data fetch
+  const initialLoading = loading && seoSettings.length === 0 && contentSuggestions.length === 0;
+
+  if (initialLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+      <div className="p-6 space-y-6">
+         <div className="flex items-center gap-2">
+          <Search className="h-6 w-6 text-emerald-600" />
+          <h2 className="text-2xl font-bold">SEO & AI Optimization</h2>
+        </div>
+        <LoadingSpinner fullPage={false} text="Loading SEO data..." size={32} />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4 md:p-6">
       <div className="flex items-center gap-2">
         <Search className="h-6 w-6 text-emerald-600" />
         <h2 className="text-2xl font-bold">SEO & AI Optimization</h2>
@@ -274,7 +363,7 @@ const SEOManager = () => {
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="seo-settings" className="space-y-6">
+        <TabsContent value="seo-settings" className="space-y-6 pt-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -292,8 +381,8 @@ const SEOManager = () => {
                       value={formData.page_path}
                       onChange={(e) => setFormData(prev => ({ ...prev, page_path: e.target.value }))}
                       placeholder="/about-us"
-                      required
                     />
+                    {formErrors.page_path && <p className="text-sm text-red-500 mt-1">{formErrors.page_path}</p>}
                   </div>
                   <div>
                     <Label htmlFor="robots_directives">Robots Directives</Label>
@@ -314,6 +403,7 @@ const SEOManager = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, meta_title: e.target.value }))}
                     placeholder="Page Title - Energy Palace"
                   />
+                  {formErrors.meta_title && <p className="text-sm text-orange-500 mt-1">{formErrors.meta_title}</p>}
                 </div>
 
                 <div>
@@ -325,6 +415,7 @@ const SEOManager = () => {
                     placeholder="Describe your page in 150-160 characters"
                     rows={3}
                   />
+                  {formErrors.meta_description && <p className="text-sm text-orange-500 mt-1">{formErrors.meta_description}</p>}
                 </div>
 
                 <div>
@@ -355,6 +446,7 @@ const SEOManager = () => {
                       onChange={(e) => setFormData(prev => ({ ...prev, og_image: e.target.value }))}
                       placeholder="https://example.com/image.jpg"
                     />
+                    {formErrors.og_image && <p className="text-sm text-red-500 mt-1">{formErrors.og_image}</p>}
                   </div>
                 </div>
 
@@ -377,6 +469,7 @@ const SEOManager = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, canonical_url: e.target.value }))}
                     placeholder="https://energypalace.com/page"
                   />
+                  {formErrors.canonical_url && <p className="text-sm text-red-500 mt-1">{formErrors.canonical_url}</p>}
                 </div>
 
                 <div>
@@ -389,10 +482,12 @@ const SEOManager = () => {
                     rows={10}
                     className="font-mono text-sm"
                   />
+                  {formErrors.schema_markup && <p className="text-sm text-red-500 mt-1">{formErrors.schema_markup}</p>}
                 </div>
 
                 <div className="flex gap-2">
-                  <Button type="submit" disabled={loading}>
+                  <Button type="submit" disabled={loading && !initialLoading} className="bg-emerald-600 hover:bg-emerald-700">
+                    {loading && !initialLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                     {editingPage ? 'Update' : 'Create'} SEO Settings
                   </Button>
                   {editingPage && (
@@ -424,30 +519,43 @@ const SEOManager = () => {
           </Card>
 
           <div className="grid gap-4">
-            {seoSettings.map((setting) => (
-              <Card key={setting.id}>
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg">{setting.page_path}</h3>
-                      <p className="text-sm text-gray-600 mt-1">{setting.meta_title}</p>
-                      <p className="text-xs text-gray-500 mt-1">{setting.meta_description}</p>
+            {seoSettings.length === 0 && !loading ? (
+              <EmptyState
+                icon={<Search />}
+                title="No SEO Settings Found"
+                description="Start by adding SEO configurations for your website pages."
+                ctaButton={{
+                  text: 'Add First SEO Setting',
+                  onClick: () => { /* Could scroll to form or focus first field */ },
+                  icon: <Plus />
+                }}
+              />
+            ) : (
+              seoSettings.map((setting) => (
+                <Card key={setting.id}>
+                  <CardContent className="pt-6">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg">{setting.page_path}</h3>
+                        <p className="text-sm text-gray-600 mt-1">{setting.meta_title}</p>
+                        <p className="text-xs text-gray-500 mt-1 line-clamp-2">{setting.meta_description}</p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEdit(setting)}
+                      >
+                        Edit
+                      </Button>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleEdit(setting)}
-                    >
-                      Edit
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </TabsContent>
 
-        <TabsContent value="ai-content" className="space-y-6">
+        <TabsContent value="ai-content" className="space-y-6 pt-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -472,7 +580,7 @@ const SEOManager = () => {
                   disabled={generatingContent}
                   className="bg-purple-600 hover:bg-purple-700"
                 >
-                  <Sparkles className="h-4 w-4 mr-2" />
+                  {generatingContent ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
                   {generatingContent ? 'Generating...' : 'Generate AI Content'}
                 </Button>
               </div>
@@ -480,63 +588,71 @@ const SEOManager = () => {
           </Card>
 
           <div className="grid gap-4">
-            {contentSuggestions.map((suggestion) => (
-              <Card key={suggestion.id}>
-                <CardContent className="pt-6">
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                            {suggestion.content_type.toUpperCase()}
-                          </span>
-                          <span className={`text-xs px-2 py-1 rounded ${
-                            suggestion.status === 'approved' ? 'bg-green-100 text-green-800' :
-                            suggestion.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                            'bg-yellow-100 text-yellow-800'
-                          }`}>
-                            {suggestion.status.toUpperCase()}
-                          </span>
-                        </div>
-                        <h3 className="font-semibold mt-2">{suggestion.title}</h3>
-                        <p className="text-sm text-gray-600 mt-1">{suggestion.content}</p>
-                        {suggestion.keywords && suggestion.keywords.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-2">
-                            {suggestion.keywords.map((keyword, index) => (
-                              <span key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                                {keyword}
-                              </span>
-                            ))}
+            {contentSuggestions.length === 0 && !loading ? (
+               <EmptyState
+                icon={<Brain />}
+                title="No AI Content Suggestions"
+                description="Use the generator above to create content ideas for your blog or SEO."
+              />
+            ) : (
+              contentSuggestions.map((suggestion) => (
+                <Card key={suggestion.id}>
+                  <CardContent className="pt-6">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                              {suggestion.content_type.toUpperCase()}
+                            </span>
+                            <span className={`text-xs px-2 py-1 rounded ${
+                              suggestion.status === 'approved' ? 'bg-green-100 text-green-800' :
+                              suggestion.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                              'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {suggestion.status.toUpperCase()}
+                            </span>
                           </div>
-                        )}
+                          <h3 className="font-semibold mt-2">{suggestion.title}</h3>
+                          <p className="text-sm text-gray-600 mt-1 line-clamp-3">{suggestion.content}</p>
+                          {suggestion.keywords && suggestion.keywords.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {suggestion.keywords.map((keyword, index) => (
+                                <span key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                                  {keyword}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
+                      {suggestion.status === 'pending' && (
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            size="sm"
+                            onClick={() => updateSuggestionStatus(suggestion.id, 'approved')}
+                            className="bg-green-600 hover:bg-green-700"
+                          >
+                            Approve
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => updateSuggestionStatus(suggestion.id, 'rejected')}
+                          >
+                            Reject
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                    {suggestion.status === 'pending' && (
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => updateSuggestionStatus(suggestion.id, 'approved')}
-                          className="bg-green-600 hover:bg-green-700"
-                        >
-                          Approve
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => updateSuggestionStatus(suggestion.id, 'rejected')}
-                        >
-                          Reject
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-6">
+        <TabsContent value="analytics" className="space-y-6 pt-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

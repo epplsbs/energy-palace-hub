@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Edit, Save, Phone, Mail, MapPin, Building, Loader2, Clock, Tag, Image, Upload, Settings, Globe } from 'lucide-react';
+import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 
 interface BusinessSetting {
   id: string;
@@ -205,15 +206,61 @@ const BusinessSettingsManager = () => {
     }
   };
 
+  const validateSettingValue = (key: string, value: string): string | null => {
+    if (value === null || typeof value === 'undefined') value = ''; // Ensure value is a string for trim
+
+    // General required check for most fields, except specific ones like background_image_url or logo_url if only upload is used
+    if (!value.trim() && key !== 'background_image_url' && key !== 'logo_url' && key !== 'email_smtp_password') {
+      return 'Value cannot be empty.';
+    }
+
+    if ((key === 'contact_email' || key === 'email_from_address') && value.trim() && !/^\S+@\S+\.\S+$/.test(value.trim())) {
+      return 'Please enter a valid email address.';
+    }
+
+    if ((key === 'background_image_url' || key === 'logo_url') && value.trim()) {
+      try {
+        new URL(value.trim()); // Check if it's a valid URL structure
+      } catch (_) {
+        // This check might be too strict if we allow relative paths or just uploaded paths
+        // For now, if it's not empty and not a valid URL, it might be an issue
+        // However, since uploads generate a valid URL, this mainly applies to manual input
+        // Let's assume manual input should be a full URL.
+        // If it's a Supabase storage URL, it will be valid.
+      }
+    }
+
+    if (key === 'business_latitude' && value.trim() && (isNaN(parseFloat(value)) || parseFloat(value) < -90 || parseFloat(value) > 90)) {
+        return 'Latitude must be a number between -90 and 90.';
+    }
+    if (key === 'business_longitude' && value.trim() && (isNaN(parseFloat(value)) || parseFloat(value) < -180 || parseFloat(value) > 180)) {
+        return 'Longitude must be a number between -180 and 180.';
+    }
+     if (key === 'email_smtp_port' && value.trim() && (isNaN(parseInt(value)) || parseInt(value) <= 0 || parseInt(value) > 65535)) {
+        return 'Port must be a number between 1 and 65535.';
+    }
+
+    return null; // No error
+  };
+
   const updateSetting = async (settingKey: string) => {
-    if (!editingSettings[settingKey] && settingKey !== 'background_image_url') {
+    const currentValue = editingSettings[settingKey] || '';
+    const validationError = validateSettingValue(settingKey, currentValue);
+
+    if (validationError) {
       toast({
-        title: "Error",
-        description: "Please enter a value before saving",
+        title: "Validation Error",
+        description: validationError,
         variant: "destructive",
       });
       return;
     }
+
+    // The original check for empty value was:
+    // if (!editingSettings[settingKey] && settingKey !== 'background_image_url') { ... }
+    // This is now handled by validateSettingValue for most keys.
+    // For logo_url and background_image_url, if they are empty, it means user wants to clear them (potentially).
+    // The validation logic above allows empty for these if not strictly required.
 
     setIsSaving(true);
     try {
@@ -422,10 +469,11 @@ const BusinessSettingsManager = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-        <span className="ml-2 text-gray-600">Loading business settings...</span>
-      </div>
+      <LoadingSpinner
+        fullPage={true}
+        text="Loading business settings..."
+        size={32}
+      />
     );
   }
 
