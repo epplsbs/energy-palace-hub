@@ -72,13 +72,6 @@ const Index = () => {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  const backgroundStyle = businessSettings?.background_image_url ? {
-    backgroundImage: `url(${businessSettings.background_image_url})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundAttachment: 'fixed'
-  } : {};
-
   return (
     <div 
       className={`min-h-screen ${theme === 'light' ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-futuristic'} relative overflow-hidden`}
@@ -88,8 +81,12 @@ const Index = () => {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'fixed',
-        ...backgroundStyle
-      } : backgroundStyle}
+      } : businessSettings?.background_image_url ? {
+        backgroundImage: `url(${businessSettings.background_image_url})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      } : {}}
     >
       {/* Theme overlay for better readability when background image is present */}
       {(businessSettings?.background_image_url || backgroundImageUrl) && (
