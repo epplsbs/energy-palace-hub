@@ -15,7 +15,16 @@ import Media from "./pages/Media"; // Import the new Media page
 import NotFound from "./pages/NotFound";
 import POSLayout from "./pages/pos/POSLayout"; // Import new POS Layout
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      retryOnMount: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 30 * 60 * 1000, // 30 minutes
+    },
+  },
+});
 
 const App = () => (
   <HelmetProvider>
