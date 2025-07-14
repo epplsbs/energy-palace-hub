@@ -691,7 +691,7 @@ const Index = () => {
       </section>
 
       {/* Testimonials Section - Copied and Adapted from About.tsx */}
-      {testimonials.length > 0 && !loading && (
+      {testimonials.length > 0 && !loadingCombined && (
         <section
           id="testimonials"
           className={`relative z-10 py-20 ${theme === "light" ? "bg-gray-50/50" : "bg-black/30"} backdrop-blur-sm`}
