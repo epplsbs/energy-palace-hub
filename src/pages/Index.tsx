@@ -671,91 +671,77 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <a href="/blog">
-              <div
-                className={`glass rounded-2xl p-6 border ${theme === "light" ? "border-gray-200 bg-white/50" : "border-white/20"} text-center`}
+          {/* Location Card - Featured */}
+          <div className="mb-12">
+            <div className="glass-card-enhanced p-8 max-w-4xl mx-auto text-center border-emerald-400/30 hover-lift-enhanced">
+              <div className="icon-container-enhanced mx-auto mb-6 neon-glow-green">
+                <MapPin className="h-10 w-10 text-white drop-shadow-lg" />
+              </div>
+              <h3 className="text-2xl font-bold text-gradient-animated mb-4">
+                Our Prime Location: Bhiman, Sindhuli
+              </h3>
+              <LocationDisplay />
+              <p
+                className={`text-lg mt-4 leading-relaxed ${theme === "light" ? "text-gray-600" : "text-white/80"}`}
               >
-                <div
-                  className={`w-16 h-16 ${theme === "light" ? "bg-gradient-to-r from-emerald-100 to-blue-100" : "bg-gradient-to-r from-emerald-100/20 to-blue-100/20"} rounded-full flex items-center justify-center mx-auto mb-4`}
-                >
+                Strategically positioned on Nepal's main highway, Energy Palace
+                serves as the perfect pit stop for EV travelers. Our location in
+                Bhiman, Sindhuli offers 24/7 accessibility, ample parking, and
+                easy highway access for all electric vehicles.
+              </p>
+            </div>
+          </div>
+
+          {/* Core Values Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <a href="/blog" className="block">
+              <div className="glass-card-enhanced p-8 text-center hover-lift-enhanced h-full border-emerald-400/20">
+                <div className="icon-container-enhanced mx-auto mb-6 bg-gradient-to-r from-emerald-400/20 to-teal-500/20">
                   <Zap className="h-8 w-8 text-emerald-400" />
                 </div>
-                <h4
-                  className={`text-lg font-bold mb-2 ${theme === "light" ? "text-gray-900" : "text-white"}`}
-                >
+                <h4 className="text-xl font-bold mb-4 text-gradient-animated">
                   Innovation
                 </h4>
                 <p
-                  className={`text-sm ${theme === "light" ? "text-gray-600" : "text-white/60"}`}
+                  className={`text-base leading-relaxed ${theme === "light" ? "text-gray-600" : "text-white/70"}`}
                 >
-                  Leading the way in sustainable energy solutions
+                  Leading the way in sustainable energy solutions with
+                  cutting-edge EV charging technology and smart grid
+                  integration.
                 </p>
               </div>
             </a>
 
-            <div
-              className={`glass rounded-2xl p-6 border ${theme === "light" ? "border-gray-200 bg-white/50" : "border-white/20"} text-center`}
-            >
-              <div
-                className={`w-16 h-16 ${theme === "light" ? "bg-gradient-to-r from-emerald-100 to-blue-100" : "bg-gradient-to-r from-emerald-100/20 to-blue-100/20"} rounded-full flex items-center justify-center mx-auto mb-4`}
-              >
-                <Car className="h-8 w-8 text-blue-400" />
-              </div>
-              <h4
-                className={`text-xl font-bold mb-3 ${theme === "light" ? "text-gray-900" : "text-white"}`}
-              >
-                Bhiman, Sindhuli Location
-              </h4>
-              <LocationDisplay />
-              <p
-                className={`text-sm mt-3 ${theme === "light" ? "text-gray-600" : "text-white/60"}`}
-              >
-                Strategically located on the main highway in Bhiman, Sindhuli,
-                Nepal. Perfect pit stop for EV travelers with 24/7 accessibility
-                and convenient parking.
-              </p>
-            </div>
-
-            <a href="/contacts">
-              <div
-                className={`glass rounded-2xl p-6 border ${theme === "light" ? "border-gray-200 bg-white/50" : "border-white/20"} text-center`}
-              >
-                <div
-                  className={`w-16 h-16 ${theme === "light" ? "bg-gradient-to-r from-emerald-100 to-blue-100" : "bg-gradient-to-r from-emerald-100/20 to-blue-100/20"} rounded-full flex items-center justify-center mx-auto mb-4`}
-                >
-                  <Users className="h-8 w-8 text-purple-400" />
+            <a href="/contacts" className="block">
+              <div className="glass-card-enhanced p-8 text-center hover-lift-enhanced h-full border-emerald-400/20">
+                <div className="icon-container-enhanced mx-auto mb-6 bg-gradient-to-r from-green-400/20 to-emerald-500/20">
+                  <Users className="h-8 w-8 text-green-400" />
                 </div>
-                <h4
-                  className={`text-lg font-bold mb-2 ${theme === "light" ? "text-gray-900" : "text-white"}`}
-                >
+                <h4 className="text-xl font-bold mb-4 text-gradient-animated">
                   Community
                 </h4>
                 <p
-                  className={`text-sm ${theme === "light" ? "text-gray-600" : "text-white/60"}`}
+                  className={`text-base leading-relaxed ${theme === "light" ? "text-gray-600" : "text-white/70"}`}
                 >
-                  Building connections and supporting the EV community
+                  Building strong connections and fostering a supportive EV
+                  community throughout Nepal and beyond.
                 </p>
               </div>
             </a>
-            <a href="/about">
-              <div
-                className={`glass rounded-2xl p-6 border ${theme === "light" ? "border-gray-200 bg-white/50" : "border-white/20"} text-center`}
-              >
-                <div
-                  className={`w-16 h-16 ${theme === "light" ? "bg-gradient-to-r from-emerald-100 to-blue-100" : "bg-gradient-to-r from-emerald-100/20 to-blue-100/20"} rounded-full flex items-center justify-center mx-auto mb-4`}
-                >
-                  <Coffee className="h-8 w-8 text-yellow-400" />
+
+            <a href="/about" className="block">
+              <div className="glass-card-enhanced p-8 text-center hover-lift-enhanced h-full border-emerald-400/20">
+                <div className="icon-container-enhanced mx-auto mb-6 bg-gradient-to-r from-teal-400/20 to-cyan-500/20">
+                  <Coffee className="h-8 w-8 text-teal-400" />
                 </div>
-                <h4
-                  className={`text-lg font-bold mb-2 ${theme === "light" ? "text-gray-900" : "text-white"}`}
-                >
+                <h4 className="text-xl font-bold mb-4 text-gradient-animated">
                   Excellence
                 </h4>
                 <p
-                  className={`text-sm ${theme === "light" ? "text-gray-600" : "text-white/60"}`}
+                  className={`text-base leading-relaxed ${theme === "light" ? "text-gray-600" : "text-white/70"}`}
                 >
-                  Delivering exceptional service and premium experiences
+                  Delivering exceptional service and premium experiences in both
+                  EV charging and hospitality.
                 </p>
               </div>
             </a>
