@@ -1,10 +1,10 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { HelmetProvider } from "react-helmet-async";
 import Index from "./pages/Index";
 import Blog from "./pages/Blog";
 import Admin from "./pages/Admin";
@@ -30,9 +30,12 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/pos" element={<POS />} />
-            <Route path="/about" element={<AboutPage />} /> {/* Corrected element for About page */}
-            <Route path="/media" element={<Media />} /> {/* Added route for Media page */}
-            <Route path="/sales/*" element={<POSLayout />} /> {/* Added POS route */}
+            <Route path="/about" element={<AboutPage />} />{" "}
+            {/* Corrected element for About page */}
+            <Route path="/media" element={<Media />} />{" "}
+            {/* Added route for Media page */}
+            <Route path="/sales/*" element={<POSLayout />} />{" "}
+            {/* Added POS route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
