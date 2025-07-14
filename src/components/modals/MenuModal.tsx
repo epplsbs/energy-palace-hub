@@ -189,7 +189,7 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
                   key={item.id}
                   className="glass-card-enhanced p-6 hover-lift-enhanced border-glow-enhanced"
                 >
-                                    <div className="space-y-4">
+                  <div className="space-y-4">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <h3 className="font-bold text-xl text-gradient-animated mb-2">
@@ -199,7 +199,9 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
                           {item.description}
                         </p>
                         <div className="inline-flex items-center bg-emerald-500/20 rounded-lg px-3 py-1 border border-emerald-400/30">
-                          <span className="text-emerald-300 font-bold text-lg">NPR {item.price}</span>
+                          <span className="text-emerald-300 font-bold text-lg">
+                            NPR {item.price}
+                          </span>
                         </div>
                       </div>
                       {item.image_url && (
@@ -209,11 +211,12 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
                             alt={item.name}
                             className="w-24 h-24 object-cover"
                           />
+                        </div>
                       )}
                     </div>
                     <Button
                       onClick={() => addToCart(item)}
-                      className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+                      className="w-full btn-primary-enhanced"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Add to Cart
