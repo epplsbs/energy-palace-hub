@@ -241,7 +241,12 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                       {date ? format(date, "PPP") : <span>Pick a date</span>}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
+                  <PopoverContent
+                    className="w-auto p-0 glass border-emerald-400/30 shadow-xl z-50"
+                    align="start"
+                    side="bottom"
+                    sideOffset={5}
+                  >
                     <Calendar
                       mode="single"
                       selected={date}
@@ -253,7 +258,7 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                         }));
                       }}
                       disabled={(date) => date < new Date()}
-                      className="rounded-md border bg-white dark:bg-gray-800 dark:text-gray-50"
+                      className="rounded-md border border-emerald-400/20 bg-gray-900/95 text-white"
                     />
                   </PopoverContent>
                 </Popover>
