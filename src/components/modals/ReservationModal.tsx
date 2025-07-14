@@ -191,27 +191,25 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
+              <div className="space-y-2">
                 <Label
                   htmlFor="customerPhone"
-                  className="text-gray-700 dark:text-gray-300"
+                  className="text-white/90 font-semibold"
                 >
-                  Phone
+                  Phone Number
                 </Label>
                 <Input
                   type="tel"
                   id="customerPhone"
                   value={formData.customerPhone}
                   onChange={handleChange}
-                  className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                  className="glass border-emerald-400/30 text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-emerald-400/50"
+                  placeholder="Enter your phone number"
                 />
               </div>
-              <div>
-                <Label
-                  htmlFor="guests"
-                  className="text-gray-700 dark:text-gray-300"
-                >
-                  Guests
+              <div className="space-y-2">
+                <Label htmlFor="guests" className="text-white/90 font-semibold">
+                  Number of Guests *
                 </Label>
                 <Input
                   type="number"
@@ -220,7 +218,8 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                   onChange={handleChange}
                   min="1"
                   required
-                  className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                  className="glass border-emerald-400/30 text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-emerald-400/50"
+                  placeholder="How many guests?"
                 />
               </div>
             </div>
