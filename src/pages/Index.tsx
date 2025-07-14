@@ -434,9 +434,9 @@ const Index = () => {
           {/* Hero Content */}
           <div className="space-y-6">
             <div
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-full glass border ${theme === "light" ? "border-gray-200 text-gray-700" : "border-white/20 text-white/80"} mb-8`}
+              className={`inline-flex items-center gap-2 px-6 py-3 rounded-full glass border bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-cyan-500/10 ${theme === "light" ? "border-purple-300 text-purple-700" : "border-pink-400/30 text-pink-200"} mb-8 shadow-lg shadow-purple-500/20`}
             >
-              <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
+              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-pink-400 to-cyan-400 animate-pulse shadow-lg shadow-pink-400/50"></div>
               <span>Live Charging Status Available</span>
             </div>
 
