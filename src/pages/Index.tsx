@@ -515,7 +515,7 @@ const Index = () => {
                 </p>
                 <Button
                   onClick={() => setIsMenuModalOpen(true)}
-                  className="w-full bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 hover:from-orange-500 hover:via-red-600 hover:to-pink-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-orange-500/50 hover:shadow-xl"
+                  className="w-full bg-gradient-to-r from-green-400 via-emerald-500 to-teal-500 hover:from-green-500 hover:via-emerald-600 hover:to-teal-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-green-500/50 hover:shadow-xl"
                 >
                   <span>View Menu</span>
                   <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
