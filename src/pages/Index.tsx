@@ -496,10 +496,10 @@ const Index = () => {
 
             {/* Menu */}
             <div
-              className={`glass rounded-2xl p-8 border ${theme === "light" ? "border-orange-200 bg-gradient-to-br from-white/80 to-orange-50/80" : "border-orange-400/30 bg-gradient-to-br from-orange-900/20 to-yellow-900/20"} hover:border-orange-400/70 hover:shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-105 group`}
+              className={`glass rounded-2xl p-8 border ${theme === "light" ? "border-green-200 bg-gradient-to-br from-white/80 to-green-50/80" : "border-green-400/30 bg-gradient-to-br from-green-900/20 to-emerald-900/20"} hover:border-green-400/70 hover:shadow-2xl hover:shadow-green-500/25 transition-all duration-300 hover:scale-105 group`}
             >
               <div className="flex flex-col items-center space-y-4">
-                <div className="p-4 rounded-xl bg-gradient-to-r from-orange-400 via-red-400 to-pink-500 neon-glow group-hover:scale-110 transition-transform shadow-lg shadow-orange-500/50">
+                <div className="p-4 rounded-xl bg-gradient-to-r from-green-400 via-emerald-400 to-teal-500 neon-glow group-hover:scale-110 transition-transform shadow-lg shadow-green-500/50">
                   <Coffee className="h-12 w-12 text-white drop-shadow-lg" />
                 </div>
                 <h3
