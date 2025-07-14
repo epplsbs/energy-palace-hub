@@ -471,8 +471,8 @@ const Index = () => {
               className={`glass rounded-2xl p-8 border ${theme === "light" ? "border-purple-200 bg-gradient-to-br from-white/80 to-purple-50/80" : "border-pink-400/30 bg-gradient-to-br from-purple-900/20 to-pink-900/20"} hover:border-emerald-400/70 hover:shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105 group`}
             >
               <div className="flex flex-col items-center space-y-4">
-                <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 neon-glow-green group-hover:scale-110 transition-transform">
-                  <Zap className="h-12 w-12 text-emerald-400" />
+                <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 neon-glow-green group-hover:scale-110 transition-transform shadow-lg shadow-emerald-500/50">
+                  <Zap className="h-12 w-12 text-white drop-shadow-lg" />
                 </div>
                 <h3
                   className={`text-2xl font-bold ${theme === "light" ? "text-gray-900" : "text-white"}`}
