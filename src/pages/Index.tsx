@@ -297,7 +297,7 @@ const Index = () => {
             <div>
               {/* Site title (not H1 on homepage) */}
               <div
-                className={`text-xl md:text-2xl font-bold ${theme === "light" ? "text-gray-900" : "bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent"}`}
+                className={`text-xl md:text-2xl font-bold ${theme === "light" ? "bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent" : "bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"}`}
               >
                 {businessSettings?.business_name || "Energy Palace"}
               </div>
