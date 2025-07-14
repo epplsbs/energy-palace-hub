@@ -105,12 +105,45 @@ const Index = () => {
           console.log("About Us data loaded successfully:", aboutData);
         } catch (aboutError) {
           console.error("About Us loading failed:", aboutError);
-          console.error("About Us error details:", {
-            message: aboutError?.message,
-            code: aboutError?.code,
-            details: aboutError?.details,
-            hint: aboutError?.hint,
-          });
+          if (aboutError?.code === "PGRST116") {
+            console.warn(
+              "About Us table does not exist. Using default content.",
+            );
+            // Provide default about us content
+            aboutData = {
+              id: "default",
+              title: "About Energy Palace",
+              company_story:
+                "Energy Palace is your premier destination for electric vehicle charging and dining. We combine state-of-the-art charging technology with exceptional hospitality.",
+              mission_statement:
+                "To provide electric vehicle travelers with a premium charging experience.",
+              vision_statement:
+                "To become the leading network of EV charging destinations.",
+              values: [
+                {
+                  title: "Sustainability",
+                  description: "Committed to environmental responsibility.",
+                },
+                {
+                  title: "Innovation",
+                  description:
+                    "Continuously investing in the latest technology.",
+                },
+                {
+                  title: "Excellence",
+                  description: "Striving to exceed expectations.",
+                },
+              ],
+              team_description:
+                "Our dedicated team is passionate about sustainable transportation and exceptional customer service.",
+              hero_image_url:
+                "https://images.unsplash.com/photo-1593941707882-a5bac6861d75?w=1200&h=600&fit=crop",
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              display_order: 1,
+              is_active: true,
+            };
+          }
         }
 
         let testimonialsData = [];
@@ -119,12 +152,38 @@ const Index = () => {
           console.log("Testimonials loaded successfully:", testimonialsData);
         } catch (testimonialsError) {
           console.error("Testimonials loading failed:", testimonialsError);
-          console.error("Testimonials error details:", {
-            message: testimonialsError?.message,
-            code: testimonialsError?.code,
-            details: testimonialsError?.details,
-            hint: testimonialsError?.hint,
-          });
+          if (testimonialsError?.code === "PGRST116") {
+            console.warn(
+              "Testimonials table does not exist. Using default testimonials.",
+            );
+            // Provide default testimonials
+            testimonialsData = [
+              {
+                id: "default-1",
+                customer_name: "Sarah Mitchell",
+                customer_title: "Tesla Model 3 Owner",
+                content:
+                  "Energy Palace has completely changed my road trip experience! The charging is fast, the food is excellent, and the staff is incredibly friendly.",
+                rating: 5,
+                is_active: true,
+                display_order: 1,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+              },
+              {
+                id: "default-2",
+                customer_name: "Michael Rodriguez",
+                customer_title: "EV Enthusiast",
+                content:
+                  "I stop here every week during my commute. The charging infrastructure is top-notch and the coffee is the best in town.",
+                rating: 5,
+                is_active: true,
+                display_order: 2,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+              },
+            ];
+          }
         }
 
         setAboutContent(aboutData);
