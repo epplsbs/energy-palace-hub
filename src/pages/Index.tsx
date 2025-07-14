@@ -127,6 +127,10 @@ const Index = () => {
           console.log("Testimonials loaded successfully:", testimonialsData);
         } catch (testimonialsError) {
           console.error("Testimonials loading failed:", testimonialsError);
+          console.error(
+            "Testimonials error details:",
+            JSON.stringify(testimonialsError, null, 2),
+          );
           if (testimonialsError?.code === "PGRST116") {
             console.warn(
               "Testimonials table does not exist. Using default testimonials.",
