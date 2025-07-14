@@ -197,7 +197,7 @@ const ChargingStationSelectorModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleModalClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] glass-card-enhanced border-emerald-400/30 overflow-hidden fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+      <DialogContent className="max-w-4xl max-h-[90vh] glass-card-enhanced border-emerald-400/30 overflow-hidden fixed inset-0 m-auto w-fit h-fit">
         <DialogHeader className="text-center pb-6 bg-gradient-to-br from-emerald-500/10 via-green-500/5 to-teal-500/10 -m-6 p-6 mb-6 border-b border-emerald-400/20">
           <div className="mx-auto icon-container-enhanced mb-4 neon-glow-green">
             <Zap className="h-8 w-8 text-white drop-shadow-lg" />
