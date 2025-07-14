@@ -130,18 +130,24 @@ const Index = () => {
           testimonialsData = await getTestimonials();
           console.log("Testimonials loaded successfully:", testimonialsData);
         } catch (testimonialsError) {
-          console.error("Testimonials loading failed:", testimonialsError);
-          console.error(
-            "Testimonials error details:",
-            JSON.stringify(testimonialsError, null, 2),
-          );
           if (
             testimonialsError?.code === "PGRST116" ||
             testimonialsError?.code === "42P01"
           ) {
-            console.warn(
+            console.info(
               "Testimonials table does not exist. Using default testimonials.",
             );
+          } else {
+            console.error("Testimonials loading failed:", testimonialsError);
+            console.error(
+              "Testimonials error details:",
+              JSON.stringify(testimonialsError, null, 2),
+            );
+          }
+          if (
+            testimonialsError?.code === "PGRST116" ||
+            testimonialsError?.code === "42P01"
+          ) {
             // Provide default testimonials
             testimonialsData = [
               {
