@@ -258,12 +258,9 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                   </PopoverContent>
                 </Popover>
               </div>
-              <div>
-                <Label
-                  htmlFor="time"
-                  className="text-gray-700 dark:text-gray-300"
-                >
-                  Time
+              <div className="space-y-2">
+                <Label htmlFor="time" className="text-white/90 font-semibold">
+                  Preferred Time *
                 </Label>
                 <Input
                   type="time"
@@ -271,14 +268,14 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                   value={formData.time}
                   onChange={handleChange}
                   required
-                  className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                  className="glass border-emerald-400/30 text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-emerald-400/50"
                 />
               </div>
             </div>
-            <div>
+            <div className="space-y-2">
               <Label
                 htmlFor="specialRequests"
-                className="text-gray-700 dark:text-gray-300"
+                className="text-white/90 font-semibold"
               >
                 Special Requests
               </Label>
@@ -286,8 +283,8 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                 id="specialRequests"
                 value={formData.specialRequests}
                 onChange={handleChange}
-                placeholder="Any special requests?"
-                className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                placeholder="Any special dietary requirements or requests?"
+                className="glass border-emerald-400/30 text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-emerald-400/50"
               />
             </div>
           </form>
