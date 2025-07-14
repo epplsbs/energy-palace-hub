@@ -290,8 +290,12 @@ const ChargingStationSelectorModal = ({
               </div>
             )}
 
-            <div className="flex justify-center pt-4 border-t bg-white sticky bottom-0">
-              <Button onClick={handleModalClose} variant="outline">
+            <div className="flex justify-center pt-6 border-t border-emerald-400/20 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 sticky bottom-0 -m-6 p-6">
+              <Button
+                onClick={handleModalClose}
+                variant="outline"
+                className="border-emerald-400/30 text-emerald-300 hover:bg-emerald-400/10"
+              >
                 <X className="h-4 w-4 mr-2" />
                 Cancel
               </Button>
