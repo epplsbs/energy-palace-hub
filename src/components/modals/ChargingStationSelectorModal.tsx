@@ -308,32 +308,32 @@ const ChargingStationSelectorModal = ({
               onSubmit={handleSubmit}
               className="space-y-6 overflow-y-auto flex-1 px-1"
             >
-              <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">
+              <div className="bg-emerald-500/10 border border-emerald-400/30 rounded-lg p-4 mb-6">
+                <h4 className="font-semibold text-white mb-2">
                   Selected Station:
                 </h4>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-gray-600">Station ID:</span>
-                    <span className="font-medium ml-2">
+                    <span className="text-white/70">Station ID:</span>
+                    <span className="font-medium ml-2 text-emerald-300">
                       {selectedStation?.station_id}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Type:</span>
-                    <span className="font-medium ml-2">
+                    <span className="text-white/70">Type:</span>
+                    <span className="font-medium ml-2 text-emerald-300">
                       {selectedStation?.type}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Power:</span>
-                    <span className="font-medium ml-2">
+                    <span className="text-white/70">Power:</span>
+                    <span className="font-medium ml-2 text-emerald-300">
                       {selectedStation?.power}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Connector:</span>
-                    <span className="font-medium ml-2">
+                    <span className="text-white/70">Connector:</span>
+                    <span className="font-medium ml-2 text-emerald-300">
                       {selectedStation?.connector}
                     </span>
                   </div>
@@ -344,7 +344,7 @@ const ChargingStationSelectorModal = ({
                 <div>
                   <Label
                     htmlFor="customerName"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium text-white/90"
                   >
                     Full Name *
                   </Label>
@@ -359,7 +359,7 @@ const ChargingStationSelectorModal = ({
                       }))
                     }
                     placeholder="Enter your full name"
-                    className="mt-1"
+                    className="mt-1 bg-white/10 border-emerald-400/30 text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-emerald-400/50"
                     required
                   />
                 </div>
@@ -367,7 +367,7 @@ const ChargingStationSelectorModal = ({
                 <div>
                   <Label
                     htmlFor="customerPhone"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium text-white/90"
                   >
                     Phone Number *
                   </Label>
@@ -382,7 +382,7 @@ const ChargingStationSelectorModal = ({
                       }))
                     }
                     placeholder="Enter your phone number"
-                    className="mt-1"
+                    className="mt-1 bg-white/10 border-emerald-400/30 text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-emerald-400/50"
                     required
                   />
                 </div>
@@ -390,7 +390,7 @@ const ChargingStationSelectorModal = ({
                 <div>
                   <Label
                     htmlFor="vehicleNumber"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium text-white/90"
                   >
                     Vehicle Number
                   </Label>
@@ -405,14 +405,14 @@ const ChargingStationSelectorModal = ({
                       }))
                     }
                     placeholder="Enter vehicle number (optional)"
-                    className="mt-1"
+                    className="mt-1 bg-white/10 border-emerald-400/30 text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-emerald-400/50"
                   />
                 </div>
 
                 <div>
                   <Label
                     htmlFor="startTime"
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium text-white/90"
                   >
                     Preferred Start Time *
                   </Label>
@@ -426,14 +426,14 @@ const ChargingStationSelectorModal = ({
                         startTime: e.target.value,
                       }))
                     }
-                    className="mt-1"
+                    className="mt-1 bg-white/10 border-emerald-400/30 text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-emerald-400/50"
                     required
                   />
                 </div>
               </div>
             </form>
 
-            <div className="flex gap-3 pt-4 border-t bg-white sticky bottom-0">
+            <div className="flex gap-3 pt-4 border-t border-emerald-400/20 bg-gray-900/95 backdrop-blur-sm sticky bottom-0">
               <Button
                 type="button"
                 onClick={handleBack}
