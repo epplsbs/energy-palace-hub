@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, X, ArrowLeft } from "lucide-react";
+import { CalendarIcon, X, ArrowLeft, Calendar } from "lucide-react";
 import {
   Popover,
   PopoverContent,
