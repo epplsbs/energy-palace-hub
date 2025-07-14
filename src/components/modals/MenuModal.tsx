@@ -228,10 +228,12 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
 
             {/* Cart Summary */}
             {cart.length > 0 && (
-              <div className="glass border border-white/20 rounded-xl p-6">
+              <div className="glass-card-enhanced p-6 border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-teal-500/10">
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <ShoppingCart className="h-5 w-5 text-blue-400" />
-                  Your Cart
+                  <div className="icon-container-enhanced p-2">
+                    <ShoppingCart className="h-5 w-5 text-emerald-400" />
+                  </div>
+                  <span className="text-gradient-animated">Your Cart</span>
                 </h3>
                 <div className="space-y-3">
                   {cart.map((item) => (
