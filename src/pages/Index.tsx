@@ -198,8 +198,8 @@ const Index = () => {
             testimonialsData = [
               {
                 id: "default-1",
-                customer_name: "Sarah Mitchell",
-                customer_title: "Tesla Model 3 Owner",
+                customer_name: "Abhisek Deuja",
+                customer_title: "EV Traveller",
                 content:
                   "Energy Palace has completely changed my road trip experience! The charging is fast, the food is excellent, and the staff is incredibly friendly.",
                 rating: 5,
@@ -210,8 +210,8 @@ const Index = () => {
               },
               {
                 id: "default-2",
-                customer_name: "Michael Rodriguez",
-                customer_title: "EV Enthusiast",
+                customer_name: "Pratik Regmi",
+                customer_title: "Official Regular Traveller",
                 content:
                   "I stop here every week during my commute. The charging infrastructure is top-notch and the coffee is the best in town.",
                 rating: 5,
