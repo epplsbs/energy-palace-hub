@@ -1,8 +1,10 @@
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Twitterbot
 Allow: /
@@ -10,7 +12,35 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+User-agent: LinkedInBot
 Allow: /
 
+User-agent: WhatsApp
+Allow: /
+
+User-agent: *
+Allow: /
+Crawl-delay: 2
+
+# Block admin and private areas
+Disallow: /admin
+Disallow: /pos
+Disallow: /sales
+Disallow: /api
+Disallow: /private
+
+# Allow important pages for EV charging and restaurant business
+Allow: /
+Allow: /about
+Allow: /blog
+Allow: /contacts
+Allow: /media
+Allow: /charging
+Allow: /menu
+Allow: /reservations
+Allow: /location
+
 Sitemap: https://energypalace.com.np/sitemap.xml
+
+# Host directive for canonical domain
+Host: https://energypalace.com.np
