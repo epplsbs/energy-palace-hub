@@ -581,8 +581,13 @@ const Index = () => {
           {/* Location Card - Featured */}
           <div className="mb-12">
             <div className="glass-card-enhanced p-8 max-w-4xl mx-auto text-center border-emerald-400/30 hover-lift-enhanced">
-              <div className="icon-container-enhanced mx-auto mb-6 neon-glow-green">
-                <MapPin className="h-10 w-10 text-white drop-shadow-lg" />
+              <div className="relative">
+                <div className="icon-container-enhanced mx-auto mb-6 neon-glow-green">
+                  <MapPin className="h-10 w-10 text-white drop-shadow-lg" />
+                </div>
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-emerald-500/90 text-white px-4 py-1 rounded-full text-sm font-bold border border-emerald-400/50">
+                  PRIME LOCATION
+                </div>
               </div>
               <h3 className="text-2xl font-bold text-gradient-animated mb-4">
                 Our Prime Location: Bhiman, Sindhuli
