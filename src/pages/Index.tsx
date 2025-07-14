@@ -520,7 +520,7 @@ const Index = () => {
               className={`glass-card-enhanced p-8 ${theme === "light" ? "bg-gradient-to-br from-white/90 to-emerald-50/90" : "bg-gradient-to-br from-emerald-900/20 to-green-900/20"} hover-lift-enhanced group`}
             >
               <div className="flex flex-col items-center space-y-4">
-                <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 neon-glow-green group-hover:scale-110 transition-transform shadow-lg shadow-emerald-500/50">
+                <div className="icon-container-enhanced neon-glow-green group-hover:scale-110 transition-transform">
                   <Zap className="h-12 w-12 text-white drop-shadow-lg" />
                 </div>
                 <h3
