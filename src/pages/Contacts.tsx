@@ -364,27 +364,45 @@ const Contacts = () => {
           </div>
           <Card className="glass border border-white/20 backdrop-blur-xl bg-gray-900/50">
             <CardContent className="p-6 md:p-8">
-              <GoogleMapEmbed
-                apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""} // Pass explicitly or ensure component handles undefined gracefully
-                lat={parseFloat(
-                  businessSettings?.business_latitude || "27.2038",
-                )}
-                lng={parseFloat(
-                  businessSettings?.business_longitude || "85.9496",
-                )}
-                zoom={16}
-                businessName={
-                  businessSettings?.business_name || "Energy Palace"
-                }
-                businessAddress={
-                  businessSettings?.business_address ||
-                  "Bhiman, Sindhuli, Bagmati Province, Nepal"
-                }
-                businessLogoUrl={
-                  businessSettings?.logo_url ||
-                  "https://energypalace.com.np/logo.png"
-                } // Default placeholder
-              />
+              <div className="map-container">
+                <GoogleMapEmbed
+                  apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""} // Pass explicitly or ensure component handles undefined gracefully
+                  lat={parseFloat(
+                    businessSettings?.business_latitude || "27.2038",
+                  )}
+                  lng={parseFloat(
+                    businessSettings?.business_longitude || "85.9496",
+                  )}
+                  zoom={16}
+                  businessName={
+                    businessSettings?.business_name || "Energy Palace"
+                  }
+                  businessAddress={
+                    businessSettings?.business_address ||
+                    "Bhiman, Sindhuli, Bagmati Province, Nepal"
+                  }
+                  businessLogoUrl={
+                    businessSettings?.logo_url ||
+                    "https://energypalace.com.np/logo.png"
+                  } // Default placeholder
+                />
+                <div className="mt-4 text-center">
+                  <p className="text-white/70 text-sm mb-3">
+                    📍 Coordinates:{" "}
+                    {businessSettings?.business_latitude || "27.2038"},{" "}
+                    {businessSettings?.business_longitude || "85.9496"}
+                  </p>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${businessSettings?.business_latitude || "27.2038"},${businessSettings?.business_longitude || "85.9496"}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 rounded-lg hover:bg-emerald-500/30 transition-all duration-300"
+                  >
+                    <MapPin className="h-4 w-4" />
+                    Open in Google Maps
+                  </a>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
