@@ -238,11 +238,11 @@ const ChargingStationSelectorModal = ({
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {stations.map((station) => (
                   <div
                     key={station.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer"
+                    className="glass-card-enhanced p-6 hover-lift-enhanced cursor-pointer border-glow-enhanced"
                     onClick={() => handleStationSelect(station)}
                   >
                     <div className="flex items-center justify-between mb-3">
