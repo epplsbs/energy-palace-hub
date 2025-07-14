@@ -155,12 +155,12 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
             className="grid gap-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
+              <div className="space-y-2">
                 <Label
                   htmlFor="customerName"
-                  className="text-gray-700 dark:text-gray-300"
+                  className="text-white/90 font-semibold"
                 >
-                  Name
+                  Full Name *
                 </Label>
                 <Input
                   type="text"
@@ -168,15 +168,16 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                   value={formData.customerName}
                   onChange={handleChange}
                   required
-                  className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                  className="glass border-emerald-400/30 text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-emerald-400/50"
+                  placeholder="Enter your full name"
                 />
               </div>
-              <div>
+              <div className="space-y-2">
                 <Label
                   htmlFor="customerEmail"
-                  className="text-gray-700 dark:text-gray-300"
+                  className="text-white/90 font-semibold"
                 >
-                  Email
+                  Email Address *
                 </Label>
                 <Input
                   type="email"
@@ -184,7 +185,8 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                   value={formData.customerEmail}
                   onChange={handleChange}
                   required
-                  className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                  className="glass border-emerald-400/30 text-white placeholder:text-white/50 focus:border-emerald-400 focus:ring-emerald-400/50"
+                  placeholder="Enter your email address"
                 />
               </div>
             </div>
