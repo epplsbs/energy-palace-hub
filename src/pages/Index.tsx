@@ -74,30 +74,6 @@ const Index = () => {
       try {
         console.log("Starting to load About Us and Testimonials data...");
 
-        // First, let's check if the tables exist by trying a simple query
-        try {
-          const { data: aboutTest } = await supabase
-            .from("about_us")
-            .select("count")
-            .limit(1);
-          console.log("about_us table exists");
-        } catch (aboutTableError) {
-          console.error("about_us table might not exist:", aboutTableError);
-        }
-
-        try {
-          const { data: testimonialsTest } = await supabase
-            .from("testimonials")
-            .select("count")
-            .limit(1);
-          console.log("testimonials table exists");
-        } catch (testimonialsTableError) {
-          console.error(
-            "testimonials table might not exist:",
-            testimonialsTableError,
-          );
-        }
-
         // Fetch data sequentially to identify which one fails
         let aboutData = null;
         try {
