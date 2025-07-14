@@ -107,6 +107,10 @@ const Index = () => {
   } = useQuery<BusinessSettings, Error>({
     queryKey: ["businessSettings"],
     queryFn: getBusinessSettings,
+    retry: 1,
+    retryOnMount: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes (formerly cacheTime)
   });
 
   // For AboutContent and Testimonials, you might want to convert them to useQuery as well for consistency
