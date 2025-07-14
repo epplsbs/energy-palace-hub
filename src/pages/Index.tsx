@@ -699,14 +699,15 @@ const Index = () => {
               <h4
                 className={`text-xl font-bold mb-3 ${theme === "light" ? "text-gray-900" : "text-white"}`}
               >
-                Our Location
+                Bhiman, Sindhuli Location
               </h4>
               <LocationDisplay />
-              {/* Thematic description for the card, can be adjusted if needed */}
               <p
                 className={`text-sm mt-3 ${theme === "light" ? "text-gray-600" : "text-white/60"}`}
               >
-                Accessible & Convenient Charging
+                Strategically located on the main highway in Bhiman, Sindhuli,
+                Nepal. Perfect pit stop for EV travelers with 24/7 accessibility
+                and convenient parking.
               </p>
             </div>
 
