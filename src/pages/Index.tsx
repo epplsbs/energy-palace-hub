@@ -535,7 +535,7 @@ const Index = () => {
                 </p>
                 <Button
                   onClick={() => setIsChargingModalOpen(true)}
-                  className="w-full bg-gradient-to-r from-emerald-400 via-teal-500 to-cyan-500 hover:from-emerald-500 hover:via-teal-600 hover:to-cyan-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-emerald-500/50 hover:shadow-xl"
+                  className="w-full btn-primary-enhanced"
                 >
                   <span>Book Now</span>
                   <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
