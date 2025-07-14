@@ -559,37 +559,37 @@ const Index = () => {
                 4+
               </div>
               <div
-                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-purple-600" : "text-pink-300"}`}
+                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-emerald-600" : "text-emerald-300"}`}
               >
                 Charging Ports
               </div>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent drop-shadow-lg">
+              <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent drop-shadow-lg">
                 180kW
               </div>
               <div
-                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-purple-600" : "text-pink-300"}`}
+                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-emerald-600" : "text-emerald-300"}`}
               >
                 Max Power
               </div>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
+              <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent drop-shadow-lg">
                 {businessSettings?.opening_hours || "24/7"}
               </div>
               <div
-                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-purple-600" : "text-pink-300"}`}
+                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-emerald-600" : "text-emerald-300"}`}
               >
                 Available
               </div>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent drop-shadow-lg">
+              <div className="text-4xl font-bold bg-gradient-to-r from-lime-400 to-green-500 bg-clip-text text-transparent drop-shadow-lg">
                 ~30min
               </div>
               <div
-                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-purple-600" : "text-pink-300"}`}
+                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-emerald-600" : "text-emerald-300"}`}
               >
                 Fast Charging
               </div>
