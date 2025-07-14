@@ -326,7 +326,7 @@ const Index = () => {
 
       {/* Header */}
       {/* Standardized Header like About.tsx - Note: businessSettings are used for logo/name, which is fine */}
-      <header className="relative z-20 p-4 md:p-6 bg-gradient-to-r from-emerald-900/20 via-green-900/20 to-teal-900/20 backdrop-blur-md border-b border-emerald-500/30">
+      <header className="relative z-20 p-4 md:p-6 bg-gradient-to-r from-emerald-900/15 via-green-900/15 to-teal-900/15 backdrop-blur-2xl border-b border-emerald-400/30 shadow-lg shadow-emerald-500/10">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3">
             {/* Logo and Business Name from businessSettings - this part is good and specific to Index.tsx */}
