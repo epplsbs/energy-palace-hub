@@ -242,10 +242,12 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent
-                    className="w-auto p-0 glass border-emerald-400/30 shadow-xl z-50"
+                    className="w-auto p-0 glass border-emerald-400/30 shadow-xl z-[100] max-h-96 overflow-auto"
                     align="start"
                     side="bottom"
-                    sideOffset={5}
+                    sideOffset={8}
+                    avoidCollisions={true}
+                    collisionPadding={20}
                   >
                     <Calendar
                       mode="single"
