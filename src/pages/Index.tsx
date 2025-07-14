@@ -135,7 +135,10 @@ const Index = () => {
             "Testimonials error details:",
             JSON.stringify(testimonialsError, null, 2),
           );
-          if (testimonialsError?.code === "PGRST116") {
+          if (
+            testimonialsError?.code === "PGRST116" ||
+            testimonialsError?.code === "42P01"
+          ) {
             console.warn(
               "Testimonials table does not exist. Using default testimonials.",
             );
