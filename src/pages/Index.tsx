@@ -178,58 +178,9 @@ const Index = () => {
           }
         }
 
-        let testimonialsData = [];
-        try {
-          testimonialsData = await getTestimonials();
-          console.log("Testimonials loaded successfully:", testimonialsData);
-        } catch (testimonialsError) {
-          if (
-            testimonialsError?.code === "PGRST116" ||
-            testimonialsError?.code === "42P01"
-          ) {
-            console.info(
-              "Testimonials table does not exist. Using default testimonials.",
-            );
-          } else {
-            console.error("Testimonials loading failed:", testimonialsError);
-            console.error(
-              "Testimonials error details:",
-              JSON.stringify(testimonialsError, null, 2),
-            );
-          }
-          if (
-            testimonialsError?.code === "PGRST116" ||
-            testimonialsError?.code === "42P01"
-          ) {
-            // Provide default testimonials
-            testimonialsData = [
-              {
-                id: "default-1",
-                customer_name: "Abhisek Deuja",
-                customer_title: "EV Traveller",
-                content:
-                  "Energy Palace has completely changed my road trip experience! The charging is fast, the food is excellent, and the staff is incredibly friendly.",
-                rating: 5,
-                is_active: true,
-                display_order: 1,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-              },
-              {
-                id: "default-2",
-                customer_name: "Pratik Regmi",
-                customer_title: "Official Regular Traveller",
-                content:
-                  "I stop here every week during my commute. The charging infrastructure is top-notch and the coffee is the best in town.",
-                rating: 5,
-                is_active: true,
-                display_order: 2,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-              },
-            ];
-          }
-        }
+        // Fetch testimonials with improved error handling
+        const testimonialsData = await getTestimonials();
+        console.log("Testimonials loaded:", testimonialsData);
 
         setAboutContent(aboutData);
         setTestimonials(testimonialsData || []);
