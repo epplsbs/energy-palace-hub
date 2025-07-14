@@ -594,8 +594,13 @@ const Blog = () => {
           {/* Newsletter Subscription */}
           <div className="mt-20 glass-card-enhanced border-emerald-400/30 p-8 md:p-12 text-center">
             <div className="max-w-2xl mx-auto">
-              <div className="icon-container-enhanced bg-gradient-to-r from-emerald-500/20 to-blue-500/20 mx-auto mb-6">
-                <MessageCircle className="h-8 w-8 text-emerald-400" />
+              <div className="relative">
+                <div className="icon-container-enhanced bg-gradient-to-r from-emerald-500/20 to-blue-500/20 mx-auto mb-6">
+                  <MessageCircle className="h-8 w-8 text-emerald-400" />
+                </div>
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-emerald-500/90 text-white px-4 py-1 rounded-full text-sm font-bold border border-emerald-400/50">
+                  STAY CONNECTED
+                </div>
               </div>
               <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white">
                 <span className="text-gradient-animated">Stay Connected</span>
