@@ -1,21 +1,24 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
-import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon, X, ArrowLeft } from "lucide-react"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { supabase } from '@/integrations/supabase/client';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon, X, ArrowLeft } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ReservationModalProps {
   isOpen: boolean;
@@ -33,24 +36,26 @@ interface FormData {
 }
 
 const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
-  const { toast } = useToast()
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
-    customerName: '',
-    customerEmail: '',
-    customerPhone: '',
-    date: '',
-    time: '',
-    guests: '2',
-    specialRequests: ''
+    customerName: "",
+    customerEmail: "",
+    customerPhone: "",
+    date: "",
+    time: "",
+    guests: "2",
+    specialRequests: "",
   });
-  const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { id, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      [id]: value
+      [id]: value,
     }));
   };
 
@@ -67,11 +72,11 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
         time: formData.time,
         guests: parseInt(formData.guests),
         special_requests: formData.specialRequests,
-        status: 'pending'
+        status: "pending",
       };
 
       const { error } = await supabase
-        .from('reservations')
+        .from("reservations")
         .insert([reservationData]);
 
       if (error) throw error;
@@ -83,19 +88,20 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
 
       onClose();
       setFormData({
-        customerName: '',
-        customerEmail: '',
-        customerPhone: '',
-        date: '',
-        time: '',
-        guests: '2',
-        specialRequests: ''
+        customerName: "",
+        customerEmail: "",
+        customerPhone: "",
+        date: "",
+        time: "",
+        guests: "2",
+        specialRequests: "",
       });
     } catch (error: any) {
-      console.error('Error creating reservation:', error);
+      console.error("Error creating reservation:", error);
       toast({
         title: "Error",
-        description: error.message || "Failed to create reservation. Please try again.",
+        description:
+          error.message || "Failed to create reservation. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -105,120 +111,207 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
 
   const handleClose = () => {
     setFormData({
-      customerName: '',
-      customerEmail: '',
-      customerPhone: '',
-      date: '',
-      time: '',
-      guests: '2',
-      specialRequests: ''
+      customerName: "",
+      customerEmail: "",
+      customerPhone: "",
+      date: "",
+      time: "",
+      guests: "2",
+      specialRequests: "",
     });
     onClose();
   };
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] bg-gray-50 dark:bg-gray-900 overflow-hidden">
-        <DialogHeader>
-          <div className="flex items-center justify-between px-6 pt-6">
-            <DialogTitle className="text-gray-900 dark:text-gray-100 text-xl md:text-2xl">Make a Reservation</DialogTitle>
+      <DialogContent className="max-w-4xl max-h-[90vh] glass-card-enhanced border-emerald-400/30 overflow-hidden">
+        <DialogHeader className="bg-gradient-to-br from-emerald-500/10 via-green-500/5 to-teal-500/10 -m-6 p-6 mb-6 border-b border-emerald-400/20">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="icon-container-enhanced neon-glow-green">
+                <Calendar className="h-6 w-6 text-white drop-shadow-lg" />
+              </div>
+              <DialogTitle className="text-gradient-animated text-xl md:text-2xl font-bold">
+                Make a Reservation
+              </DialogTitle>
+            </div>
             <Button
               onClick={handleClose}
               variant="ghost"
               size="sm"
-              className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+              className="text-white/60 hover:text-white border-emerald-400/30 hover:bg-emerald-400/10"
             >
               <X className="h-5 w-5" />
             </Button>
           </div>
+          <p className="text-white/70 text-lg mt-2">
+            Reserve your table for the ultimate dining experience
+          </p>
         </DialogHeader>
-        
+
         <div className="overflow-y-auto max-h-[calc(90vh-120px)] p-6">
-          <form onSubmit={handleSubmit} id="reservationForm" className="grid gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="customerName" className="text-gray-700 dark:text-gray-300">Name</Label>
-              <Input type="text" id="customerName" value={formData.customerName} onChange={handleChange} required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
+          <form
+            onSubmit={handleSubmit}
+            id="reservationForm"
+            className="grid gap-6"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label
+                  htmlFor="customerName"
+                  className="text-gray-700 dark:text-gray-300"
+                >
+                  Name
+                </Label>
+                <Input
+                  type="text"
+                  id="customerName"
+                  value={formData.customerName}
+                  onChange={handleChange}
+                  required
+                  className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                />
+              </div>
+              <div>
+                <Label
+                  htmlFor="customerEmail"
+                  className="text-gray-700 dark:text-gray-300"
+                >
+                  Email
+                </Label>
+                <Input
+                  type="email"
+                  id="customerEmail"
+                  value={formData.customerEmail}
+                  onChange={handleChange}
+                  required
+                  className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label
+                  htmlFor="customerPhone"
+                  className="text-gray-700 dark:text-gray-300"
+                >
+                  Phone
+                </Label>
+                <Input
+                  type="tel"
+                  id="customerPhone"
+                  value={formData.customerPhone}
+                  onChange={handleChange}
+                  className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                />
+              </div>
+              <div>
+                <Label
+                  htmlFor="guests"
+                  className="text-gray-700 dark:text-gray-300"
+                >
+                  Guests
+                </Label>
+                <Input
+                  type="number"
+                  id="guests"
+                  value={formData.guests}
+                  onChange={handleChange}
+                  min="1"
+                  required
+                  className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label
+                  htmlFor="date"
+                  className="text-gray-700 dark:text-gray-300"
+                >
+                  Date
+                </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] justify-start text-left font-normal dark:bg-gray-800 dark:border-gray-700 dark:text-gray-50",
+                        !date && "text-muted-foreground dark:text-gray-400",
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={(date) => {
+                        setDate(date);
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          date: date?.toISOString().split("T")[0] || "",
+                        }));
+                      }}
+                      disabled={(date) => date < new Date()}
+                      className="rounded-md border bg-white dark:bg-gray-800 dark:text-gray-50"
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div>
+                <Label
+                  htmlFor="time"
+                  className="text-gray-700 dark:text-gray-300"
+                >
+                  Time
+                </Label>
+                <Input
+                  type="time"
+                  id="time"
+                  value={formData.time}
+                  onChange={handleChange}
+                  required
+                  className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+                />
+              </div>
             </div>
             <div>
-              <Label htmlFor="customerEmail" className="text-gray-700 dark:text-gray-300">Email</Label>
-              <Input type="email" id="customerEmail" value={formData.customerEmail} onChange={handleChange} required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
+              <Label
+                htmlFor="specialRequests"
+                className="text-gray-700 dark:text-gray-300"
+              >
+                Special Requests
+              </Label>
+              <Input
+                id="specialRequests"
+                value={formData.specialRequests}
+                onChange={handleChange}
+                placeholder="Any special requests?"
+                className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+              />
             </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="customerPhone" className="text-gray-700 dark:text-gray-300">Phone</Label>
-              <Input type="tel" id="customerPhone" value={formData.customerPhone} onChange={handleChange} className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
-            </div>
-            <div>
-              <Label htmlFor="guests" className="text-gray-700 dark:text-gray-300">Guests</Label>
-              <Input type="number" id="guests" value={formData.guests} onChange={handleChange} min="1" required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="date" className="text-gray-700 dark:text-gray-300">Date</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-[240px] justify-start text-left font-normal dark:bg-gray-800 dark:border-gray-700 dark:text-gray-50",
-                      !date && "text-muted-foreground dark:text-gray-400"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={(date) => {
-                      setDate(date)
-                      setFormData(prevData => ({
-                        ...prevData,
-                        date: date?.toISOString().split('T')[0] || ''
-                      }));
-                    }}
-                    disabled={(date) =>
-                      date < new Date()
-                    }
-                    className="rounded-md border bg-white dark:bg-gray-800 dark:text-gray-50"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div>
-              <Label htmlFor="time" className="text-gray-700 dark:text-gray-300">Time</Label>
-              <Input type="time" id="time" value={formData.time} onChange={handleChange} required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
-            </div>
-          </div>
-          <div>
-            <Label htmlFor="specialRequests" className="text-gray-700 dark:text-gray-300">Special Requests</Label>
-            <Input
-              id="specialRequests"
-              value={formData.specialRequests}
-              onChange={handleChange}
-              placeholder="Any special requests?"
-              className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
-            />
-          </div>
           </form>
         </div>
-        
+
         <div className="flex justify-end gap-2 px-6 py-4 border-t bg-gray-50 dark:bg-gray-900 sticky bottom-0 dark:border-gray-700">
-          <Button type="button" variant="outline" onClick={handleClose} className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleClose}
+            className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700"
+          >
             <ArrowLeft className="h-4 w-4" />
             Cancel
           </Button>
-          <Button 
+          <Button
             type="submit"
             form="reservationForm"
             disabled={isLoading}
             className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white"
           >
-            {isLoading ? 'Submitting...' : 'Submit Reservation'}
+            {isLoading ? "Submitting..." : "Submit Reservation"}
           </Button>
         </div>
       </DialogContent>
