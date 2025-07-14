@@ -494,9 +494,7 @@ const Index = () => {
             <h1
               className={`text-6xl md:text-8xl font-black leading-tight ${theme === "light" ? "text-gray-900" : "text-white"}`}
             >
-              <span
-                className={`block ${theme === "light" ? "bg-gradient-to-r from-emerald-600 via-green-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent" : "bg-gradient-to-r from-emerald-400 via-green-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent"} drop-shadow-lg`}
-              >
+              <span className={`block text-gradient-animated text-shadow-glow`}>
                 Charge
               </span>
               <span
