@@ -233,8 +233,8 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-[240px] justify-start text-left font-normal dark:bg-gray-800 dark:border-gray-700 dark:text-gray-50",
-                        !date && "text-muted-foreground dark:text-gray-400",
+                        "w-full justify-start text-left font-normal glass border-emerald-400/30 text-white hover:bg-emerald-400/10",
+                        !date && "text-white/50",
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
