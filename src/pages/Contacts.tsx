@@ -366,7 +366,7 @@ const Contacts = () => {
             <CardContent className="p-6 md:p-8">
               <div className="map-container">
                 <GoogleMapEmbed
-                  apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""} // Pass explicitly or ensure component handles undefined gracefully
+                  apiKey="AIzaSyCRrJ_VQvTCWM0bv_ZpLfm8j5TW-yUhX9E"
                   lat={parseFloat(
                     businessSettings?.business_latitude || "27.2038",
                   )}
