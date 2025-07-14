@@ -555,15 +555,19 @@ const Index = () => {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 max-w-4xl mx-auto">
             <div className="text-center space-y-2">
-              <div className="text-4xl font-bold text-emerald-400">4+</div>
+              <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent drop-shadow-lg">
+                4+
+              </div>
               <div
-                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-gray-600" : "text-white/60"}`}
+                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-purple-600" : "text-pink-300"}`}
               >
                 Charging Ports
               </div>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-4xl font-bold text-blue-400">180kW</div>
+              <div className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent drop-shadow-lg">
+                180kW
+              </div>
               <div
                 className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-gray-600" : "text-white/60"}`}
               >
