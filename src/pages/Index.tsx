@@ -525,11 +525,11 @@ const Index = () => {
 
             {/* Reserve Now */}
             <div
-              className={`glass rounded-2xl p-8 border ${theme === "light" ? "border-gray-200 bg-white/50" : "border-white/20"} hover:border-purple-500/50 transition-all duration-300 hover:scale-105 group`}
+              className={`glass rounded-2xl p-8 border ${theme === "light" ? "border-purple-200 bg-gradient-to-br from-white/80 to-purple-50/80" : "border-purple-400/30 bg-gradient-to-br from-purple-900/20 to-indigo-900/20"} hover:border-purple-400/70 hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 group`}
             >
               <div className="flex flex-col items-center space-y-4">
-                <div className="p-4 rounded-xl bg-gradient-to-r from-purple-500/20 to-purple-600/20 group-hover:scale-110 transition-transform">
-                  <Car className="h-12 w-12 text-purple-400" />
+                <div className="p-4 rounded-xl bg-gradient-to-r from-purple-400 via-indigo-500 to-blue-600 group-hover:scale-110 transition-transform shadow-lg shadow-purple-500/50">
+                  <Car className="h-12 w-12 text-white drop-shadow-lg" />
                 </div>
                 <h3
                   className={`text-2xl font-bold ${theme === "light" ? "text-gray-900" : "text-white"}`}
