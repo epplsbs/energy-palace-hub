@@ -661,7 +661,7 @@ const Index = () => {
               className={`text-xl max-w-3xl mx-auto ${theme === "light" ? "text-gray-600" : "text-white/70"}`}
             >
               {aboutContent?.company_story ||
-                "Leading the way in sustainable transportation with cutting-edge EV charging technology and exceptional hospitality."}
+                "Located in Bhiman, Sindhuli, Energy Palace is Nepal's premier EV charging destination. We combine state-of-the-art electric vehicle charging technology with exceptional dining and hospitality, making your journey through Nepal both sustainable and enjoyable."}
             </p>
           </div>
 
