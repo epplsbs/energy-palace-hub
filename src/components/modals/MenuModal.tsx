@@ -189,25 +189,26 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
                   key={item.id}
                   className="glass-card-enhanced p-6 hover-lift-enhanced border-glow-enhanced"
                 >
-                  <div className="space-y-3">
+                                    <div className="space-y-4">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-lg text-white">
+                        <h3 className="font-bold text-xl text-gradient-animated mb-2">
                           {item.name}
                         </h3>
-                        <p className="text-white/70 text-sm">
+                        <p className="text-white/80 text-sm leading-relaxed mb-3">
                           {item.description}
                         </p>
-                        <p className="text-blue-400 font-bold text-lg">
-                          NPR {item.price}
-                        </p>
+                        <div className="inline-flex items-center bg-emerald-500/20 rounded-lg px-3 py-1 border border-emerald-400/30">
+                          <span className="text-emerald-300 font-bold text-lg">NPR {item.price}</span>
+                        </div>
                       </div>
                       {item.image_url && (
-                        <img
-                          src={item.image_url}
-                          alt={item.name}
-                          className="w-20 h-20 object-cover rounded-lg ml-4"
-                        />
+                        <div className="ml-4 border-glow-enhanced rounded-xl overflow-hidden">
+                          <img
+                            src={item.image_url}
+                            alt={item.name}
+                            className="w-24 h-24 object-cover"
+                          />
                       )}
                     </div>
                     <Button
