@@ -82,9 +82,11 @@ const Index = () => {
       } catch (error) {
         console.error(
           "Error loading page data for Index (About/Testimonials):",
-          error,
+          error?.message || error?.toString() || error,
         );
-        setTestimonials([]); // Set default/empty states if necessary
+        // Set default/empty states if necessary
+        setAboutContent(null);
+        setTestimonials([]);
       } finally {
         // setLoading(false); // isLoadingBusinessSettings handles its part
         setLoadingCombined(false); // Update combined loading state
