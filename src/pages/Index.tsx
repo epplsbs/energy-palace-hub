@@ -32,7 +32,10 @@ import {
   getAboutUsContent,
   type AboutUsContent,
 } from "@/services/aboutUsService";
-import { getTestimonials, type Testimonial } from "@/services/contentService";
+import {
+  getTestimonials,
+  type Testimonial,
+} from "@/services/testimonialsService";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useBackgroundImage } from "@/hooks/useBackgroundImage";
 import { Card, CardContent } from "@/components/ui/card";
