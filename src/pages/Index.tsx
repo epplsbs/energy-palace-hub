@@ -603,8 +603,13 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <a href="/blog" className="block">
               <div className="glass-card-enhanced p-8 text-center hover-lift-enhanced h-full border-emerald-400/20">
-                <div className="icon-container-enhanced mx-auto mb-6 bg-gradient-to-r from-emerald-400/20 to-teal-500/20">
-                  <Zap className="h-8 w-8 text-emerald-400" />
+                <div className="relative">
+                  <div className="icon-container-enhanced mx-auto mb-6 bg-gradient-to-r from-emerald-400/20 to-teal-500/20">
+                    <Zap className="h-8 w-8 text-emerald-400" />
+                  </div>
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-emerald-500/90 text-white px-3 py-1 rounded-full text-xs font-bold border border-emerald-400/50">
+                    INNOVATION
+                  </div>
                 </div>
                 <h4 className="text-xl font-bold mb-4 text-gradient-animated">
                   Innovation
@@ -621,8 +626,13 @@ const Index = () => {
 
             <a href="/contacts" className="block">
               <div className="glass-card-enhanced p-8 text-center hover-lift-enhanced h-full border-emerald-400/20">
-                <div className="icon-container-enhanced mx-auto mb-6 bg-gradient-to-r from-green-400/20 to-emerald-500/20">
-                  <Users className="h-8 w-8 text-green-400" />
+                <div className="relative">
+                  <div className="icon-container-enhanced mx-auto mb-6 bg-gradient-to-r from-green-400/20 to-emerald-500/20">
+                    <Users className="h-8 w-8 text-green-400" />
+                  </div>
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-green-500/90 text-white px-3 py-1 rounded-full text-xs font-bold border border-green-400/50">
+                    COMMUNITY
+                  </div>
                 </div>
                 <h4 className="text-xl font-bold mb-4 text-gradient-animated">
                   Community
@@ -638,8 +648,13 @@ const Index = () => {
 
             <a href="/about" className="block">
               <div className="glass-card-enhanced p-8 text-center hover-lift-enhanced h-full border-emerald-400/20">
-                <div className="icon-container-enhanced mx-auto mb-6 bg-gradient-to-r from-teal-400/20 to-cyan-500/20">
-                  <Coffee className="h-8 w-8 text-teal-400" />
+                <div className="relative">
+                  <div className="icon-container-enhanced mx-auto mb-6 bg-gradient-to-r from-teal-400/20 to-cyan-500/20">
+                    <Coffee className="h-8 w-8 text-teal-400" />
+                  </div>
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-teal-500/90 text-white px-3 py-1 rounded-full text-xs font-bold border border-teal-400/50">
+                    EXCELLENCE
+                  </div>
                 </div>
                 <h4 className="text-xl font-bold mb-4 text-gradient-animated">
                   Excellence
