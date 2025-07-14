@@ -290,7 +290,7 @@ const Index = () => {
                 className="h-10 md:h-12 w-10 md:w-12 object-contain rounded-xl" // Slightly adjusted size for consistency
               />
             ) : (
-              <div className="p-2 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 neon-glow-green shadow-lg shadow-purple-500/50">
+              <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 neon-glow-green shadow-lg shadow-emerald-500/50">
                 <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
               </div>
             )}
