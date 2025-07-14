@@ -569,25 +569,27 @@ const Index = () => {
                 180kW
               </div>
               <div
-                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-gray-600" : "text-white/60"}`}
+                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-purple-600" : "text-pink-300"}`}
               >
                 Max Power
               </div>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-4xl font-bold text-purple-400">
+              <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
                 {businessSettings?.opening_hours || "24/7"}
               </div>
               <div
-                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-gray-600" : "text-white/60"}`}
+                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-purple-600" : "text-pink-300"}`}
               >
                 Available
               </div>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-4xl font-bold text-yellow-400">~30min</div>
+              <div className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent drop-shadow-lg">
+                ~30min
+              </div>
               <div
-                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-gray-600" : "text-white/60"}`}
+                className={`text-sm uppercase tracking-wider ${theme === "light" ? "text-purple-600" : "text-pink-300"}`}
               >
                 Fast Charging
               </div>
