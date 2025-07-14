@@ -245,19 +245,19 @@ const ChargingStationSelectorModal = ({
                     className="glass-card-enhanced p-6 hover-lift-enhanced cursor-pointer border-glow-enhanced"
                     onClick={() => handleStationSelect(station)}
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-bold text-lg text-gray-900">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-xl text-gradient-animated">
                         {station.station_id}
                       </h3>
-                      <div className="flex items-center space-x-1 text-emerald-600">
-                        <Power className="h-4 w-4" />
-                        <span className="text-sm font-medium">
+                      <div className="icon-container-enhanced bg-gradient-to-r from-emerald-400/20 to-teal-400/20 p-2">
+                        <Power className="h-5 w-5 text-emerald-400" />
+                        <span className="text-sm font-bold text-emerald-400 ml-1">
                           {station.power}
                         </span>
                       </div>
                     </div>
 
-                    <div className="space-y-2 text-sm text-gray-600">
+                    <div className="space-y-3 text-sm text-white/80 mb-6">
                       <div className="flex items-center justify-between">
                         <span>Type:</span>
                         <span className="font-medium">{station.type}</span>
