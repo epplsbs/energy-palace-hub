@@ -468,7 +468,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {/* Book Charger */}
             <div
-              className={`glass rounded-2xl p-8 border ${theme === "light" ? "border-purple-200 bg-gradient-to-br from-white/80 to-purple-50/80" : "border-pink-400/30 bg-gradient-to-br from-purple-900/20 to-pink-900/20"} hover:border-emerald-400/70 hover:shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105 group`}
+              className={`glass rounded-2xl p-8 border ${theme === "light" ? "border-emerald-200 bg-gradient-to-br from-white/80 to-emerald-50/80" : "border-emerald-400/30 bg-gradient-to-br from-emerald-900/20 to-green-900/20"} hover:border-emerald-400/70 hover:shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105 group`}
             >
               <div className="flex flex-col items-center space-y-4">
                 <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500 neon-glow-green group-hover:scale-110 transition-transform shadow-lg shadow-emerald-500/50">
