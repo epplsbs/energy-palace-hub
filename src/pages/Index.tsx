@@ -230,14 +230,16 @@ const Index = () => {
               <span>Live Charging Status Available</span>
             </div>
             
-            <h1 className={`text-6xl md:text-8xl font-black leading-tight ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+            <h1 className={`text-5xl md:text-7xl font-black leading-tight ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
               <span className={`block ${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent'}`}>
-                Charge
-              </span>
-              <span className={`block ${theme === 'light' ? 'text-gray-800' : 'text-white/90'}`}>
-                And Dine
+                EV Charging Station in Bhiman, Sindhuli
               </span>
             </h1>
+            <h2 className={`text-4xl md:text-6xl font-black leading-tight ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+              <span className={`block ${theme === 'light' ? 'text-gray-800' : 'text-white/90'}`}>
+                Charge and Dine
+              </span>
+            </h2>
             
             <p className={`text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
               Power up your EV, savor exceptional meals at our restaurant, and relax with specialty coffees at our on-site coffee shop. Energy Palace is your complete destination.
