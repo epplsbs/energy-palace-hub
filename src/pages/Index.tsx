@@ -52,6 +52,49 @@ const Index = () => {
 
   const { theme, toggleTheme } = useTheme();
   const backgroundImageUrl = useBackgroundImage();
+
+  // Custom SEO implementation for EV charging station
+  useEffect(() => {
+    // Update document title
+    document.title =
+      "Energy Palace - EV Charging Station & Restaurant in Bhiman, Sindhuli, Nepal";
+
+    // Update meta description
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute(
+        "content",
+        "Premium EV charging station with restaurant and coffee shop in Bhiman, Sindhuli, Nepal. Fast CCS2 & GBT charging up to 180kW, delicious local cuisine, and specialty coffee. Open 24/7 for electric vehicle drivers.",
+      );
+    }
+
+    // Update meta keywords
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) {
+      metaKeywords.setAttribute(
+        "content",
+        "EV charging station Nepal, electric vehicle charging Sindhuli, Bhiman EV charger, restaurant Sindhuli, coffee shop Nepal, fast charging CCS2 GBT, electric car charging, sustainable energy Nepal, EV Cafe Sindhuli, 24/7 charging, highway charging station, Bhiman restaurant",
+      );
+    }
+
+    // Update Open Graph tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute(
+        "content",
+        "Energy Palace - EV Charging Station & Restaurant in Bhiman, Sindhuli, Nepal",
+      );
+    }
+
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) {
+      ogDesc.setAttribute(
+        "content",
+        "Premium EV charging station with restaurant and coffee shop in Bhiman, Sindhuli, Nepal. Fast CCS2 & GBT charging up to 180kW, delicious local cuisine, and specialty coffee. Open 24/7 for electric vehicle drivers.",
+      );
+    }
+  }, []);
+
   useSEO("/");
 
   const {
