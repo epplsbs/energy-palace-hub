@@ -183,11 +183,11 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
         {!showCheckout ? (
           <div className="space-y-6">
             {/* Menu Items */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {menuItems.map((item) => (
                 <div
                   key={item.id}
-                  className="glass border border-white/20 rounded-xl p-4 hover:border-blue-500/50 transition-all"
+                  className="glass-card-enhanced p-6 hover-lift-enhanced border-glow-enhanced"
                 >
                   <div className="space-y-3">
                     <div className="flex justify-between items-start">
