@@ -258,18 +258,22 @@ const ChargingStationSelectorModal = ({
                     </div>
 
                     <div className="space-y-3 text-sm text-white/80 mb-6">
-                      <div className="flex items-center justify-between">
-                        <span>Type:</span>
-                        <span className="font-medium">{station.type}</span>
+                      <div className="flex items-center justify-between bg-white/5 rounded-lg p-2 border border-white/10">
+                        <span className="text-white/60">Type:</span>
+                        <span className="font-semibold text-emerald-300">
+                          {station.type}
+                        </span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span>Connector:</span>
-                        <span className="font-medium">{station.connector}</span>
+                      <div className="flex items-center justify-between bg-white/5 rounded-lg p-2 border border-white/10">
+                        <span className="text-white/60">Connector:</span>
+                        <span className="font-semibold text-emerald-300">
+                          {station.connector}
+                        </span>
                       </div>
                       {station.estimated_time && (
-                        <div className="flex items-center justify-between">
-                          <span>Est. Time:</span>
-                          <span className="flex items-center font-medium">
+                        <div className="flex items-center justify-between bg-white/5 rounded-lg p-2 border border-white/10">
+                          <span className="text-white/60">Est. Time:</span>
+                          <span className="flex items-center font-semibold text-emerald-300">
                             <Clock className="h-3 w-3 mr-1" />
                             {station.estimated_time}
                           </span>
@@ -277,7 +281,8 @@ const ChargingStationSelectorModal = ({
                       )}
                     </div>
 
-                    <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-600">
+                    <Button className="w-full btn-primary-enhanced">
+                      <Zap className="h-4 w-4 mr-2" />
                       Select Station
                     </Button>
                   </div>
