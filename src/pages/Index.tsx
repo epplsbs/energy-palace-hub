@@ -84,7 +84,7 @@ const Index = () => {
             "About Us error details:",
             JSON.stringify(aboutError, null, 2),
           );
-          if (aboutError?.code === "PGRST116") {
+          if (aboutError?.code === "PGRST116" || aboutError?.code === "42P01") {
             console.warn(
               "About Us table does not exist. Using default content.",
             );
