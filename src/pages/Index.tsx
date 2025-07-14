@@ -123,60 +123,9 @@ const Index = () => {
       try {
         console.log("Starting to load About Us and Testimonials data...");
 
-        // Fetch data sequentially to identify which one fails
-        let aboutData = null;
-        try {
-          aboutData = await getAboutUsContent();
-          console.log("About Us data loaded successfully:", aboutData);
-        } catch (aboutError) {
-          if (aboutError?.code === "PGRST116" || aboutError?.code === "42P01") {
-            console.info(
-              "About Us table does not exist. Using default content.",
-            );
-          } else {
-            console.error("About Us loading failed:", aboutError);
-            console.error(
-              "About Us error details:",
-              JSON.stringify(aboutError, null, 2),
-            );
-          }
-          if (aboutError?.code === "PGRST116" || aboutError?.code === "42P01") {
-            // Provide default about us content
-            aboutData = {
-              id: "default",
-              title: "About Energy Palace",
-              company_story:
-                "Energy Palace is your premier destination for electric vehicle charging and dining. We combine state-of-the-art charging technology with exceptional hospitality.",
-              mission_statement:
-                "To provide electric vehicle travelers with a premium charging experience.",
-              vision_statement:
-                "To become the leading network of EV charging destinations.",
-              values: [
-                {
-                  title: "Sustainability",
-                  description: "Committed to environmental responsibility.",
-                },
-                {
-                  title: "Innovation",
-                  description:
-                    "Continuously investing in the latest technology.",
-                },
-                {
-                  title: "Excellence",
-                  description: "Striving to exceed expectations.",
-                },
-              ],
-              team_description:
-                "Our dedicated team is passionate about sustainable transportation and exceptional customer service.",
-              hero_image_url:
-                "https://images.unsplash.com/photo-1593941707882-a5bac6861d75?w=1200&h=600&fit=crop",
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-              display_order: 1,
-              is_active: true,
-            };
-          }
-        }
+        // Fetch about us content with improved error handling
+        const aboutData = await getAboutUsContent();
+        console.log("About Us data loaded:", aboutData);
 
         // Fetch testimonials with improved error handling
         const testimonialsData = await getTestimonials();
