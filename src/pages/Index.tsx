@@ -70,26 +70,46 @@ const Index = () => {
 
   useEffect(() => {
     const loadOtherData = async () => {
-      // setLoading(true); // isLoadingBusinessSettings handles its part
       try {
-        // Only fetch AboutContent and Testimonials here
-        const [aboutData, testimonialsData] = await Promise.all([
-          getAboutUsContent(),
-          getTestimonials(),
-        ]);
+        console.log("Starting to load About Us and Testimonials data...");
+
+        // Fetch data sequentially to identify which one fails
+        let aboutData = null;
+        try {
+          aboutData = await getAboutUsContent();
+          console.log("About Us data loaded successfully:", aboutData);
+        } catch (aboutError) {
+          console.error("About Us loading failed:", aboutError);
+          console.error("About Us error details:", {
+            message: aboutError?.message,
+            code: aboutError?.code,
+            details: aboutError?.details,
+            hint: aboutError?.hint,
+          });
+        }
+
+        let testimonialsData = [];
+        try {
+          testimonialsData = await getTestimonials();
+          console.log("Testimonials loaded successfully:", testimonialsData);
+        } catch (testimonialsError) {
+          console.error("Testimonials loading failed:", testimonialsError);
+          console.error("Testimonials error details:", {
+            message: testimonialsError?.message,
+            code: testimonialsError?.code,
+            details: testimonialsError?.details,
+            hint: testimonialsError?.hint,
+          });
+        }
+
         setAboutContent(aboutData);
         setTestimonials(testimonialsData || []);
       } catch (error) {
-        console.error(
-          "Error loading page data for Index (About/Testimonials):",
-          error?.message || error?.toString() || error,
-        );
-        // Set default/empty states if necessary
+        console.error("Unexpected error in loadOtherData:", error);
         setAboutContent(null);
         setTestimonials([]);
       } finally {
-        // setLoading(false); // isLoadingBusinessSettings handles its part
-        setLoadingCombined(false); // Update combined loading state
+        setLoadingCombined(false);
       }
     };
     loadOtherData();
