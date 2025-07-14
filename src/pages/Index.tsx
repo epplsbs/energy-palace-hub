@@ -38,6 +38,7 @@ import { useBackgroundImage } from "@/hooks/useBackgroundImage";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSEO } from "@/hooks/useSEO";
 import LocationDisplay from "@/components/LocationDisplay";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const [isChargingModalOpen, setIsChargingModalOpen] = useState(false);
