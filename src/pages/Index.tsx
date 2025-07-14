@@ -348,7 +348,7 @@ const Index = () => {
             <div>
               {/* Site title (not H1 on homepage) */}
               <div
-                className={`text-xl md:text-2xl font-bold ${theme === "light" ? "bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent" : "bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent"}`}
+                className={`text-xl md:text-2xl font-bold ${theme === "light" ? "text-gradient-animated" : "text-gradient-animated"} drop-shadow-sm`}
               >
                 {businessSettings?.business_name || "Energy Palace"}
               </div>
