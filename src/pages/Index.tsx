@@ -248,21 +248,21 @@ const Index = () => {
       {/* Animated Background Elements (only show if no background image) */}
       {!(businessSettings?.background_image_url || backgroundImageUrl) && (
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-pink-400 to-orange-400 opacity-40 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-emerald-400 to-green-400 opacity-40 rounded-full blur-3xl animate-float"></div>
           <div
-            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-30 rounded-full blur-3xl animate-float"
+            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-teal-400 to-cyan-500 opacity-30 rounded-full blur-3xl animate-float"
             style={{ animationDelay: "2s" }}
           ></div>
           <div
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-128 h-128 bg-gradient-to-r from-purple-400 to-pink-500 opacity-20 rounded-full blur-3xl animate-float"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-128 h-128 bg-gradient-to-r from-green-400 to-emerald-500 opacity-20 rounded-full blur-3xl animate-float"
             style={{ animationDelay: "4s" }}
           ></div>
           <div
-            className="absolute top-10 right-10 w-64 h-64 bg-gradient-to-r from-emerald-400 to-teal-500 opacity-35 rounded-full blur-2xl animate-float"
+            className="absolute top-10 right-10 w-64 h-64 bg-gradient-to-r from-lime-400 to-green-500 opacity-35 rounded-full blur-2xl animate-float"
             style={{ animationDelay: "1s" }}
           ></div>
           <div
-            className="absolute bottom-10 left-10 w-72 h-72 bg-gradient-to-r from-yellow-400 to-red-500 opacity-25 rounded-full blur-3xl animate-float"
+            className="absolute bottom-10 left-10 w-72 h-72 bg-gradient-to-r from-emerald-300 to-teal-500 opacity-25 rounded-full blur-3xl animate-float"
             style={{ animationDelay: "3s" }}
           ></div>
         </div>
