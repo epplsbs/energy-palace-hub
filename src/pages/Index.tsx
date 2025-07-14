@@ -444,7 +444,7 @@ const Index = () => {
               className={`text-6xl md:text-8xl font-black leading-tight ${theme === "light" ? "text-gray-900" : "text-white"}`}
             >
               <span
-                className={`block ${theme === "light" ? "bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent" : "bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent"}`}
+                className={`block ${theme === "light" ? "bg-gradient-to-r from-pink-600 via-purple-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent" : "bg-gradient-to-r from-pink-400 via-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent"} drop-shadow-lg`}
               >
                 Charge
               </span>
