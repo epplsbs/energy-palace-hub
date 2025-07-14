@@ -80,6 +80,10 @@ const Index = () => {
           console.log("About Us data loaded successfully:", aboutData);
         } catch (aboutError) {
           console.error("About Us loading failed:", aboutError);
+          console.error(
+            "About Us error details:",
+            JSON.stringify(aboutError, null, 2),
+          );
           if (aboutError?.code === "PGRST116") {
             console.warn(
               "About Us table does not exist. Using default content.",
