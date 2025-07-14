@@ -224,12 +224,9 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label
-                  htmlFor="date"
-                  className="text-gray-700 dark:text-gray-300"
-                >
-                  Date
+              <div className="space-y-2">
+                <Label htmlFor="date" className="text-white/90 font-semibold">
+                  Reservation Date *
                 </Label>
                 <Popover>
                   <PopoverTrigger asChild>
