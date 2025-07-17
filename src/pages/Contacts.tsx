@@ -256,8 +256,8 @@ const Contacts = () => {
             <CardContent className="p-6 md:p-8">
               <GoogleMapEmbed
                 apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""} // Pass explicitly or ensure component handles undefined gracefully
-                lat={27.108917}
-                lng={85.963333}
+                lat={businessSettings?.latitude || 27.108917}
+                lng={businessSettings?.longitude || 85.963333}
                 zoom={16}
                 businessName={businessSettings?.business_name || "Energy Palace"}
                 businessAddress={businessSettings?.business_address || "Bhiman, Sindhuli, Bagmati, Nepal"}
