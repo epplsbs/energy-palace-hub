@@ -25,13 +25,33 @@ const GoogleMapEmbed: React.FC<GoogleMapEmbedProps> = ({
   const isMapLoaded = useRef(false); // To prevent multiple script loads / map initializations
   const scriptAdded = useRef(false); // To track if script has been appended
 
-  useEffect(() => {
+    useEffect(() => {
     const GOOGLE_MAPS_API_KEY = apiKey || import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
     if (!GOOGLE_MAPS_API_KEY) {
-      console.error("Google Maps API Key is missing. Please provide it via props or VITE_GOOGLE_MAPS_API_KEY environment variable.");
+      console.warn("Google Maps API Key is missing. Using fallback iframe embed.");
       if (mapRef.current) {
-        mapRef.current.innerHTML = '<p style="text-align:center; padding: 20px;">Map could not be loaded. API Key missing.</p>';
+        // Create fallback iframe embed
+        const fallbackMapUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.1234567890123!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjfCsDA2JzMyLjEiTiA4NcKwNTcnNDguMCJF!5e0!3m2!1sen!2snp!4v1629788234567!5m2!1sen!2snp&q=${lat},${lng}`;
+
+        mapRef.current.innerHTML = `
+          <div style="position: relative; width: 100%; height: 100%; background: #f5f5f5; border-radius: 8px; overflow: hidden;">
+            <iframe
+              width="100%"
+              height="100%"
+              style="border:0; border-radius: 8px;"
+              src="${fallbackMapUrl}"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <div style="position: absolute; bottom: 10px; right: 10px; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 4px; font-size: 12px;">
+              <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank" style="color: #1a73e8; text-decoration: none;">
+                View on Google Maps
+              </a>
+            </div>
+          </div>
+        `;
       }
       return;
     }
