@@ -122,7 +122,7 @@ const Admin = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 admin-panel">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <div className="mx-auto w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center mb-4">
+                        <div className="mx-auto w-16 h-16 bg-emerald-600 rounded-xl flex items-center justify-center mb-4">
               <span className="text-white font-bold text-xl">A</span>
             </div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -172,17 +172,17 @@ const Admin = () => {
   }
 
     return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 admin-panel">
+        <div className="min-h-screen bg-gray-50 admin-panel">
       <nav className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-slate-200/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="flex-shrink-0 flex items-center">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
+                                    <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold text-sm">A</span>
                   </div>
-                  <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                  <h1 className="text-xl font-bold text-gray-900">
                     Admin Panel
                   </h1>
                 </div>
