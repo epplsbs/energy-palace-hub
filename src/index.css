@@ -171,9 +171,14 @@
     --ring: 222.2 84% 4.9%;
   }
 
-  .admin-panel * {
-    /* Override any dark theme styles */
-    color: inherit !important;
+    .admin-panel {
+    /* Ensure admin panel has proper text colors */
+    color: hsl(var(--foreground));
+  }
+
+  .admin-panel .text-transparent {
+    /* Allow gradient text to work */
+    color: transparent !important;
   }
 
   .text-gradient-emerald {
