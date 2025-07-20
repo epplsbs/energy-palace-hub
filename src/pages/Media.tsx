@@ -186,22 +186,87 @@ const Media = () => {
               <p className={`text-base md:text-lg leading-relaxed mb-3 ${theme === 'light' ? 'text-gray-700' : 'text-white/80'}`}>
                 Download high-resolution logos and other brand assets for use in your publications.
               </p>
-              <div className="flex items-center">
-                {/* Placeholder for a download button or link */}
-                <button
-                  disabled
-                  className={`px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition-colors duration-300
-                              ${theme === 'light'
-                                ? 'bg-emerald-500 text-white hover:bg-emerald-600 disabled:bg-gray-300'
-                                : 'bg-emerald-600 text-white hover:bg-emerald-700 disabled:bg-gray-500'}`}
-                >
-                  <Download className="h-5 w-5" />
-                  Download Asset Pack (Coming Soon)
-                </button>
+                            <div className="flex flex-wrap items-center gap-3">
+                {businessSettings?.logo_url ? (
+                  <>
+                    <button
+                      onClick={async () => {
+                        if (!businessSettings?.logo_url) return;
+
+                        try {
+                          // Fetch the image
+                          const response = await fetch(businessSettings.logo_url);
+                          const blob = await response.blob();
+
+                          // Create download link
+                          const url = window.URL.createObjectURL(blob);
+                          const link = document.createElement('a');
+                          link.href = url;
+                          link.download = `${businessSettings?.business_name || 'Energy-Palace'}-logo.${blob.type.split('/')[1]}`;
+                          document.body.appendChild(link);
+                          link.click();
+
+                          // Cleanup
+                          document.body.removeChild(link);
+                          window.URL.revokeObjectURL(url);
+                        } catch (error) {
+                          console.error('Download failed:', error);
+                          // Fallback: open in new tab
+                          window.open(businessSettings.logo_url, '_blank');
+                        }
+                      }}
+                      className={`px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105
+                                  ${theme === 'light'
+                                    ? 'bg-emerald-500 text-white hover:bg-emerald-600'
+                                    : 'bg-emerald-600 text-white hover:bg-emerald-700'}`}
+                    >
+                      <Download className="h-5 w-5" />
+                      Download Logo
+                    </button>
+
+                    <button
+                      onClick={() => window.open(businessSettings.logo_url, '_blank')}
+                      className={`px-4 py-3 rounded-lg font-medium flex items-center gap-2 transition-all duration-300 border
+                                  ${theme === 'light'
+                                    ? 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                                    : 'border-gray-600 bg-gray-800 text-white hover:bg-gray-700'}`}
+                    >
+                      View Full Size
+                    </button>
+                  </>
+                ) : (
+                  <div className={`px-6 py-3 rounded-lg border-2 border-dashed flex items-center gap-2
+                                  ${theme === 'light'
+                                    ? 'border-gray-300 text-gray-500'
+                                    : 'border-gray-600 text-gray-400'}`}>
+                    <Download className="h-5 w-5" />
+                    <span>No logo available - Upload one in Admin Panel</span>
+                  </div>
+                )}
               </div>
-              <p className={`text-sm mt-2 ${theme === 'light' ? 'text-gray-500' : 'text-white/60'}`}>
-                (User: Please link this to your actual press kit/logo download URL when available.)
-              </p>
+
+              {businessSettings?.logo_url && (
+                <div className="mt-4 p-4 border rounded-lg bg-white/5 backdrop-blur-sm">
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={businessSettings.logo_url}
+                      alt={`${businessSettings?.business_name || 'Energy Palace'} Logo`}
+                      className="h-16 w-auto object-contain bg-white rounded p-2"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <div>
+                      <p className={`font-medium ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+                        {businessSettings?.business_name || 'Energy Palace'} Logo
+                      </p>
+                      <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
+                        High-resolution logo suitable for print and digital use
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </section>
           </div>
         </div>
