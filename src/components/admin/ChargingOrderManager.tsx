@@ -411,17 +411,15 @@ const ChargingOrderManager = () => {
                         Cancel
                       </Button>
                     )}
-                    {(order.status === 'cancelled' || order.status === 'completed') && (
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => setOrderToDelete(order)}
-                        >
-                          <Trash2 className="h-4 w-4 mr-1" />
-                          Delete
-                        </Button>
-                      </AlertDialogTrigger>
+                                        {(order.status === 'cancelled' || order.status === 'completed') && (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => setOrderToDelete(order)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        Delete
+                      </Button>
                     )}
                   </div>
                 </div>
