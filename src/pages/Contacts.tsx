@@ -264,10 +264,10 @@ const Contacts = () => {
           </div>
           <Card className="glass border border-white/20 backdrop-blur-xl bg-gray-900/50">
             <CardContent className="p-6 md:p-8">
-              <GoogleMapEmbed
+                            <GoogleMapEmbed
                 apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""} // Pass explicitly or ensure component handles undefined gracefully
-                lat={businessSettings?.latitude || 27.108916666666665}
-                lng={businessSettings?.longitude || 85.96333333333334}
+                lat={parseFloat(businessSettings?.business_latitude || '27.7172')}
+                lng={parseFloat(businessSettings?.business_longitude || '85.3240')}
                 zoom={16}
                 businessName={businessSettings?.business_name || "Energy Palace"}
                 businessAddress={businessSettings?.business_address || "Bhiman, Sindhuli, Bagmati, Nepal"}
