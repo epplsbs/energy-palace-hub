@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -166,19 +165,38 @@ const Admin = () => {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b">
+    return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 admin-panel">
+      <nav className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-slate-200/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">A</span>
+                  </div>
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                    Admin Panel
+                  </h1>
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-700 hidden sm:block">Welcome, {user.email}</span>
-              <Button onClick={handleSignOut} variant="outline" size="sm">
+              <div className="hidden sm:flex items-center space-x-2">
+                <div className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
+                  <span className="text-emerald-600 font-medium text-xs">
+                    {user.email?.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <span className="text-sm text-slate-700">{user.email}</span>
+              </div>
+              <Button
+                onClick={handleSignOut}
+                variant="outline"
+                size="sm"
+                className="border-slate-300 hover:bg-slate-50"
+              >
                 Sign Out
               </Button>
             </div>
@@ -188,21 +206,22 @@ const Admin = () => {
 
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="overflow-x-auto">
-              <TabsList className="grid w-full min-w-max grid-cols-10 mb-6">
-                <TabsTrigger value="dashboard" className="text-xs px-2">Dashboard</TabsTrigger>
-                <TabsTrigger value="menu" className="text-xs px-2">Menu</TabsTrigger>
-                <TabsTrigger value="orders" className="text-xs px-2">Orders</TabsTrigger>
-                <TabsTrigger value="reservations" className="text-xs px-2">Reservations</TabsTrigger>
-                <TabsTrigger value="charging" className="text-xs px-2">Charging</TabsTrigger>
-                <TabsTrigger value="charging-orders" className="text-xs px-2">Charging Orders</TabsTrigger>
-                <TabsTrigger value="gallery" className="text-xs px-2">Gallery</TabsTrigger>
-                <TabsTrigger value="contacts" className="text-xs px-2">Contacts</TabsTrigger>
-                <TabsTrigger value="about" className="text-xs px-2">About Us</TabsTrigger>
-                <TabsTrigger value="settings" className="text-xs px-2">Settings</TabsTrigger>
-              </TabsList>
-            </div>
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-white/50 p-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <div className="overflow-x-auto">
+                <TabsList className="grid w-full min-w-max grid-cols-10 mb-6 bg-slate-100/50 p-1 rounded-xl">
+                  <TabsTrigger value="dashboard" className="text-xs px-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">Dashboard</TabsTrigger>
+                  <TabsTrigger value="menu" className="text-xs px-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">Menu</TabsTrigger>
+                  <TabsTrigger value="orders" className="text-xs px-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">Orders</TabsTrigger>
+                  <TabsTrigger value="reservations" className="text-xs px-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">Reservations</TabsTrigger>
+                  <TabsTrigger value="charging" className="text-xs px-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">Charging</TabsTrigger>
+                  <TabsTrigger value="charging-orders" className="text-xs px-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">Charging Orders</TabsTrigger>
+                  <TabsTrigger value="gallery" className="text-xs px-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">Gallery</TabsTrigger>
+                  <TabsTrigger value="contacts" className="text-xs px-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">Contacts</TabsTrigger>
+                  <TabsTrigger value="about" className="text-xs px-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">About Us</TabsTrigger>
+                  <TabsTrigger value="settings" className="text-xs px-2 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg">Settings</TabsTrigger>
+                </TabsList>
+              </div>
 
             <TabsContent value="dashboard" className="mt-6">
               <AdminDashboard />
