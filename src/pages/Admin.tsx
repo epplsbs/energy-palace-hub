@@ -223,46 +223,47 @@ const Admin = () => {
                 </TabsList>
               </div>
 
-            <TabsContent value="dashboard" className="mt-6">
-              <AdminDashboard />
-            </TabsContent>
+                          <TabsContent value="dashboard" className="mt-6">
+                <AdminDashboard />
+              </TabsContent>
 
-            <TabsContent value="menu" className="mt-6">
-              <MenuManager />
-            </TabsContent>
+              <TabsContent value="menu" className="mt-6">
+                <MenuManager />
+              </TabsContent>
 
-            <TabsContent value="orders" className="mt-6">
-              <OrderManager />
-            </TabsContent>
+              <TabsContent value="orders" className="mt-6">
+                <OrderManager />
+              </TabsContent>
 
-            <TabsContent value="reservations" className="mt-6">
-              <ReservationManager />
-            </TabsContent>
+              <TabsContent value="reservations" className="mt-6">
+                <ReservationManager />
+              </TabsContent>
 
-            <TabsContent value="charging" className="mt-6">
-              <ChargingStationManager />
-            </TabsContent>
+              <TabsContent value="charging" className="mt-6">
+                <ChargingStationManager />
+              </TabsContent>
 
-            <TabsContent value="charging-orders" className="mt-6">
-              <ChargingOrderManager />
-            </TabsContent>
+              <TabsContent value="charging-orders" className="mt-6">
+                <ChargingOrderManager />
+              </TabsContent>
 
-            <TabsContent value="gallery" className="mt-6">
-              <GalleryManager />
-            </TabsContent>
+              <TabsContent value="gallery" className="mt-6">
+                <GalleryManager />
+              </TabsContent>
 
-            <TabsContent value="contacts" className="mt-6">
-              <ContactsManager />
-            </TabsContent>
+              <TabsContent value="contacts" className="mt-6">
+                <ContactsManager />
+              </TabsContent>
 
-            <TabsContent value="about" className="mt-6">
-              <AboutUsManager />
-            </TabsContent>
+              <TabsContent value="about" className="mt-6">
+                <AboutUsManager />
+              </TabsContent>
 
-            <TabsContent value="settings" className="mt-6">
-              <BusinessSettingsManager />
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="settings" className="mt-6">
+                <BusinessSettingsManager />
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
       </div>
     </div>
