@@ -18,9 +18,14 @@ const About = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   
-  const backgroundImageUrl = useBackgroundImage();
+    const backgroundImageUrl = useBackgroundImage();
   const { theme, toggleTheme } = useTheme();
   useSEO('/about');
+
+  const { data: businessSettings } = useQuery<BusinessSettings, Error>({
+    queryKey: ['businessSettings'],
+    queryFn: getBusinessSettings,
+  });
 
   useEffect(() => {
     loadData();
