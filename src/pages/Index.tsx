@@ -1,14 +1,12 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Zap, Car, Coffee, ChevronRight, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon, Menu, X, BookOpen } from 'lucide-react'; // Added BookOpen
+import { Zap, Car, Coffee, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon, Menu, X, BookOpen } from 'lucide-react'; // Added BookOpen
 import ChargingStationSelectorModal from '@/components/modals/ChargingStationSelectorModal';
 import MenuModal from '@/components/modals/MenuModal';
 import ReservationModal from '@/components/modals/ReservationModal';
 import { useQuery } from '@tanstack/react-query';
 import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
-import { getAboutUsContent, type AboutUsContent } from '@/services/aboutUsService';
-import { getTestimonials, type Testimonial } from '@/services/contentService'; // Import Testimonials
+import { getAboutUsContent, getTestimonials, type AboutUsContent, type Testimonial } from '@/services/contentService';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 // Ensure Card, CardContent, Star, ChevronLeft, ChevronRight, Quote are imported or add them
@@ -47,15 +45,23 @@ const Index = () => {
     const loadOtherData = async () => {
       // setLoading(true); // isLoadingBusinessSettings handles its part
       try {
-        // Only fetch AboutContent and Testimonials here
+                // Only fetch AboutContent and Testimonials here
         const [aboutData, testimonialsData] = await Promise.all([
-          getAboutUsContent(),
-          getTestimonials()
+          getAboutUsContent().catch(err => {
+            console.warn('About Us content not available:', err);
+            return null;
+          }),
+          getTestimonials().catch(err => {
+            console.warn('Testimonials not available:', err);
+            return [];
+          })
         ]);
         setAboutContent(aboutData);
         setTestimonials(testimonialsData || []);
-      } catch (error) {
+            } catch (error) {
         console.error('Error loading page data for Index (About/Testimonials):', error);
+        console.error('Error details:', error instanceof Error ? error.message : 'Unknown error');
+        setAboutContent(null);
         setTestimonials([]); // Set default/empty states if necessary
       } finally {
         // setLoading(false); // isLoadingBusinessSettings handles its part

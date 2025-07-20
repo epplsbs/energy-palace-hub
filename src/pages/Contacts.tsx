@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
@@ -105,13 +104,24 @@ const Contacts = () => {
       {/* Header */}
       <header className="relative z-20 p-4 md:p-6 bg-black/10 backdrop-blur-md border-b border-white/10">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
-              <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
-            </div>
+                    <div className="flex items-center space-x-3">
+            {businessSettings?.logo_url ? (
+              <img
+                src={businessSettings.logo_url}
+                alt={businessSettings?.business_name ? `${businessSettings.business_name} Logo` : 'Logo'}
+                className="h-8 md:h-12 w-auto"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            ) : (
+              <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
+                <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
+              </div>
+            )}
             <div>
               <h1 className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
-                Energy Palace
+                {businessSettings?.business_name || 'Energy Palace'}
               </h1>
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Get in Touch</p>
             </div>
@@ -254,10 +264,10 @@ const Contacts = () => {
           </div>
           <Card className="glass border border-white/20 backdrop-blur-xl bg-gray-900/50">
             <CardContent className="p-6 md:p-8">
-              <GoogleMapEmbed
+                            <GoogleMapEmbed
                 apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""} // Pass explicitly or ensure component handles undefined gracefully
-                lat={businessSettings?.latitude || 27.108916666666665}
-                lng={businessSettings?.longitude || 85.96333333333334}
+                lat={parseFloat(businessSettings?.business_latitude || '27.7172')}
+                lng={parseFloat(businessSettings?.business_longitude || '85.3240')}
                 zoom={16}
                 businessName={businessSettings?.business_name || "Energy Palace"}
                 businessAddress={businessSettings?.business_address || "Bhiman, Sindhuli, Bagmati, Nepal"}

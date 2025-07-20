@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -163,11 +162,11 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-gray-900 to-gray-800 border border-white/20 text-white">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600">
+        <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white/90 backdrop-blur-sm border border-white/30 text-gray-900 shadow-2xl">
+                <DialogHeader>
+          <DialogTitle className="text-2xl font-bold flex items-center gap-3 text-gray-900">
+            <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500">
               <Utensils className="h-6 w-6 text-white" />
             </div>
             Premium Menu
@@ -178,14 +177,14 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
           <div className="space-y-6">
             {/* Menu Items */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {menuItems.map((item) => (
-                <div key={item.id} className="glass border border-white/20 rounded-xl p-4 hover:border-blue-500/50 transition-all">
+                            {menuItems.map((item) => (
+                <div key={item.id} className="bg-white/70 backdrop-blur-sm border border-white/40 rounded-xl p-4 hover:border-emerald-500/50 hover:shadow-lg transition-all">
                   <div className="space-y-3">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-lg text-white">{item.name}</h3>
-                        <p className="text-white/70 text-sm">{item.description}</p>
-                        <p className="text-blue-400 font-bold text-lg">NPR {item.price}</p>
+                        <h3 className="font-semibold text-lg text-gray-900">{item.name}</h3>
+                        <p className="text-gray-600 text-sm">{item.description}</p>
+                        <p className="text-emerald-600 font-bold text-lg">NPR {item.price}</p>
                       </div>
                       {item.image_url && (
                         <img 
@@ -195,9 +194,9 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
                         />
                       )}
                     </div>
-                    <Button
+                                        <Button
                       onClick={() => addToCart(item)}
-                      className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+                      className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Add to Cart
@@ -207,22 +206,22 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
               ))}
             </div>
 
-            {/* Cart Summary */}
+                        {/* Cart Summary */}
             {cart.length > 0 && (
-              <div className="glass border border-white/20 rounded-xl p-6">
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <ShoppingCart className="h-5 w-5 text-blue-400" />
+              <div className="bg-white/70 backdrop-blur-sm border border-white/40 rounded-xl p-6">
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
+                  <ShoppingCart className="h-5 w-5 text-emerald-600" />
                   Your Cart
                 </h3>
                 <div className="space-y-3">
-                  {cart.map((item) => (
+                                    {cart.map((item) => (
                     <div key={item.id} className="flex justify-between items-center">
                       <div>
-                        <span className="font-medium">{item.name}</span>
-                        <span className="text-white/70 ml-2">x{item.quantity}</span>
+                        <span className="font-medium text-gray-900">{item.name}</span>
+                        <span className="text-gray-600 ml-2">x{item.quantity}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-blue-400 font-bold">NPR {item.price * item.quantity}</span>
+                        <span className="text-emerald-600 font-bold">NPR {item.price * item.quantity}</span>
                         <div className="flex items-center gap-1">
                           <Button
                             size="sm"
@@ -242,10 +241,10 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
                       </div>
                     </div>
                   ))}
-                  <div className="border-t border-white/20 pt-3">
-                    <div className="flex justify-between items-center text-lg font-bold">
+                                    <div className="border-t border-gray-200 pt-3">
+                    <div className="flex justify-between items-center text-lg font-bold text-gray-900">
                       <span>Total:</span>
-                      <span className="text-blue-400">NPR {getTotalAmount()}</span>
+                      <span className="text-emerald-600">NPR {getTotalAmount()}</span>
                     </div>
                   </div>
                   <Button
@@ -258,68 +257,68 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
               </div>
             )}
           </div>
-        ) : (
+                ) : (
           <form onSubmit={handleSubmitOrder} className="space-y-6">
-            <h3 className="text-xl font-bold">Order Information</h3>
+            <h3 className="text-xl font-bold text-gray-900">Order Information</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name" className="text-white/90">Full Name *</Label>
+                <Label htmlFor="name" className="text-gray-700">Full Name *</Label>
                 <Input
                   id="name"
                   value={customerInfo.name}
                   onChange={(e) => setCustomerInfo(prev => ({ ...prev, name: e.target.value }))}
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                  className="bg-white/70 border-gray-300 text-gray-900 placeholder:text-gray-500"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="phone" className="text-white/90">Phone Number *</Label>
+                <Label htmlFor="phone" className="text-gray-700">Phone Number *</Label>
                 <Input
                   id="phone"
                   value={customerInfo.phone}
                   onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                  className="bg-white/70 border-gray-300 text-gray-900 placeholder:text-gray-500"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <Label htmlFor="email" className="text-white/90">Email</Label>
+              <Label htmlFor="email" className="text-gray-700">Email</Label>
               <Input
                 id="email"
                 type="email"
                 value={customerInfo.email}
                 onChange={(e) => setCustomerInfo(prev => ({ ...prev, email: e.target.value }))}
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                className="bg-white/70 border-gray-300 text-gray-900 placeholder:text-gray-500"
               />
             </div>
 
             <div>
-              <Label htmlFor="notes" className="text-white/90">Special Requests</Label>
+              <Label htmlFor="notes" className="text-gray-700">Special Requests</Label>
               <Textarea
                 id="notes"
                 value={customerInfo.notes}
                 onChange={(e) => setCustomerInfo(prev => ({ ...prev, notes: e.target.value }))}
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                className="bg-white/70 border-gray-300 text-gray-900 placeholder:text-gray-500"
                 rows={3}
               />
             </div>
 
-            {/* Order Summary */}
-            <div className="glass border border-white/20 rounded-xl p-4">
-              <h4 className="font-bold mb-3">Order Summary</h4>
+                        {/* Order Summary */}
+            <div className="bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl p-4">
+              <h4 className="font-bold mb-3 text-gray-900">Order Summary</h4>
               {cart.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm mb-2">
+                <div key={item.id} className="flex justify-between text-sm mb-2 text-gray-700">
                   <span>{item.name} x{item.quantity}</span>
                   <span>NPR {item.price * item.quantity}</span>
                 </div>
               ))}
-              <div className="border-t border-white/20 pt-2 mt-2">
-                <div className="flex justify-between font-bold">
+              <div className="border-t border-gray-200 pt-2 mt-2">
+                <div className="flex justify-between font-bold text-gray-900">
                   <span>Total:</span>
-                  <span className="text-emerald-400">NPR {getTotalAmount()}</span>
+                  <span className="text-emerald-600">NPR {getTotalAmount()}</span>
                 </div>
               </div>
             </div>

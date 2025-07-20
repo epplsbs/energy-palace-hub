@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,8 @@ import { getGalleryItems } from '@/services/contentService';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useQuery } from '@tanstack/react-query';
+import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
 import { Zap, Calendar, Tag, BookOpen, X, Home, Phone, Info, Sun, Moon, Menu } from 'lucide-react';
 
 interface GalleryItem {
@@ -24,9 +25,14 @@ const Blog = () => {
   const [selectedPost, setSelectedPost] = useState<GalleryItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const backgroundImageUrl = useBackgroundImage();
+    const backgroundImageUrl = useBackgroundImage();
   const { theme, toggleTheme } = useTheme();
   useSEO('/blog');
+
+  const { data: businessSettings } = useQuery<BusinessSettings, Error>({
+    queryKey: ['businessSettings'],
+    queryFn: getBusinessSettings,
+  });
 
   useEffect(() => {
     fetchGalleryItems();
@@ -96,13 +102,24 @@ const Blog = () => {
       {/* Header */}
       <header className="relative z-20 p-4 md:p-6 bg-black/10 backdrop-blur-md border-b border-white/10">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
-              <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
-            </div>
+                    <div className="flex items-center space-x-3">
+            {businessSettings?.logo_url ? (
+              <img
+                src={businessSettings.logo_url}
+                alt={businessSettings?.business_name ? `${businessSettings.business_name} Logo` : 'Logo'}
+                className="h-8 md:h-12 w-auto"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            ) : (
+              <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
+                <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
+              </div>
+            )}
             <div>
               <h1 className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
-                Energy Palace
+                {businessSettings?.business_name || 'Energy Palace'}
               </h1>
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Our Story in Pictures</p>
             </div>

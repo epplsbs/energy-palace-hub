@@ -179,7 +179,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
 
   return (
     <Dialog open={isOpen} onOpenChange={handleModalClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <DialogContent className="max-w-4xl max-h-[90vh] mx-auto bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-white/20">
         <DialogHeader className="text-center pb-4">
           <div className="mx-auto w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center mb-4">
             <Zap className="h-8 w-8 text-white" />
@@ -214,7 +214,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
                 {stations.map((station) => (
                   <div
                     key={station.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer"
+                    className="border border-gray-200 rounded-lg p-4 hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer bg-white/50"
                     onClick={() => handleStationSelect(station)}
                   >
                     <div className="flex items-center justify-between mb-3">
@@ -253,7 +253,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
               </div>
             )}
 
-            <div className="flex justify-center pt-4 border-t bg-white sticky bottom-0">
+            <div className="flex justify-center pt-4 border-t bg-white/50 sticky bottom-0">
               <Button onClick={handleModalClose} variant="outline">
                 <X className="h-4 w-4 mr-2" />
                 Cancel
@@ -263,92 +263,93 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
         ) : (
           // Booking Form View
           <div className="flex flex-col max-h-[calc(90vh-200px)]">
-            <form onSubmit={handleSubmit} className="space-y-6 overflow-y-auto flex-1 px-1">
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <h4 className="font-semibold text-gray-900 mb-2">Selected Station:</h4>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-gray-600">Station ID:</span>
-                  <span className="font-medium ml-2">{selectedStation?.station_id}</span>
+            <div className="overflow-y-auto flex-1 pr-2">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="bg-gray-50/80 backdrop-blur-sm rounded-lg p-4 mb-6">
+                  <h4 className="font-semibold text-gray-900 mb-2">Selected Station:</h4>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">Station ID:</span>
+                      <span className="font-medium ml-2">{selectedStation?.station_id}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Type:</span>
+                      <span className="font-medium ml-2">{selectedStation?.type}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Power:</span>
+                      <span className="font-medium ml-2">{selectedStation?.power}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Connector:</span>
+                      <span className="font-medium ml-2">{selectedStation?.connector}</span>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-gray-600">Type:</span>
-                  <span className="font-medium ml-2">{selectedStation?.type}</span>
+
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="customerName" className="text-sm font-medium text-gray-700">
+                      Full Name *
+                    </Label>
+                    <Input
+                      id="customerName"
+                      type="text"
+                      value={formData.customerName}
+                      onChange={(e) => setFormData(prev => ({ ...prev, customerName: e.target.value }))}
+                      placeholder="Enter your full name"
+                      className="mt-1 bg-white/70"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="customerPhone" className="text-sm font-medium text-gray-700">
+                      Phone Number *
+                    </Label>
+                    <Input
+                      id="customerPhone"
+                      type="tel"
+                      value={formData.customerPhone}
+                      onChange={(e) => setFormData(prev => ({ ...prev, customerPhone: e.target.value }))}
+                      placeholder="Enter your phone number"
+                      className="mt-1 bg-white/70"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="vehicleNumber" className="text-sm font-medium text-gray-700">
+                      Vehicle Number
+                    </Label>
+                    <Input
+                      id="vehicleNumber"
+                      type="text"
+                      value={formData.vehicleNumber}
+                      onChange={(e) => setFormData(prev => ({ ...prev, vehicleNumber: e.target.value }))}
+                      placeholder="Enter vehicle number (optional)"
+                      className="mt-1 bg-white/70"
+                    />
+                  </div>
+
+                  <div className="pb-8">
+                    <Label htmlFor="startTime" className="text-sm font-medium text-gray-700">
+                      Preferred Start Time *
+                    </Label>
+                    <Input
+                      id="startTime"
+                      type="datetime-local"
+                      value={formData.startTime}
+                      onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                      className="mt-1 bg-white/70"
+                      required
+                    />
+                  </div>
                 </div>
-                <div>
-                  <span className="text-gray-600">Power:</span>
-                  <span className="font-medium ml-2">{selectedStation?.power}</span>
-                </div>
-                <div>
-                  <span className="text-gray-600">Connector:</span>
-                  <span className="font-medium ml-2">{selectedStation?.connector}</span>
-                </div>
-              </div>
+              </form>
             </div>
-
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="customerName" className="text-sm font-medium text-gray-700">
-                  Full Name *
-                </Label>
-                <Input
-                  id="customerName"
-                  type="text"
-                  value={formData.customerName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, customerName: e.target.value }))}
-                  placeholder="Enter your full name"
-                  className="mt-1"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="customerPhone" className="text-sm font-medium text-gray-700">
-                  Phone Number *
-                </Label>
-                <Input
-                  id="customerPhone"
-                  type="tel"
-                  value={formData.customerPhone}
-                  onChange={(e) => setFormData(prev => ({ ...prev, customerPhone: e.target.value }))}
-                  placeholder="Enter your phone number"
-                  className="mt-1"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="vehicleNumber" className="text-sm font-medium text-gray-700">
-                  Vehicle Number
-                </Label>
-                <Input
-                  id="vehicleNumber"
-                  type="text"
-                  value={formData.vehicleNumber}
-                  onChange={(e) => setFormData(prev => ({ ...prev, vehicleNumber: e.target.value }))}
-                  placeholder="Enter vehicle number (optional)"
-                  className="mt-1"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="startTime" className="text-sm font-medium text-gray-700">
-                  Preferred Start Time *
-                </Label>
-                <Input
-                  id="startTime"
-                  type="datetime-local"
-                  value={formData.startTime}
-                  onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
-                  className="mt-1"
-                  required
-                />
-              </div>
-            </div>
-
-            </form>
             
-            <div className="flex gap-3 pt-4 border-t bg-white sticky bottom-0">
+            <div className="flex gap-3 pt-4 border-t bg-white/50 mt-4">
               <Button
                 type="button"
                 onClick={handleBack}
