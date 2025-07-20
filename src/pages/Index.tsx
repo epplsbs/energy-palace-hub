@@ -98,7 +98,7 @@ const Index = () => {
 
   return (
     <div 
-      className={`min-h-screen ${theme === 'light' ? 'bg-gradient-to-br from-gray-50 to-gray-100' : 'bg-gradient-futuristic'} relative overflow-hidden`}
+            className={`min-h-screen ${theme === 'light' ? 'bg-gray-50' : 'bg-slate-900'} relative overflow-hidden`}
       style={backgroundImageUrl ? {
         backgroundImage: `url(${backgroundImageUrl})`,
         backgroundSize: 'cover',
