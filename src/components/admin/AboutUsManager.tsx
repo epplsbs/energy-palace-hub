@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { Info, Plus, Trash2 } from 'lucide-react';
+import ImageUpload from '@/components/common/ImageUpload';
 import { 
   getAboutUsContent, 
   updateAboutUsContent, 
@@ -161,13 +161,15 @@ const AboutUsManager = () => {
                   placeholder="About Energy Palace"
                 />
               </div>
-              <div>
-                <Label htmlFor="hero_image_url">Hero Image URL</Label>
-                <Input
-                  id="hero_image_url"
-                  value={formData.hero_image_url}
-                  onChange={(e) => setFormData(prev => ({ ...prev, hero_image_url: e.target.value }))}
-                  placeholder="https://example.com/image.jpg"
+                            <div>
+                <Label>Hero Image</Label>
+                <ImageUpload
+                  onImageUploaded={(url) => setFormData(prev => ({ ...prev, hero_image_url: url }))}
+                  currentImageUrl={formData.hero_image_url}
+                  maxSizeKB={200}
+                  bucket="about-us"
+                  folder="hero-images"
+                  placeholder="Upload hero image or enter URL (will be resized to ~200KB)"
                 />
               </div>
             </div>
