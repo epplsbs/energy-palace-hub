@@ -319,16 +319,15 @@ const MenuManager = () => {
                 />
               </div>
 
-              <div>
-                <Label htmlFor="image">Upload Image</Label>
-                <div className="space-y-4">
-                  <Input
-                    id="image"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    disabled={uploading}
-                  />
+                            <div>
+                <ImageUpload
+                  onImageUploaded={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
+                  currentImageUrl={formData.image_url}
+                  maxSizeKB={150}
+                  bucket="menu-items"
+                  folder="menu-images"
+                  placeholder="Upload menu item image or enter URL (will be resized to ~150KB)"
+                />
                   
                   {uploading && (
                     <div className="flex items-center gap-2 text-sm text-gray-600">
