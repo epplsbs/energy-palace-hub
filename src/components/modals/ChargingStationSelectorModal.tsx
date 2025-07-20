@@ -262,8 +262,9 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
           </div>
         ) : (
           // Booking Form View
-          <div className="flex flex-col max-h-[calc(90vh-200px)]">
-            <form onSubmit={handleSubmit} className="space-y-6 overflow-y-auto flex-1 px-1">
+                    <div className="flex flex-col max-h-[calc(90vh-200px)]">
+            <div className="overflow-y-auto flex-1 pb-4">
+              <form onSubmit={handleSubmit} className="space-y-6 px-1">
             <div className="bg-gray-50 rounded-lg p-4 mb-6">
               <h4 className="font-semibold text-gray-900 mb-2">Selected Station:</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
