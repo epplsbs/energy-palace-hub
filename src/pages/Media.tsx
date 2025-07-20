@@ -145,8 +145,8 @@ const Media = () => {
                 Media & Press Information
               </span>
             </h1>
-            <p className={`text-lg md:text-xl max-w-2xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
-              Welcome to the official media page for {businessName}. Find resources, contact information, and learn more about our story.
+                        <p className={`text-lg md:text-xl max-w-2xl mx-auto ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
+              Welcome to the official media page for {businessSettings?.business_name || 'Energy Palace'}. Find resources, contact information, and learn more about our story.
             </p>
           </div>
 
