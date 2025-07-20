@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { getBusinessSettings } from '@/services/businessSettingsService';
-import { Phone, Mail, MapPin, Clock, User, Building, Zap, Home, BookOpen, Info, Sun, Moon, Menu, X } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, User, Building, Zap, Home, BookOpen, Info, Sun, Moon, Menu, X, Car, Navigation } from 'lucide-react';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
