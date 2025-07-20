@@ -52,8 +52,10 @@ const Index = () => {
         ]);
         setAboutContent(aboutData);
         setTestimonials(testimonialsData || []);
-      } catch (error) {
+            } catch (error) {
         console.error('Error loading page data for Index (About/Testimonials):', error);
+        console.error('Error details:', error instanceof Error ? error.message : 'Unknown error');
+        setAboutContent(null);
         setTestimonials([]); // Set default/empty states if necessary
       } finally {
         // setLoading(false); // isLoadingBusinessSettings handles its part
