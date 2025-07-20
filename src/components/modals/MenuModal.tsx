@@ -164,9 +164,9 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
   return (
         <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white/90 backdrop-blur-sm border border-white/30 text-gray-900 shadow-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600">
+                <DialogHeader>
+          <DialogTitle className="text-2xl font-bold flex items-center gap-3 text-gray-900">
+            <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500">
               <Utensils className="h-6 w-6 text-white" />
             </div>
             Premium Menu
