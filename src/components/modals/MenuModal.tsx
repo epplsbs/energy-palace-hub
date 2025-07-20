@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -163,8 +162,8 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-gray-900 to-gray-800 border border-white/20 text-white">
+        <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white/90 backdrop-blur-sm border border-white/30 text-gray-900 shadow-2xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold flex items-center gap-3">
             <div className="p-2 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600">
