@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Utensils, Plus, Edit, Trash2, Upload, X, Loader2 } from 'lucide-react';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { EmptyState } from '@/components/common/EmptyState';
+import ImageUpload from '@/components/common/ImageUpload';
 import { 
   getMenuCategories, 
   getMenuItems, 
