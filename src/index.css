@@ -345,10 +345,8 @@
     @apply bg-purple-600;
   }
 
-  .bg-gradient-futuristic {
-    background: radial-gradient(ellipse at top, rgba(16, 185, 129, 0.3) 0%, transparent 50%),
-                radial-gradient(ellipse at bottom, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-                linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    .bg-gradient-futuristic {
+    @apply bg-slate-900;
   }
 
   .bg-gradient-mesh {
