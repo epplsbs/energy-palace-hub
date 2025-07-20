@@ -187,14 +187,14 @@ const GalleryManager = () => {
                 />
               </div>
 
-              <div>
-                <Label htmlFor="image_url">Image URL *</Label>
-                <Input
-                  id="image_url"
-                  value={formData.image_url}
-                  onChange={(e) => setFormData(prev => ({ ...prev, image_url: e.target.value }))}
-                  placeholder="https://example.com/image.jpg"
-                  required
+                            <div>
+                <ImageUpload
+                  onImageUploaded={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
+                  currentImageUrl={formData.image_url}
+                  maxSizeKB={150}
+                  bucket="gallery"
+                  folder="blog-images"
+                  placeholder="Upload an image or enter URL (will be resized to ~150KB)"
                 />
               </div>
 
