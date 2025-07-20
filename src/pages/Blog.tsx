@@ -25,9 +25,14 @@ const Blog = () => {
   const [selectedPost, setSelectedPost] = useState<GalleryItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const backgroundImageUrl = useBackgroundImage();
+    const backgroundImageUrl = useBackgroundImage();
   const { theme, toggleTheme } = useTheme();
   useSEO('/blog');
+
+  const { data: businessSettings } = useQuery<BusinessSettings, Error>({
+    queryKey: ['businessSettings'],
+    queryFn: getBusinessSettings,
+  });
 
   useEffect(() => {
     fetchGalleryItems();
