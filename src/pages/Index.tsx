@@ -6,8 +6,7 @@ import MenuModal from '@/components/modals/MenuModal';
 import ReservationModal from '@/components/modals/ReservationModal';
 import { useQuery } from '@tanstack/react-query';
 import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
-import { getAboutUsContent, type AboutUsContent } from '@/services/aboutUsService';
-import { getTestimonials, type Testimonial } from '@/services/contentService'; // Import Testimonials
+import { getAboutUsContent, getTestimonials, type AboutUsContent, type Testimonial } from '@/services/contentService';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 // Ensure Card, CardContent, Star, ChevronLeft, ChevronRight, Quote are imported or add them
