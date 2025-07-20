@@ -6,7 +6,8 @@ import { getTestimonials, type Testimonial } from '@/services/contentService';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Zap, Users, Coffee, Car, Star, ChevronLeft, ChevronRight, Quote, Home, BookOpen, Phone, MapPin, Calendar, Sun, Moon, Menu, X } from 'lucide-react';
+import Navigation from '@/components/common/Navigation';
+import { Zap, Users, Coffee, Car, Star, ChevronLeft, ChevronRight, Quote, MapPin, Calendar } from 'lucide-react';
 
 const About = () => {
   const [content, setContent] = useState<AboutUsContent | null>(null);
