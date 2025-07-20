@@ -361,9 +361,8 @@
   }
 
   /* Loading States */
-  .skeleton {
-    @apply animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%] rounded;
-    animation: skeleton-loading 1.5s ease-in-out infinite;
+    .skeleton {
+    @apply animate-pulse bg-gray-300 rounded;
   }
 
   @keyframes skeleton-loading {
