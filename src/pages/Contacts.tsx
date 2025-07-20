@@ -262,9 +262,9 @@ const Contacts = () => {
           <div className="text-center mb-8">
             <h2 className={`text-2xl md:text-3xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>Find Us On Map</h2>
           </div>
-          <Card className="glass border border-white/20 backdrop-blur-xl bg-gray-900/50">
-            <CardContent className="p-6 md:p-8">
-                            <GoogleMapEmbed
+                    <Card className="glass border border-white/20 backdrop-blur-xl bg-gray-900/50">
+            <CardContent className="p-6 md:p-8 relative">
+              <GoogleMapEmbed
                 apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""} // Pass explicitly or ensure component handles undefined gracefully
                 lat={parseFloat(businessSettings?.business_latitude || '27.7172')}
                 lng={parseFloat(businessSettings?.business_longitude || '85.3240')}
@@ -273,6 +273,33 @@ const Contacts = () => {
                 businessAddress={businessSettings?.business_address || "Bhiman, Sindhuli, Bagmati, Nepal"}
                 businessLogoUrl={businessSettings?.logo_url || "https://energypalace.com.np/logo.png"} // Default placeholder
               />
+
+              {/* Drive to Energy Palace Button */}
+              <div className="absolute top-8 right-8 z-10">
+                <button
+                  onClick={() => {
+                    const lat = parseFloat(businessSettings?.business_latitude || '27.7172');
+                    const lng = parseFloat(businessSettings?.business_longitude || '85.3240');
+                    const businessName = businessSettings?.business_name || 'Energy Palace';
+
+                    // Open Google Maps with directions from current location
+                    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=&travelmode=driving`;
+                    window.open(mapsUrl, '_blank');
+                  }}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                    theme === 'light'
+                      ? 'bg-white/90 hover:bg-white text-gray-900 border border-gray-200/50'
+                      : 'bg-gray-900/90 hover:bg-gray-800/90 text-white border border-white/20'
+                  } backdrop-blur-sm`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Navigation className="h-5 w-5 text-emerald-600" />
+                    <Car className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <span className="hidden sm:inline">Drive to {businessSettings?.business_name || 'Energy Palace'}</span>
+                  <span className="sm:hidden">Directions</span>
+                </button>
+              </div>
             </CardContent>
           </Card>
         </div>
