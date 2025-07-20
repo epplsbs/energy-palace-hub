@@ -206,11 +206,11 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
               ))}
             </div>
 
-            {/* Cart Summary */}
+                        {/* Cart Summary */}
             {cart.length > 0 && (
-              <div className="glass border border-white/20 rounded-xl p-6">
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <ShoppingCart className="h-5 w-5 text-blue-400" />
+              <div className="bg-white/70 backdrop-blur-sm border border-white/40 rounded-xl p-6">
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
+                  <ShoppingCart className="h-5 w-5 text-emerald-600" />
                   Your Cart
                 </h3>
                 <div className="space-y-3">
