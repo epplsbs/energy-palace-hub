@@ -241,10 +241,10 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
                       </div>
                     </div>
                   ))}
-                  <div className="border-t border-white/20 pt-3">
-                    <div className="flex justify-between items-center text-lg font-bold">
+                                    <div className="border-t border-gray-200 pt-3">
+                    <div className="flex justify-between items-center text-lg font-bold text-gray-900">
                       <span>Total:</span>
-                      <span className="text-blue-400">NPR {getTotalAmount()}</span>
+                      <span className="text-emerald-600">NPR {getTotalAmount()}</span>
                     </div>
                   </div>
                   <Button
