@@ -9,8 +9,8 @@ const Media = () => {
   useSEO('/media'); // Hook for SEO settings
   const { theme, toggleTheme } = useTheme();
   const backgroundImageUrl = useBackgroundImage();
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [businessName, setBusinessName] = useState('Energy Palace');
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [businessSettings, setBusinessSettings] = useState<BusinessSettings | null>(null);
 
   useEffect(() => {
     const fetchSettings = async () => {
