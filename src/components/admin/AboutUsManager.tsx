@@ -161,13 +161,15 @@ const AboutUsManager = () => {
                   placeholder="About Energy Palace"
                 />
               </div>
-              <div>
-                <Label htmlFor="hero_image_url">Hero Image URL</Label>
-                <Input
-                  id="hero_image_url"
-                  value={formData.hero_image_url}
-                  onChange={(e) => setFormData(prev => ({ ...prev, hero_image_url: e.target.value }))}
-                  placeholder="https://example.com/image.jpg"
+                            <div>
+                <Label>Hero Image</Label>
+                <ImageUpload
+                  onImageUploaded={(url) => setFormData(prev => ({ ...prev, hero_image_url: url }))}
+                  currentImageUrl={formData.hero_image_url}
+                  maxSizeKB={200}
+                  bucket="about-us"
+                  folder="hero-images"
+                  placeholder="Upload hero image or enter URL (will be resized to ~200KB)"
                 />
               </div>
             </div>
