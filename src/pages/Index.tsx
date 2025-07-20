@@ -45,10 +45,16 @@ const Index = () => {
     const loadOtherData = async () => {
       // setLoading(true); // isLoadingBusinessSettings handles its part
       try {
-        // Only fetch AboutContent and Testimonials here
+                // Only fetch AboutContent and Testimonials here
         const [aboutData, testimonialsData] = await Promise.all([
-          getAboutUsContent(),
-          getTestimonials()
+          getAboutUsContent().catch(err => {
+            console.warn('About Us content not available:', err);
+            return null;
+          }),
+          getTestimonials().catch(err => {
+            console.warn('Testimonials not available:', err);
+            return [];
+          })
         ]);
         setAboutContent(aboutData);
         setTestimonials(testimonialsData || []);
