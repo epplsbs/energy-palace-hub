@@ -508,7 +508,111 @@
     @apply text-2xl;
   }
   
-  .text-responsive-4xl {
+    .text-responsive-4xl {
     @apply text-3xl;
+  }
+
+  /* Mobile performance optimizations */
+  *, *::before, *::after {
+    animation-duration: 0.2s !important;
+    transition-duration: 0.2s !important;
+  }
+
+  /* Optimize touch targets */
+  button, [role="button"], .btn {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+
+  /* Mobile scrolling */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+  }
+
+  /* Reduce complex effects on mobile */
+  .backdrop-blur-lg {
+    backdrop-filter: blur(8px) !important;
+  }
+
+  .shadow-2xl {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+/* Mobile viewport height fix */
+.min-h-screen-mobile {
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+}
+
+/* Mobile-first responsive utilities */
+@media (max-width: 480px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .text-responsive-2xl {
+    @apply text-xl;
+  }
+
+  .text-responsive-xl {
+    @apply text-lg;
+  }
+
+  /* Ultra-compact mode for very small screens */
+  .p-8 {
+    @apply p-4;
+  }
+
+  .p-6 {
+    @apply p-3;
+  }
+
+  .space-y-8 > * + * {
+    margin-top: 1rem !important;
+  }
+
+  .space-y-6 > * + * {
+    margin-top: 0.75rem !important;
+  }
+}
+
+/* Network-aware optimizations */
+@media (prefers-reduced-data: reduce) {
+  /* Data saver mode */
+  .shadow-lg, .shadow-xl, .shadow-2xl {
+    box-shadow: none !important;
+  }
+
+  .backdrop-blur-sm, .backdrop-blur-md, .backdrop-blur-lg {
+    backdrop-filter: none !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  .dark .backdrop-blur-sm,
+  .dark .backdrop-blur-md,
+  .dark .backdrop-blur-lg {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch-specific styles */
+  .hover\:scale-105:hover {
+    transform: none !important;
+  }
+
+  .hover\:shadow-lg:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Larger touch targets */
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
   }
 }
