@@ -12,8 +12,9 @@ import { Zap, Users, Coffee, Car, Star, ChevronLeft, ChevronRight, Quote, MapPin
 const About = () => {
   const [content, setContent] = useState<AboutUsContent | null>(null);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   
   const backgroundImageUrl = useBackgroundImage();
   const { theme, toggleTheme } = useTheme();
