@@ -365,14 +365,7 @@
     @apply animate-pulse bg-gray-300 rounded;
   }
 
-  @keyframes skeleton-loading {
-    0% {
-      background-position: 200% 0;
-    }
-    100% {
-      background-position: -200% 0;
-    }
-  }
+  
 
   /* Responsive Text Sizes */
   .text-responsive-sm {
