@@ -147,7 +147,7 @@
     @apply bg-gradient-to-r from-emerald-400 via-blue-500 to-purple-500 bg-clip-text text-transparent;
   }
 
-  /* Admin Panel Theme Isolation */
+    /* Admin Panel Theme Isolation */
   .admin-panel {
     /* Force light theme variables for admin panel */
     --background: 0 0% 100%;
@@ -169,9 +169,7 @@
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
-  }
 
-    .admin-panel {
     /* Ensure admin panel has proper text colors */
     color: hsl(var(--foreground));
   }
@@ -179,6 +177,31 @@
   .admin-panel .text-transparent {
     /* Allow gradient text to work */
     color: transparent !important;
+  }
+
+  .admin-panel h1,
+  .admin-panel h2,
+  .admin-panel h3,
+  .admin-panel h4,
+  .admin-panel h5,
+  .admin-panel h6 {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .admin-panel .text-slate-700 {
+    color: rgb(51 65 85) !important;
+  }
+
+  .admin-panel .text-gray-900 {
+    color: rgb(17 24 39) !important;
+  }
+
+  .admin-panel .text-gray-600 {
+    color: rgb(75 85 99) !important;
+  }
+
+  .admin-panel .text-gray-800 {
+    color: rgb(31 41 55) !important;
   }
 
   .text-gradient-emerald {
