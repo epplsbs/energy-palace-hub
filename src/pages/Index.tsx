@@ -140,13 +140,13 @@ const Index = () => {
                 className="h-10 md:h-12 w-10 md:w-12 object-contain rounded-xl" // Slightly adjusted size for consistency
               />
             ) : (
-              <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500 neon-glow-green">
+                            <div className="p-2 rounded-xl bg-emerald-600 neon-glow-green">
                 <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
               </div>
             )}
             <div>
               {/* Site title (not H1 on homepage) */}
-              <div className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent'}`}>
+                            <div className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-emerald-400'}`}>
                 {businessSettings?.business_name || 'Energy Palace'}
               </div>
               {/* Tagline can remain if desired, or be removed for closer match to About.tsx header style */}
