@@ -117,14 +117,19 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
   return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] bg-white/90 backdrop-blur-sm border border-white/30 shadow-2xl overflow-hidden">
-        <DialogHeader>
+                <DialogHeader>
           <div className="flex items-center justify-between px-6 pt-6">
-            <DialogTitle className="text-gray-900 dark:text-gray-100 text-xl md:text-2xl">Make a Reservation</DialogTitle>
+            <DialogTitle className="text-gray-900 text-xl md:text-2xl flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-500">
+                <CalendarIcon className="h-6 w-6 text-white" />
+              </div>
+              Make a Reservation
+            </DialogTitle>
             <Button
               onClick={handleClose}
               variant="ghost"
               size="sm"
-              className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+              className="text-gray-600 hover:text-gray-900"
             >
               <X className="h-5 w-5" />
             </Button>
