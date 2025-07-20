@@ -306,19 +306,19 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
               />
             </div>
 
-            {/* Order Summary */}
-            <div className="glass border border-white/20 rounded-xl p-4">
-              <h4 className="font-bold mb-3">Order Summary</h4>
+                        {/* Order Summary */}
+            <div className="bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl p-4">
+              <h4 className="font-bold mb-3 text-gray-900">Order Summary</h4>
               {cart.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm mb-2">
+                <div key={item.id} className="flex justify-between text-sm mb-2 text-gray-700">
                   <span>{item.name} x{item.quantity}</span>
                   <span>NPR {item.price * item.quantity}</span>
                 </div>
               ))}
-              <div className="border-t border-white/20 pt-2 mt-2">
-                <div className="flex justify-between font-bold">
+              <div className="border-t border-gray-200 pt-2 mt-2">
+                <div className="flex justify-between font-bold text-gray-900">
                   <span>Total:</span>
-                  <span className="text-emerald-400">NPR {getTotalAmount()}</span>
+                  <span className="text-emerald-600">NPR {getTotalAmount()}</span>
                 </div>
               </div>
             </div>
