@@ -152,11 +152,11 @@ const Media = () => {
 
           <div className="space-y-8">
             <section>
-              <h2 className={`text-2xl md:text-3xl font-bold mb-4 pb-2 border-b ${theme === 'light' ? 'text-gray-800 border-gray-300' : 'text-white border-white/20'}`}>
-                About {businessName}
+                            <h2 className={`text-2xl md:text-3xl font-bold mb-4 pb-2 border-b ${theme === 'light' ? 'text-gray-800 border-gray-300' : 'text-white border-white/20'}`}>
+                About {businessSettings?.business_name || 'Energy Palace'}
               </h2>
               <p className={`text-base md:text-lg leading-relaxed ${theme === 'light' ? 'text-gray-700' : 'text-white/80'}`}>
-                {businessName} is a pioneering establishment located in Bhiman, Sindhuli, offering a unique blend of services including state-of-the-art EV charging facilities, a full-service restaurant, and a cozy coffee shop. We are committed to promoting sustainable travel and providing exceptional hospitality to all our guests.
+                {businessSettings?.business_name || 'Energy Palace'} is a pioneering establishment located in Bhiman, Sindhuli, offering a unique blend of services including state-of-the-art EV charging facilities, a full-service restaurant, and a cozy coffee shop. We are committed to promoting sustainable travel and providing exceptional hospitality to all our guests.
                 (User: This text can be made dynamic from About Us content or Business Settings if needed).
               </p>
             </section>
