@@ -117,14 +117,20 @@ const Admin = () => {
     );
   }
 
-  if (!user) {
+    if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 admin-panel">
         <div className="max-w-md w-full space-y-8">
           <div>
+            <div className="mx-auto w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center mb-4">
+              <span className="text-white font-bold text-xl">A</span>
+            </div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
               Admin Sign In
             </h2>
+            <p className="mt-2 text-center text-sm text-gray-600">
+              Sign in to access the admin panel
+            </p>
           </div>
           <form className="mt-8 space-y-6" onSubmit={(e) => {
             e.preventDefault();
