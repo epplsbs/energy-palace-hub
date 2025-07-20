@@ -194,9 +194,9 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
                         />
                       )}
                     </div>
-                    <Button
+                                        <Button
                       onClick={() => addToCart(item)}
-                      className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+                      className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Add to Cart
