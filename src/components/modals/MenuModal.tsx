@@ -214,14 +214,14 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
                   Your Cart
                 </h3>
                 <div className="space-y-3">
-                  {cart.map((item) => (
+                                    {cart.map((item) => (
                     <div key={item.id} className="flex justify-between items-center">
                       <div>
-                        <span className="font-medium">{item.name}</span>
-                        <span className="text-white/70 ml-2">x{item.quantity}</span>
+                        <span className="font-medium text-gray-900">{item.name}</span>
+                        <span className="text-gray-600 ml-2">x{item.quantity}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-blue-400 font-bold">NPR {item.price * item.quantity}</span>
+                        <span className="text-emerald-600 font-bold">NPR {item.price * item.quantity}</span>
                         <div className="flex items-center gap-1">
                           <Button
                             size="sm"
