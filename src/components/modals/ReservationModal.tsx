@@ -211,8 +211,8 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
           </form>
         </div>
         
-        <div className="flex justify-end gap-2 px-6 py-4 border-t bg-gray-50 dark:bg-gray-900 sticky bottom-0 dark:border-gray-700">
-          <Button type="button" variant="outline" onClick={handleClose} className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700">
+                <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-200 bg-white/70 backdrop-blur-sm sticky bottom-0">
+          <Button type="button" variant="outline" onClick={handleClose} className="flex items-center gap-2 border-gray-300 text-gray-700 hover:bg-gray-50">
             <ArrowLeft className="h-4 w-4" />
             Cancel
           </Button>
