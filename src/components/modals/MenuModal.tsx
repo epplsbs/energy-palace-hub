@@ -177,14 +177,14 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
           <div className="space-y-6">
             {/* Menu Items */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {menuItems.map((item) => (
-                <div key={item.id} className="glass border border-white/20 rounded-xl p-4 hover:border-blue-500/50 transition-all">
+                            {menuItems.map((item) => (
+                <div key={item.id} className="bg-white/70 backdrop-blur-sm border border-white/40 rounded-xl p-4 hover:border-emerald-500/50 hover:shadow-lg transition-all">
                   <div className="space-y-3">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-lg text-white">{item.name}</h3>
-                        <p className="text-white/70 text-sm">{item.description}</p>
-                        <p className="text-blue-400 font-bold text-lg">NPR {item.price}</p>
+                        <h3 className="font-semibold text-lg text-gray-900">{item.name}</h3>
+                        <p className="text-gray-600 text-sm">{item.description}</p>
+                        <p className="text-emerald-600 font-bold text-lg">NPR {item.price}</p>
                       </div>
                       {item.image_url && (
                         <img 
