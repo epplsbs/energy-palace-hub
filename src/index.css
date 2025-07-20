@@ -204,12 +204,12 @@
     color: rgb(31 41 55) !important;
   }
 
-  .text-gradient-emerald {
-    @apply bg-gradient-to-r from-emerald-300 to-emerald-500 bg-clip-text text-transparent;
+    .text-gradient-emerald {
+    @apply text-emerald-600;
   }
 
   .text-gradient-blue {
-    @apply bg-gradient-to-r from-blue-300 to-blue-500 bg-clip-text text-transparent;
+    @apply text-blue-600;
   }
 
   /* Enhanced Card Shadows */
