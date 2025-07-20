@@ -12,13 +12,11 @@ const Media = () => {
     const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [businessSettings, setBusinessSettings] = useState<BusinessSettings | null>(null);
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchSettings = async () => {
       try {
         const settings = await getBusinessSettings();
-        if (settings?.business_name) {
-          setBusinessName(settings.business_name);
-        }
+        setBusinessSettings(settings);
       } catch (error) {
         console.error("Failed to fetch business settings for Media page:", error);
       }
