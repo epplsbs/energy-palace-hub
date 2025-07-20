@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,8 @@ import { getGalleryItems } from '@/services/contentService';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useQuery } from '@tanstack/react-query';
+import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
 import { Zap, Calendar, Tag, BookOpen, X, Home, Phone, Info, Sun, Moon, Menu } from 'lucide-react';
 
 interface GalleryItem {
