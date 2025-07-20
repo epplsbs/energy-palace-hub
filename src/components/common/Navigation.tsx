@@ -41,7 +41,7 @@ const Navigation = ({ currentPage }: NavigationProps) => {
             />
           ) : null}
           <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+                        <h1 className="text-2xl font-bold text-emerald-600">
               {businessSettings?.business_name || 'Energy Palace'}
             </h1>
             {businessSettings?.business_tagline && (
@@ -93,7 +93,7 @@ const Navigation = ({ currentPage }: NavigationProps) => {
             />
           ) : null}
           <div>
-            <h1 className="text-lg font-bold bg-gradient-to-r from-emerald-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+                        <h1 className="text-lg font-bold text-emerald-600">
               {businessSettings?.business_name || 'Energy Palace'}
             </h1>
           </div>
@@ -123,7 +123,7 @@ const Navigation = ({ currentPage }: NavigationProps) => {
       {/* Mobile Menu Overlay */}
       {showMobileMenu && (
         <div className="md:hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
-          <div className="absolute top-0 right-0 w-64 h-full bg-gradient-to-br from-gray-900 to-gray-800 shadow-2xl">
+                    <div className="absolute top-0 right-0 w-64 h-full bg-gray-900 shadow-2xl">
             <div className="flex justify-end p-4">
               <Button
                 onClick={() => setShowMobileMenu(false)}
