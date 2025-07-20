@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Zap, Car, Coffee, ChevronRight, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon, Menu, X, BookOpen } from 'lucide-react'; // Added BookOpen
+import { Zap, Car, Coffee, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon, Menu, X, BookOpen } from 'lucide-react'; // Added BookOpen
 import ChargingStationSelectorModal from '@/components/modals/ChargingStationSelectorModal';
 import MenuModal from '@/components/modals/MenuModal';
 import ReservationModal from '@/components/modals/ReservationModal';
