@@ -337,8 +337,8 @@
   }
 
   /* Enhanced Gradient Backgrounds */
-  .bg-gradient-primary {
-    @apply bg-gradient-to-r from-emerald-500 to-blue-500;
+    .bg-gradient-primary {
+    @apply bg-emerald-600;
   }
 
   .bg-gradient-secondary {
