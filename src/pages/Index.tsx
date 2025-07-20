@@ -237,7 +237,7 @@ const Index = () => {
             </div>
             
             <h1 className={`text-5xl md:text-7xl font-black leading-tight ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
-              <span className={`block ${theme === 'light' ? 'bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent' : 'bg-gradient-to-r from-emerald-400 via-blue-400 to-purple-400 bg-clip-text text-transparent'}`}>
+                            <span className={`block ${theme === 'light' ? 'text-emerald-700' : 'text-emerald-400'}`}>
                 EV Charging Station in Bhiman, Sindhuli
               </span>
             </h1>
