@@ -138,24 +138,24 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
         
         <div className="overflow-y-auto max-h-[calc(90vh-120px)] p-6">
           <form onSubmit={handleSubmit} id="reservationForm" className="grid gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="customerName" className="text-gray-700 dark:text-gray-300">Name</Label>
-              <Input type="text" id="customerName" value={formData.customerName} onChange={handleChange} required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
+              <Label htmlFor="customerName" className="text-gray-700">Name</Label>
+              <Input type="text" id="customerName" value={formData.customerName} onChange={handleChange} required className="bg-white/70 border-gray-300 text-gray-900" />
             </div>
             <div>
-              <Label htmlFor="customerEmail" className="text-gray-700 dark:text-gray-300">Email</Label>
-              <Input type="email" id="customerEmail" value={formData.customerEmail} onChange={handleChange} required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
+              <Label htmlFor="customerEmail" className="text-gray-700">Email</Label>
+              <Input type="email" id="customerEmail" value={formData.customerEmail} onChange={handleChange} required className="bg-white/70 border-gray-300 text-gray-900" />
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="customerPhone" className="text-gray-700 dark:text-gray-300">Phone</Label>
-              <Input type="tel" id="customerPhone" value={formData.customerPhone} onChange={handleChange} className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
+              <Label htmlFor="customerPhone" className="text-gray-700">Phone</Label>
+              <Input type="tel" id="customerPhone" value={formData.customerPhone} onChange={handleChange} className="bg-white/70 border-gray-300 text-gray-900" />
             </div>
             <div>
-              <Label htmlFor="guests" className="text-gray-700 dark:text-gray-300">Guests</Label>
-              <Input type="number" id="guests" value={formData.guests} onChange={handleChange} min="1" required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
+              <Label htmlFor="guests" className="text-gray-700">Guests</Label>
+              <Input type="number" id="guests" value={formData.guests} onChange={handleChange} min="1" required className="bg-white/70 border-gray-300 text-gray-900" />
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
