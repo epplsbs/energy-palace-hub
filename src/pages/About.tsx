@@ -6,6 +6,8 @@ import { getTestimonials, type Testimonial } from '@/services/contentService';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useQuery } from '@tanstack/react-query';
+import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
 import Navigation from '@/components/common/Navigation';
 import { Zap, Users, Coffee, Car, Star, ChevronLeft, ChevronRight, Quote, MapPin, Calendar, Home, BookOpen, Phone, Sun, Moon, Menu, X } from 'lucide-react';
 
