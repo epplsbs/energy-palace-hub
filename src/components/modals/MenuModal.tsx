@@ -261,47 +261,47 @@ const MenuModal = ({ isOpen, onClose }: MenuModalProps) => {
           <form onSubmit={handleSubmitOrder} className="space-y-6">
             <h3 className="text-xl font-bold text-gray-900">Order Information</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name" className="text-white/90">Full Name *</Label>
+                <Label htmlFor="name" className="text-gray-700">Full Name *</Label>
                 <Input
                   id="name"
                   value={customerInfo.name}
                   onChange={(e) => setCustomerInfo(prev => ({ ...prev, name: e.target.value }))}
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                  className="bg-white/70 border-gray-300 text-gray-900 placeholder:text-gray-500"
                   required
                 />
               </div>
               <div>
-                <Label htmlFor="phone" className="text-white/90">Phone Number *</Label>
+                <Label htmlFor="phone" className="text-gray-700">Phone Number *</Label>
                 <Input
                   id="phone"
                   value={customerInfo.phone}
                   onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
-                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                  className="bg-white/70 border-gray-300 text-gray-900 placeholder:text-gray-500"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <Label htmlFor="email" className="text-white/90">Email</Label>
+              <Label htmlFor="email" className="text-gray-700">Email</Label>
               <Input
                 id="email"
                 type="email"
                 value={customerInfo.email}
                 onChange={(e) => setCustomerInfo(prev => ({ ...prev, email: e.target.value }))}
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                className="bg-white/70 border-gray-300 text-gray-900 placeholder:text-gray-500"
               />
             </div>
 
             <div>
-              <Label htmlFor="notes" className="text-white/90">Special Requests</Label>
+              <Label htmlFor="notes" className="text-gray-700">Special Requests</Label>
               <Textarea
                 id="notes"
                 value={customerInfo.notes}
                 onChange={(e) => setCustomerInfo(prev => ({ ...prev, notes: e.target.value }))}
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                className="bg-white/70 border-gray-300 text-gray-900 placeholder:text-gray-500"
                 rows={3}
               />
             </div>
