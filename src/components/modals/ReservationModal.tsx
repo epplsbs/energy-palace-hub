@@ -158,16 +158,16 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
               <Input type="number" id="guests" value={formData.guests} onChange={handleChange} min="1" required className="bg-white/70 border-gray-300 text-gray-900" />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="date" className="text-gray-700 dark:text-gray-300">Date</Label>
+              <Label htmlFor="date" className="text-gray-700">Date</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-[240px] justify-start text-left font-normal dark:bg-gray-800 dark:border-gray-700 dark:text-gray-50",
-                      !date && "text-muted-foreground dark:text-gray-400"
+                      "w-[240px] justify-start text-left font-normal bg-white/70 border-gray-300 text-gray-900",
+                      !date && "text-muted-foreground"
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -188,24 +188,24 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                     disabled={(date) =>
                       date < new Date()
                     }
-                    className="rounded-md border bg-white dark:bg-gray-800 dark:text-gray-50"
+                    className="rounded-md border bg-white/90 backdrop-blur-sm text-gray-900"
                   />
                 </PopoverContent>
               </Popover>
             </div>
             <div>
-              <Label htmlFor="time" className="text-gray-700 dark:text-gray-300">Time</Label>
-              <Input type="time" id="time" value={formData.time} onChange={handleChange} required className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700" />
+              <Label htmlFor="time" className="text-gray-700">Time</Label>
+              <Input type="time" id="time" value={formData.time} onChange={handleChange} required className="bg-white/70 border-gray-300 text-gray-900" />
             </div>
           </div>
           <div>
-            <Label htmlFor="specialRequests" className="text-gray-700 dark:text-gray-300">Special Requests</Label>
+            <Label htmlFor="specialRequests" className="text-gray-700">Special Requests</Label>
             <Input
               id="specialRequests"
               value={formData.specialRequests}
               onChange={handleChange}
               placeholder="Any special requests?"
-              className="bg-white dark:bg-gray-800 dark:text-gray-50 dark:border-gray-700"
+              className="bg-white/70 border-gray-300 text-gray-900"
             />
           </div>
           </form>
