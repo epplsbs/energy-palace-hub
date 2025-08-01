@@ -122,46 +122,16 @@ const POSLayout: React.FC = () => {
     return <div className="flex items-center justify-center min-h-screen">Loading POS Data...</div>;
   }
 
-  // --- TEMPORARY AUTH BYPASS FOR DEVELOPMENT ---
-  let effectivePosUser: POSUser;
-
-  if (posUser && posUser.is_active) {
-    effectivePosUser = posUser;
-  } else if (authUser) {
-    effectivePosUser = {
-      id: `dev-profile-${authUser.id.substring(0,8)}`,
-      auth_user_id: authUser.id,
-      full_name: authUser.email?.split('@')[0] || 'Dev User',
-      username: authUser.email?.split('@')[0] || 'devuser',
-      email: authUser.email || 'dev@example.com',
-      role: 'admin',
-      is_active: true,
-    };
-    console.warn("POSLayout: Using mock POS user profile based on auth user because actual posUser is null or inactive.", effectivePosUser);
-  } else {
-    effectivePosUser = {
-      id: 'static-mock-pos-id',
-      auth_user_id: 'static-mock-auth-id',
-      full_name: 'Mock POS Staff',
-      username: 'mockstaff',
-      email: 'mockstaff@example.com',
-      role: 'cashier',
-      is_active: true,
-    };
-    console.warn("POSLayout: Using static mock POS user profile because no authUser is present.", effectivePosUser);
+  // Enforce proper authentication - users must have valid POS profiles
+  if (!authUser || !posUser || !posUser.is_active) {
+    return <POSLoginPage onLoginSuccess={() => setLoadingAuth(true) } />;
   }
-  // --- END OF TEMPORARY AUTH BYPASS ---
-
-  // Original login check - Now bypassed by providing effectivePosUser
-  // if (!authUser || !posUser) {
-  //   return <POSLoginPage onLoginSuccess={() => setLoadingAuth(true) } />;
-  // }
 
   const enrichedNavItems = posNavItems.map(item => {
     // Ensure item.element is a valid React element before cloning
     const elementIsValid = item.element && React.isValidElement(item.element);
     const elementWithProps = elementIsValid
-      ? React.cloneElement(item.element as React.ReactElement<any>, { posUser: effectivePosUser })
+      ? React.cloneElement(item.element as React.ReactElement<any>, { posUser: posUser })
       : item.element; // Fallback to original element if not valid for cloning
     return { ...item, element: elementWithProps };
   });
@@ -187,10 +157,10 @@ const POSLayout: React.FC = () => {
           ))}
         </nav>
         <div className="mt-auto">
-          {effectivePosUser && (
+          {posUser && (
             <div className="mb-2 p-2 border-t border-gray-700">
-              <p className="text-sm truncate" title={effectivePosUser.email}>User: {effectivePosUser.full_name || effectivePosUser.username}</p>
-              <p className="text-xs text-gray-400">Role: {effectivePosUser.role}</p>
+              <p className="text-sm truncate" title={posUser.email}>User: {posUser.full_name || posUser.username}</p>
+              <p className="text-xs text-gray-400">Role: {posUser.role}</p>
             </div>
           )}
           <Button // Logout button still functional if an authUser session did exist
