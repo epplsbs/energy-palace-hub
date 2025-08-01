@@ -67,28 +67,31 @@ const POSLayout: React.FC = () => {
 
           if (posUserError) {
             console.error("Error fetching POS user profile:", posUserError?.message);
-            // toast({ title: "Profile Error", description: "Could not load POS user profile. Ensure a POS user profile is linked to your account and is active.", variant: "destructive"});
+            toast({ 
+              title: "Profile Error", 
+              description: "Could not load POS user profile. Ensure a POS user profile is linked to your account and is active.", 
+              variant: "destructive"
+            });
             setPosUser(null);
-            // await supabase.auth.signOut(); // Don't sign out if we are bypassing login for dev
-            // setLoadingAuth(false);
-            // return;
           } else if (posUserData && !posUserData.is_active) {
             console.warn("POS user profile is inactive:", posUserData.username);
-            // toast({ title: "Account Inactive", description: "Your POS account is inactive. Please contact an administrator.", variant: "destructive"});
+            toast({ 
+              title: "Account Inactive", 
+              description: "Your POS account is inactive. Please contact an administrator.", 
+              variant: "destructive"
+            });
             setPosUser(null);
-            // await supabase.auth.signOut();
-            // setLoadingAuth(false);
-            // return;
           } else {
             setPosUser(posUserData as POSUser);
           }
         } catch (e: any) {
             console.error("Exception fetching POS user profile:", e?.message);
-            // toast({ title: "Profile Exception", description: "An error occurred while fetching your profile.", variant: "destructive"});
+            toast({ 
+              title: "Profile Exception", 
+              description: "An error occurred while fetching your profile.", 
+              variant: "destructive"
+            });
             setPosUser(null);
-            // await supabase.auth.signOut();
-            // setLoadingAuth(false);
-            // return;
         }
       } else {
         setPosUser(null);
