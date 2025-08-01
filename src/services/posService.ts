@@ -114,7 +114,10 @@ export const submitPOSOrder = async (orderData: OrderSubmissionData): Promise<{ 
 
   const { data: newOrder, error: orderError } = await supabase
     .from('pos_orders')
-    .insert(orderToInsert)
+    .insert({
+      ...orderToInsert,
+      order_number: '' // This will be set by the trigger
+    })
     .select()
     .single(); // Assuming insert returns the created row
 
@@ -146,7 +149,7 @@ export const submitPOSOrder = async (orderData: OrderSubmissionData): Promise<{ 
     // This is where a transaction (via Edge Function) would be beneficial.
     // For now, we'll report the error.
     await supabase.from('pos_orders').delete().eq('id', newOrder.id); // Attempt to clean up
-    return { success: false, error: itemsError, message: "Order created but failed to add items. Order has been rolled back." };
+    return { success: false, error: itemsError };
   }
 
   // TODO: (Future) Update stock levels if pos_menu_items.track_stock is true

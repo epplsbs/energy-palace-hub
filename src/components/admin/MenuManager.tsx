@@ -343,7 +343,7 @@ const MenuManager = () => {
         <CardContent className="p-4 md:p-6">
           {menuItems.length === 0 && !loading ? (
             <EmptyState
-              icon={Utensils}
+              icon={<Utensils className="h-12 w-12" />}
               title="No menu items found"
               description="Add your first menu item to get started"
             />

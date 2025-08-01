@@ -1,5 +1,29 @@
 import React, { useEffect, useRef } from 'react';
 
+// Declare Google Maps types
+declare global {
+  interface Window {
+    google: {
+      maps: {
+        Map: any;
+        Marker: any;
+        InfoWindow: any;
+        MapOptions: any;
+      };
+    };
+  }
+}
+
+type GoogleMapsMapOptions = {
+  center: { lat: number; lng: number };
+  zoom: number;
+  mapId?: string;
+  mapTypeControl: boolean;
+  streetViewControl: boolean;
+  fullscreenControl: boolean;
+  zoomControl: boolean;
+};
+
 interface GoogleMapEmbedProps {
   apiKey: string;
   lat: number;
@@ -59,7 +83,7 @@ const GoogleMapEmbed: React.FC<GoogleMapEmbedProps> = ({
     // Define initMap within useEffect or ensure it's stable if defined outside
     const initMap = () => {
       if (window.google && window.google.maps && mapRef.current && !isMapLoaded.current) {
-        const mapOptions: google.maps.MapOptions = {
+        const mapOptions: GoogleMapsMapOptions = {
           center: { lat, lng },
           zoom,
           mapId,
