@@ -17,19 +17,32 @@ export interface ChargingBooking {
 export const createChargingBooking = async (booking: Omit<ChargingBooking, 'id' | 'created_at' | 'order_number'>): Promise<ChargingBooking> => {
   console.log('Creating charging booking:', booking);
   
+  // Parse start_time to ensure it's a valid ISO string
+  let startTimeValue = null;
+  if (booking.start_time) {
+    const parsedDate = new Date(booking.start_time);
+    if (!isNaN(parsedDate.getTime())) {
+      startTimeValue = parsedDate.toISOString();
+    }
+  }
+  
+  const insertData = {
+    customer_name: booking.customer_name,
+    customer_phone: booking.customer_phone || null,
+    vehicle_number: booking.vehicle_number || null,
+    charging_station_id: booking.charging_station_id,
+    start_time: startTimeValue,
+    status: 'booked',
+    rate_per_unit: 15,
+    total_amount: 0,
+    payment_status: 'pending'
+  };
+  
+  console.log('Insert data:', insertData);
+  
   const { data, error } = await supabase
     .from('pos_charging_orders')
-    .insert({
-      customer_name: booking.customer_name,
-      customer_phone: booking.customer_phone,
-      vehicle_number: booking.vehicle_number,
-      charging_station_id: booking.charging_station_id,
-      start_time: booking.start_time,
-      status: booking.status,
-      rate_per_unit: 15,
-      total_amount: 0,
-      payment_status: 'pending'
-    })
+    .insert(insertData)
     .select()
     .single();
   
@@ -40,12 +53,16 @@ export const createChargingBooking = async (booking: Omit<ChargingBooking, 'id' 
   
   console.log('Charging booking created successfully:', data);
   
-  // Update charging station status
+  // Update charging station status to occupied
   if (booking.charging_station_id) {
-    await supabase
+    const { error: stationError } = await supabase
       .from('charging_stations')
       .update({ status: 'occupied' })
       .eq('id', booking.charging_station_id);
+    
+    if (stationError) {
+      console.warn('Could not update station status:', stationError);
+    }
   }
   
   return {
