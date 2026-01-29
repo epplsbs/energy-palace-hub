@@ -1120,7 +1120,35 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      charging_order_availability: {
+        Row: {
+          charging_station_id: string | null
+          expected_end_time: string | null
+          start_time: string | null
+          status: string | null
+        }
+        Insert: {
+          charging_station_id?: string | null
+          expected_end_time?: string | null
+          start_time?: string | null
+          status?: string | null
+        }
+        Update: {
+          charging_station_id?: string | null
+          expected_end_time?: string | null
+          start_time?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pos_charging_orders_charging_station_id_fkey"
+            columns: ["charging_station_id"]
+            isOneToOne: false
+            referencedRelation: "charging_stations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       generate_charging_order_number: { Args: never; Returns: string }

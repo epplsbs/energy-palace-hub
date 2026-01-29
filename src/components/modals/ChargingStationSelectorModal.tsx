@@ -66,13 +66,14 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
 
       if (stationsError) throw stationsError;
 
+      // Use the secure view that doesn't expose PII
       const { data: activeOrders, error: ordersError } = await supabase
-        .from('pos_charging_orders')
-        .select('charging_station_id, expected_end_time')
-        .in('status', ['active', 'booked'])
-        .not('expected_end_time', 'is', null);
+        .from('charging_order_availability')
+        .select('charging_station_id, expected_end_time, status');
 
-      if (ordersError) throw ordersError;
+      if (ordersError) {
+        console.warn('Could not fetch availability, using station status only:', ordersError);
+      }
 
       const stationsWithAvailability = stations?.map(station => {
         const busyOrder = activeOrders?.find(order => order.charging_station_id === station.id);
