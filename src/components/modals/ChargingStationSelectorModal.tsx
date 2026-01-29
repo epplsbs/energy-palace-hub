@@ -348,7 +348,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
                     value={formData.customerName}
                     onChange={(e) => setFormData(prev => ({ ...prev, customerName: e.target.value }))}
                     placeholder="Enter your full name"
-                    className="h-12 rounded-xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white"
+                    className="h-12 rounded-xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white text-gray-900 placeholder:text-gray-400"
                     required
                   />
                 </div>
@@ -364,7 +364,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
                     value={formData.customerPhone}
                     onChange={(e) => setFormData(prev => ({ ...prev, customerPhone: e.target.value }))}
                     placeholder="+977-98XXXXXXXX"
-                    className="h-12 rounded-xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white"
+                    className="h-12 rounded-xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white text-gray-900 placeholder:text-gray-400"
                     required
                   />
                 </div>
@@ -380,7 +380,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
                     value={formData.vehicleNumber}
                     onChange={(e) => setFormData(prev => ({ ...prev, vehicleNumber: e.target.value }))}
                     placeholder="BA 1 PA 1234"
-                    className="h-12 rounded-xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white"
+                    className="h-12 rounded-xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
 
@@ -394,7 +394,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
                     type="datetime-local"
                     value={formData.startTime}
                     onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
-                    className="h-12 rounded-xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white"
+                    className="h-12 rounded-xl border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white text-gray-900"
                     required
                   />
                 </div>
