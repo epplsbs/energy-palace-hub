@@ -131,22 +131,22 @@ const Index = () => {
       {/* Standardized Header like About.tsx - Note: businessSettings are used for logo/name, which is fine */}
       <header className="relative z-20 p-4 md:p-6 bg-black/10 backdrop-blur-md border-b border-white/10">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-3">
+          <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer">
             {/* Logo and Business Name from businessSettings - this part is good and specific to Index.tsx */}
             {businessSettings?.logo_url ? (
               <img
                 src={businessSettings.logo_url}
                 alt={businessSettings?.business_name ? `${businessSettings.business_name} Logo` : 'Energy Palace Logo'}
-                className="h-10 md:h-12 w-10 md:w-12 object-contain rounded-xl" // Slightly adjusted size for consistency
+                className="h-10 md:h-12 w-10 md:w-12 object-contain rounded-xl"
               />
             ) : (
-                            <div className="p-2 rounded-xl bg-emerald-600 neon-glow-green">
+              <div className="p-2 rounded-xl bg-emerald-600 neon-glow-green">
                 <Zap className="h-6 md:h-8 w-6 md:w-8 text-white" />
               </div>
             )}
             <div>
               {/* Site title (not H1 on homepage) */}
-                            <div className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-emerald-400'}`}>
+              <div className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-emerald-400'}`}>
                 {businessSettings?.business_name || 'Energy Palace'}
               </div>
               {/* Tagline can remain if desired, or be removed for closer match to About.tsx header style */}
@@ -154,7 +154,7 @@ const Index = () => {
                 {businessSettings?.business_tagline || 'EV Charging, Restaurant & Coffee Shop'}
               </p>
             </div>
-          </div>
+          </a>
 
           {/* Desktop Navigation - Standardized */}
           <div className={`hidden md:flex items-center space-x-6 ${theme === 'light' ? 'text-gray-800' : 'text-white'}`}>

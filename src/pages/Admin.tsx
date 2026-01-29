@@ -48,7 +48,14 @@ const Admin = () => {
     document.documentElement.classList.remove('dark');
     document.documentElement.classList.add('light');
 
+    // Listen for tab change events from dashboard cards
+    const handleTabChange = (event: CustomEvent) => {
+      setActiveTab(event.detail);
+    };
+    window.addEventListener('adminTabChange', handleTabChange as EventListener);
+
     return () => {
+      window.removeEventListener('adminTabChange', handleTabChange as EventListener);
       document.documentElement.classList.remove('light', 'dark');
       if (originalGlobalTheme === 'dark') {
         document.documentElement.classList.add('dark');

@@ -46,6 +46,11 @@ const AdminDashboard = () => {
             <Card 
               key={item.id}
               className="cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105"
+              onClick={() => {
+                // Dispatch custom event to change tab in parent Admin component
+                const event = new CustomEvent('adminTabChange', { detail: item.id });
+                window.dispatchEvent(event);
+              }}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{item.label}</CardTitle>
