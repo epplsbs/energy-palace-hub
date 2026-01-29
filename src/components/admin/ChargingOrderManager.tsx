@@ -206,7 +206,7 @@ const ChargingOrderManager = () => {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch ((status || '').toLowerCase()) {
       case 'booked':
         return 'bg-blue-100 text-blue-800';
       case 'active':
@@ -221,7 +221,7 @@ const ChargingOrderManager = () => {
   };
 
   const getPaymentStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch ((status || '').toLowerCase()) {
       case 'paid':
         return 'bg-green-100 text-green-800';
       case 'pending':
@@ -262,7 +262,14 @@ const ChargingOrderManager = () => {
             </CardContent>
           </Card>
         ) : (
-          orders.map((order) => (
+          orders.map((order) => {
+            const normalizedStatus = (order.status || '').toLowerCase();
+            const isTerminal = normalizedStatus === 'cancelled' || normalizedStatus === 'completed';
+            const canStart = normalizedStatus === 'booked';
+            const canCancel = !isTerminal;
+            const canComplete = !isTerminal;
+
+            return (
             <Card key={order.id}>
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -371,27 +378,29 @@ const ChargingOrderManager = () => {
                   </div>
                   
                   <div className="flex gap-2 flex-wrap">
-                    {order.status === 'booked' && (
+                     {canStart && (
                       <Button
                         size="sm"
                         onClick={() => handleStartCharging(order.id)}
-                        className="bg-green-500 hover:bg-green-600"
                       >
                         <CheckCircle className="h-4 w-4 mr-1" />
                         Start
                       </Button>
                     )}
-                    {order.status === 'active' && (
-                      <Button
-                        size="sm"
-                        onClick={() => updateOrderStatus(order.id, 'completed')}
-                        className="bg-blue-500 hover:bg-blue-600"
-                      >
-                        <CheckCircle className="h-4 w-4 mr-1" />
-                        Complete
-                      </Button>
-                    )}
-                    {order.status === 'booked' && (
+
+                     {/* Allow completing from Booked or Active (user requested “Completed button”) */}
+                     {canComplete && (
+                       <Button
+                         size="sm"
+                         variant="secondary"
+                         onClick={() => updateOrderStatus(order.id, 'completed')}
+                       >
+                         <CheckCircle className="h-4 w-4 mr-1" />
+                         Complete
+                       </Button>
+                     )}
+
+                     {canStart && (
                       <Button
                         size="sm"
                         onClick={() => sendConfirmationEmail(order.id, 'charging')}
@@ -401,7 +410,8 @@ const ChargingOrderManager = () => {
                         Send Email
                       </Button>
                     )}
-                    {(order.status === 'booked' || order.status === 'active') && (
+
+                     {canCancel && (
                       <Button
                         size="sm"
                         variant="destructive"
@@ -411,21 +421,22 @@ const ChargingOrderManager = () => {
                         Cancel
                       </Button>
                     )}
-                                        {(order.status === 'cancelled' || order.status === 'completed') && (
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => setOrderToDelete(order)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Delete
-                      </Button>
-                    )}
+
+                     {/* Allow deleting any order (user requested “Allow deleting”) */}
+                     <Button
+                       size="sm"
+                       variant="outline"
+                       onClick={() => setOrderToDelete(order)}
+                     >
+                       <Trash2 className="h-4 w-4 mr-1" />
+                       Delete
+                     </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          ))
+            );
+          })
         )}
       </div>
 
