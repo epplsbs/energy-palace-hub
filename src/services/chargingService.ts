@@ -27,6 +27,7 @@ export const createChargingBooking = async (booking: Omit<ChargingBooking, 'id' 
   }
   
   const insertData = {
+    order_number: '',
     customer_name: booking.customer_name,
     customer_phone: booking.customer_phone || null,
     vehicle_number: booking.vehicle_number || null,
@@ -39,19 +40,17 @@ export const createChargingBooking = async (booking: Omit<ChargingBooking, 'id' 
   };
   
   console.log('Insert data:', insertData);
-  
-  const { data, error } = await supabase
+
+  const { error } = await supabase
     .from('pos_charging_orders')
-    .insert(insertData)
-    .select()
-    .single();
+    .insert(insertData);
   
   if (error) {
     console.error('Error creating charging booking:', error);
     throw error;
   }
-  
-  console.log('Charging booking created successfully:', data);
+
+  console.log('Charging booking created successfully');
   
   // Update charging station status to occupied
   if (booking.charging_station_id) {
@@ -66,16 +65,13 @@ export const createChargingBooking = async (booking: Omit<ChargingBooking, 'id' 
   }
   
   return {
-    id: data.id,
-    customer_name: data.customer_name,
-    customer_phone: data.customer_phone || '',
-    vehicle_number: data.vehicle_number || '',
-    charging_station_id: data.charging_station_id || '',
-    start_time: data.start_time || '',
-    status: data.status as 'booked' | 'active' | 'completed' | 'cancelled',
-    total_amount: data.total_amount,
-    created_at: data.created_at,
-    order_number: data.order_number
+    customer_name: booking.customer_name,
+    customer_phone: booking.customer_phone || '',
+    vehicle_number: booking.vehicle_number || '',
+    charging_station_id: booking.charging_station_id || '',
+    start_time: startTimeValue || '',
+    status: 'booked',
+    total_amount: 0
   };
 };
 
