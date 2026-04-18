@@ -194,7 +194,7 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                     onChange={handleChange} 
                     required 
                     placeholder="Enter your full name"
-                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white" 
+                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white text-gray-900 placeholder:text-gray-400" 
                   />
                 </div>
                 <div className="space-y-2">
@@ -209,7 +209,7 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                     onChange={handleChange} 
                     required 
                     placeholder="your@email.com"
-                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white" 
+                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white text-gray-900 placeholder:text-gray-400" 
                   />
                 </div>
               </div>
@@ -226,7 +226,7 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                     value={formData.customerPhone} 
                     onChange={handleChange} 
                     placeholder="+977-98XXXXXXXX"
-                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white" 
+                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white text-gray-900 placeholder:text-gray-400" 
                   />
                 </div>
                 <div className="space-y-2">
@@ -242,7 +242,7 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                     min="1" 
                     max="50"
                     required 
-                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white" 
+                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white text-gray-900 placeholder:text-gray-400" 
                   />
                 </div>
               </div>
@@ -260,7 +260,7 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                         type="button"
                         variant="outline"
                         className={cn(
-                          "w-full h-12 justify-start text-left font-normal rounded-xl border-gray-200 bg-white hover:bg-gray-50",
+                          "w-full h-12 justify-start text-left font-normal rounded-xl border-gray-200 bg-white hover:bg-gray-50 text-gray-900",
                           !date && "text-gray-500"
                         )}
                       >
@@ -305,7 +305,7 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                     value={formData.time} 
                     onChange={handleChange} 
                     required 
-                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white" 
+                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white text-gray-900" 
                   />
                 </div>
               </div>
@@ -321,7 +321,7 @@ const ReservationModal = ({ isOpen, onClose }: ReservationModalProps) => {
                   value={formData.specialRequests}
                   onChange={handleChange}
                   placeholder="Any dietary requirements or special occasions?"
-                  className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white"
+                    className="h-12 rounded-xl border-gray-200 focus:border-amber-500 focus:ring-amber-500 bg-white text-gray-900 placeholder:text-gray-400"
                 />
               </div>
             </div>

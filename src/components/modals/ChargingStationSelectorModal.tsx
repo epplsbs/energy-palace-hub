@@ -76,7 +76,10 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
       }
 
       const stationsWithAvailability = stations?.map(station => {
-        const busyOrder = activeOrders?.find(order => order.charging_station_id === station.id);
+        const busyOrder = activeOrders?.find(order => {
+          const status = (order.status || '').toLowerCase();
+          return order.charging_station_id === station.id && (status === 'booked' || status === 'active');
+        });
         let availability = 'available';
         let availableAt: Date | null = null;
         
@@ -275,7 +278,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
                   <div
                     key={station.id}
                     onClick={() => handleStationSelect(station)}
-                    className={`relative p-5 rounded-2xl border-2 transition-all cursor-pointer ${
+                        className={`relative p-5 rounded-2xl border-2 transition-all cursor-pointer ${
                       station.availability === 'available'
                         ? 'border-emerald-200 hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-100 bg-white'
                         : 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed'
@@ -308,7 +311,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
 
                     {station.availability === 'available' && (
                       <div className="mt-4 pt-4 border-t border-gray-100">
-                        <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
+                          <Button type="button" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white gap-2">
                           <CheckCircle className="h-4 w-4" />
                           Select Station
                         </Button>
