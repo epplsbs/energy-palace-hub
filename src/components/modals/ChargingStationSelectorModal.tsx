@@ -66,7 +66,10 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
 
       if (stationsError) throw stationsError;
 
-      // Use the secure view that doesn't expose PII
+      // The admin-managed `charging_stations.status` is the source of truth.
+      // We only consult active orders to display an estimated availability time
+      // for stations the admin has already marked as occupied — we never let a
+      // stale order override a station the admin set to "available".
       const { data: activeOrders, error: ordersError } = await supabase
         .from('charging_order_availability')
         .select('charging_station_id, expected_end_time, status');
@@ -76,27 +79,23 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
       }
 
       const stationsWithAvailability = stations?.map(station => {
-        const busyOrder = activeOrders?.find(order => {
-          const status = (order.status || '').toLowerCase();
-          return order.charging_station_id === station.id && (status === 'booked' || status === 'active');
-        });
-        let availability = 'available';
+        const stationStatus = (station.status || '').toLowerCase();
+        let availability: string = stationStatus || 'available';
         let availableAt: Date | null = null;
-        
-        if (station.status === 'maintenance') {
-          availability = 'maintenance';
-        } else if (station.status === 'occupied' || busyOrder) {
-          availability = 'occupied';
+
+        if (stationStatus === 'occupied') {
+          const busyOrder = activeOrders?.find(order => {
+            const s = (order.status || '').toLowerCase();
+            return order.charging_station_id === station.id && (s === 'booked' || s === 'active');
+          });
           if (busyOrder?.expected_end_time) {
             const expectedEndTime = new Date(busyOrder.expected_end_time);
             if (now < expectedEndTime) {
               availableAt = expectedEndTime;
-            } else {
-              availability = 'available';
             }
           }
         }
-        
+
         return {
           ...station,
           availability,
