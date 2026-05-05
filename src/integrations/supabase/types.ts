@@ -181,6 +181,24 @@ export type Database = {
           },
         ]
       }
+      charger_status: {
+        Row: {
+          id: number
+          is_available: boolean
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          is_available?: boolean
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          is_available?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       charging_stations: {
         Row: {
           connector: string

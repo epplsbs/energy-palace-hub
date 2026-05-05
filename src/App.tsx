@@ -14,6 +14,7 @@ import AboutPage from "./pages/About"; // Corrected import for the About page
 import Media from "./pages/Media"; // Import the new Media page
 import NotFound from "./pages/NotFound";
 import POSLayout from "./pages/pos/POSLayout"; // Import new POS Layout
+import ChargerStatus from "./pages/ChargerStatus";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/about" element={<AboutPage />} /> {/* Corrected element for About page */}
             <Route path="/media" element={<Media />} /> {/* Added route for Media page */}
             <Route path="/sales/*" element={<POSLayout />} /> {/* Added POS route */}
+            <Route path="/charger-status" element={<ChargerStatus />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
