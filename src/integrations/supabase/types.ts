@@ -185,22 +185,28 @@ export type Database = {
         Row: {
           charger_id: string | null
           connector_id: number | null
+          error_code: string | null
           id: number
           is_available: boolean
+          last_heartbeat: string | null
           updated_at: string
         }
         Insert: {
           charger_id?: string | null
           connector_id?: number | null
+          error_code?: string | null
           id?: number
           is_available?: boolean
+          last_heartbeat?: string | null
           updated_at?: string
         }
         Update: {
           charger_id?: string | null
           connector_id?: number | null
+          error_code?: string | null
           id?: number
           is_available?: boolean
+          last_heartbeat?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -1178,7 +1184,30 @@ export type Database = {
       generate_charging_order_number: { Args: never; Returns: string }
       generate_order_number: { Args: never; Returns: string }
       get_current_user_pos_role: { Args: never; Returns: string }
+      get_overall_charger_availability: {
+        Args: never
+        Returns: {
+          available_connectors: number
+          is_any_available: boolean
+          total_connectors: number
+        }[]
+      }
       is_pos_staff: { Args: never; Returns: boolean }
+      update_charger_status_from_ocpp: {
+        Args: {
+          p_charger_id: string
+          p_connector_id: number
+          p_error_code?: string
+          p_status: string
+        }
+        Returns: {
+          charger_id: string
+          connector_id: number
+          id: number
+          is_available: boolean
+          updated_at: string
+        }[]
+      }
     }
     Enums: {
       user_role: "admin" | "cashier" | "waiter" | "charging_staff" | "manager"
