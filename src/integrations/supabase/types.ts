@@ -183,16 +183,22 @@ export type Database = {
       }
       charger_status: {
         Row: {
+          charger_id: string | null
+          connector_id: number | null
           id: number
           is_available: boolean
           updated_at: string
         }
         Insert: {
+          charger_id?: string | null
+          connector_id?: number | null
           id?: number
           is_available?: boolean
           updated_at?: string
         }
         Update: {
+          charger_id?: string | null
+          connector_id?: number | null
           id?: number
           is_available?: boolean
           updated_at?: string

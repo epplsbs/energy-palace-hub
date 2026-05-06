@@ -24,7 +24,18 @@ interface ChargingStation {
   estimated_time?: string;
   availability?: string;
   availableAt?: Date | null;
+  charger_id?: string;
+  connector_id?: number;
 }
+
+// Map the 4 UI charger slots (ordered by station_id) to physical
+// charger_status rows from Supabase / Pipedream / OCPP.
+const SLOT_MAPPING: { charger_id: string; connector_id: number }[] = [
+  { charger_id: 'STATION_01', connector_id: 1 },
+  { charger_id: 'STATION_01', connector_id: 2 },
+  { charger_id: 'STATION_02', connector_id: 1 },
+  { charger_id: 'STATION_02', connector_id: 2 },
+];
 
 const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelectorModalProps) => {
   const { toast } = useToast();
@@ -66,6 +77,14 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
 
       if (stationsError) throw stationsError;
 
+      // Live availability per physical connector (driven by Pipedream/OCPP).
+      const { data: liveStatus, error: liveErr } = await supabase
+        .from('charger_status')
+        .select('charger_id, connector_id, is_available');
+      if (liveErr) {
+        console.warn('Could not fetch charger_status:', liveErr);
+      }
+
       // The admin-managed `charging_stations.status` is the source of truth.
       // We only consult active orders to display an estimated availability time
       // for stations the admin has already marked as occupied — we never let a
@@ -78,10 +97,21 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
         console.warn('Could not fetch availability, using station status only:', ordersError);
       }
 
-      const stationsWithAvailability = stations?.map(station => {
+      const stationsWithAvailability = stations?.map((station, idx) => {
         const stationStatus = (station.status || '').toLowerCase();
         let availability: string = stationStatus || 'available';
         let availableAt: Date | null = null;
+
+        // Live OCPP/Pipedream override via charger_status table.
+        const slot = SLOT_MAPPING[idx];
+        if (slot) {
+          const live = liveStatus?.find(
+            (r: any) => r.charger_id === slot.charger_id && r.connector_id === slot.connector_id
+          );
+          if (live) {
+            availability = live.is_available ? 'available' : 'occupied';
+          }
+        }
 
         if (stationStatus === 'occupied') {
           const busyOrder = activeOrders?.find(order => {
@@ -98,6 +128,8 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
 
         return {
           ...station,
+          charger_id: slot?.charger_id,
+          connector_id: slot?.connector_id,
           availability,
           availableAt
         };
@@ -115,6 +147,20 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
       setLoading(false);
     }
   };
+
+  // Realtime: re-fetch whenever charger_status changes (Pipedream/OCPP updates).
+  useEffect(() => {
+    if (!isOpen) return;
+    const channel = supabase
+      .channel('charger_status_modal')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'charger_status' },
+        () => { loadStations(); }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [isOpen]);
 
   const handleStationSelect = (station: ChargingStation) => {
     if (station.availability !== 'available') {
@@ -209,7 +255,7 @@ const ChargingStationSelectorModal = ({ isOpen, onClose }: ChargingStationSelect
       case 'available':
         return <Badge className="bg-emerald-500 text-white">Available</Badge>;
       case 'occupied':
-        return <Badge className="bg-amber-500 text-white">Occupied</Badge>;
+        return <Badge className="bg-red-500 text-white">In Use</Badge>;
       case 'maintenance':
         return <Badge className="bg-gray-500 text-white">Maintenance</Badge>;
       default:
