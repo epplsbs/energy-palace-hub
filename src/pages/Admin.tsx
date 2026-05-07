@@ -31,6 +31,7 @@ import GalleryManager from '@/components/admin/GalleryManager';
 import ContactsManager from '@/components/admin/ContactsManager';
 import AboutUsManager from '@/components/admin/AboutUsManager';
 import BusinessSettingsManager from '@/components/admin/BusinessSettingsManager';
+import SEOManager from '@/components/admin/SEOManager';
 
 const Admin = () => {
   const { toast } = useToast();
@@ -129,6 +130,7 @@ const Admin = () => {
     { id: 'contacts', label: 'Contacts', icon: MapPin },
     { id: 'about', label: 'About Us', icon: Info },
     { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'seo', label: 'SEO', icon: BarChart3 },
   ];
 
   if (loading) {
@@ -347,6 +349,10 @@ const Admin = () => {
 
               <TabsContent value="settings" className="p-6 m-0">
                 <BusinessSettingsManager />
+              </TabsContent>
+
+              <TabsContent value="seo" className="p-6 m-0">
+                <SEOManager />
               </TabsContent>
             </Tabs>
           </div>
