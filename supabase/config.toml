@@ -1,1 +1,13 @@
 project_id = "zrjrzwndjfvobxcoyspa"
+
+[functions.sitemap]
+verify_jwt = false
+
+[functions.seo-generate]
+verify_jwt = false
+
+[functions.seo-cron]
+verify_jwt = false
+
+[functions.seo-image-alt]
+verify_jwt = false

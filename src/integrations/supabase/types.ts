@@ -128,6 +128,51 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_posts: {
+        Row: {
+          author: string | null
+          content: string | null
+          cover_image: string | null
+          created_at: string | null
+          excerpt: string | null
+          id: string
+          is_published: boolean | null
+          published_at: string | null
+          slug: string
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author?: string | null
+          content?: string | null
+          cover_image?: string | null
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean | null
+          published_at?: string | null
+          slug: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author?: string | null
+          content?: string | null
+          cover_image?: string | null
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          is_published?: boolean | null
+          published_at?: string | null
+          slug?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       charger_reservations: {
         Row: {
           charging_station_id: string | null
@@ -291,6 +336,7 @@ export type Database = {
       }
       employees: {
         Row: {
+          alt_text: string | null
           bio: string | null
           created_at: string
           designation: string
@@ -302,6 +348,7 @@ export type Database = {
           specialties: string[] | null
         }
         Insert: {
+          alt_text?: string | null
           bio?: string | null
           created_at?: string
           designation: string
@@ -313,6 +360,7 @@ export type Database = {
           specialties?: string[] | null
         }
         Update: {
+          alt_text?: string | null
           bio?: string | null
           created_at?: string
           designation?: string
@@ -354,6 +402,7 @@ export type Database = {
       }
       gallery_items: {
         Row: {
+          alt_text: string | null
           created_at: string
           description: string | null
           display_order: number | null
@@ -363,6 +412,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          alt_text?: string | null
           created_at?: string
           description?: string | null
           display_order?: number | null
@@ -372,6 +422,7 @@ export type Database = {
           title: string
         }
         Update: {
+          alt_text?: string | null
           created_at?: string
           description?: string | null
           display_order?: number | null
@@ -411,6 +462,7 @@ export type Database = {
       }
       menu_items: {
         Row: {
+          alt_text: string | null
           category_id: string | null
           created_at: string
           description: string | null
@@ -422,6 +474,7 @@ export type Database = {
           price: number
         }
         Insert: {
+          alt_text?: string | null
           category_id?: string | null
           created_at?: string
           description?: string | null
@@ -433,6 +486,7 @@ export type Database = {
           price: number
         }
         Update: {
+          alt_text?: string | null
           category_id?: string | null
           created_at?: string
           description?: string | null
@@ -1097,12 +1151,72 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_audit_log: {
+        Row: {
+          created_at: string | null
+          details: Json | null
+          id: string
+          issue_type: string
+          page_path: string
+          resolved: boolean | null
+          severity: string
+        }
+        Insert: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          issue_type: string
+          page_path: string
+          resolved?: boolean | null
+          severity?: string
+        }
+        Update: {
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          issue_type?: string
+          page_path?: string
+          resolved?: boolean | null
+          severity?: string
+        }
+        Relationships: []
+      }
+      seo_redirects: {
+        Row: {
+          created_at: string | null
+          from_path: string
+          id: string
+          is_active: boolean | null
+          status_code: number | null
+          to_path: string
+        }
+        Insert: {
+          created_at?: string | null
+          from_path: string
+          id?: string
+          is_active?: boolean | null
+          status_code?: number | null
+          to_path: string
+        }
+        Update: {
+          created_at?: string | null
+          from_path?: string
+          id?: string
+          is_active?: boolean | null
+          status_code?: number | null
+          to_path?: string
+        }
+        Relationships: []
+      }
       seo_settings: {
         Row: {
+          auto_generated: boolean | null
           canonical_url: string | null
+          content_hash: string | null
           created_at: string | null
           id: string
           is_active: boolean | null
+          last_auto_generated_at: string | null
           meta_description: string | null
           meta_keywords: string | null
           meta_title: string | null
@@ -1112,13 +1226,20 @@ export type Database = {
           page_path: string
           robots_directives: string | null
           schema_markup: Json | null
+          twitter_card: string | null
+          twitter_description: string | null
+          twitter_image: string | null
+          twitter_title: string | null
           updated_at: string | null
         }
         Insert: {
+          auto_generated?: boolean | null
           canonical_url?: string | null
+          content_hash?: string | null
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+          last_auto_generated_at?: string | null
           meta_description?: string | null
           meta_keywords?: string | null
           meta_title?: string | null
@@ -1128,13 +1249,20 @@ export type Database = {
           page_path: string
           robots_directives?: string | null
           schema_markup?: Json | null
+          twitter_card?: string | null
+          twitter_description?: string | null
+          twitter_image?: string | null
+          twitter_title?: string | null
           updated_at?: string | null
         }
         Update: {
+          auto_generated?: boolean | null
           canonical_url?: string | null
+          content_hash?: string | null
           created_at?: string | null
           id?: string
           is_active?: boolean | null
+          last_auto_generated_at?: string | null
           meta_description?: string | null
           meta_keywords?: string | null
           meta_title?: string | null
@@ -1144,6 +1272,10 @@ export type Database = {
           page_path?: string
           robots_directives?: string | null
           schema_markup?: Json | null
+          twitter_card?: string | null
+          twitter_description?: string | null
+          twitter_image?: string | null
+          twitter_title?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -1193,6 +1325,7 @@ export type Database = {
         }[]
       }
       is_pos_staff: { Args: never; Returns: boolean }
+      slugify: { Args: { input: string }; Returns: string }
       update_charger_status_from_ocpp: {
         Args: {
           p_charger_id: string
