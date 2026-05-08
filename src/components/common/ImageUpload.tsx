@@ -9,22 +9,26 @@ import ImageResizer from '@/lib/imageUtils';
 
 interface ImageUploadProps {
   onImageUploaded: (url: string) => void;
+  onAltGenerated?: (alt: string) => void;
   currentImageUrl?: string;
   maxSizeKB?: number;
   accept?: string;
   bucket?: string;
   folder?: string;
   placeholder?: string;
+  context?: string;
 }
 
 const ImageUpload = ({
   onImageUploaded,
+  onAltGenerated,
   currentImageUrl,
   maxSizeKB = 200,
   accept = 'image/*',
   bucket = 'gallery',
   folder = 'images',
-  placeholder = 'Upload an image or enter URL'
+  placeholder = 'Upload an image or enter URL',
+  context,
 }: ImageUploadProps) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -62,7 +66,7 @@ const ImageUpload = ({
         maxWidth: 1920,
         maxHeight: 1080,
         quality: 0.9,
-        format: 'jpeg'
+        format: 'webp'
       });
 
       setUploadProgress(60);
@@ -89,6 +93,19 @@ const ImageUpload = ({
 
       onImageUploaded(uploadedUrl);
       setUrlInput(uploadedUrl);
+
+      // Fire-and-forget AI alt text generation
+      if (onAltGenerated) {
+        try {
+          const { supabase } = await import('@/integrations/supabase/client');
+          const { data } = await supabase.functions.invoke('seo-image-alt', {
+            body: { filename: file.name, context, image_url: uploadedUrl },
+          });
+          if (data?.alt_text) onAltGenerated(data.alt_text);
+        } catch (e) {
+          console.warn('Alt text generation failed', e);
+        }
+      }
 
     } catch (error) {
       console.error('Upload error:', error);
