@@ -1,2 +1,4 @@
 /poss/*  https://possoft.netlify.app/:splat  301!
+/sitemap.xml  https://zrjrzwndjfvobxcoyspa.supabase.co/functions/v1/sitemap  200
+/robots.txt   https://zrjrzwndjfvobxcoyspa.supabase.co/functions/v1/sitemap?type=robots  200
 /*    /index.html   200

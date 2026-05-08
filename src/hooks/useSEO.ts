@@ -8,6 +8,10 @@ interface SEOData {
   og_title?: string;
   og_description?: string;
   og_image?: string;
+  twitter_title?: string;
+  twitter_description?: string;
+  twitter_image?: string;
+  twitter_card?: string;
   canonical_url?: string;
   robots_directives?: string;
   schema_markup?: any;
@@ -60,7 +64,13 @@ const updateSEOTags = (seoData: SEOData) => {
   updateMetaProperty('og:title', seoData.og_title);
   updateMetaProperty('og:description', seoData.og_description);
   updateMetaProperty('og:image', seoData.og_image);
-  
+
+  // Twitter cards
+  updateMetaTag('twitter:card', seoData.twitter_card || 'summary_large_image');
+  updateMetaTag('twitter:title', seoData.twitter_title || seoData.og_title);
+  updateMetaTag('twitter:description', seoData.twitter_description || seoData.og_description);
+  updateMetaTag('twitter:image', seoData.twitter_image || seoData.og_image);
+
   // Update canonical URL
   updateCanonicalLink(seoData.canonical_url);
 
