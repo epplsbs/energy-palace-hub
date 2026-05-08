@@ -74,7 +74,7 @@ export class ImageResizer {
       maxWidth = 1920,
       maxHeight = 1080,
       quality: initialQuality = 0.9,
-      format = 'jpeg'
+      format = 'webp'
     } = options;
 
     // Load the original image
