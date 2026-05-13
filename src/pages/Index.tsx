@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Zap, Car, Coffee, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon, Menu, X, BookOpen } from 'lucide-react'; // Added BookOpen
+import { Zap, Car, Coffee, Phone, Mail, MapPin, Clock, Users, Info, Sun, Moon, Menu, X, BookOpen } from 'lucide-react';
 import ChargingStationSelectorModal from '@/components/modals/ChargingStationSelectorModal';
 import MenuModal from '@/components/modals/MenuModal';
 import ReservationModal from '@/components/modals/ReservationModal';
@@ -9,9 +9,8 @@ import { getBusinessSettings, type BusinessSettings } from '@/services/businessS
 import { getAboutUsContent, getTestimonials, type AboutUsContent, type Testimonial } from '@/services/contentService';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
-// Ensure Card, CardContent, Star, ChevronLeft, ChevronRight, Quote are imported or add them
-import { Card, CardContent } from '@/components/ui/card'; // Assuming these are used by testimonial slider
-import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react'; // Icons for testimonials
+import { Card, CardContent } from '@/components/ui/card';
+import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { useSEO } from '@/hooks/useSEO';
 import LocationDisplay from '@/components/LocationDisplay';
 
@@ -20,73 +19,48 @@ const Index = () => {
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  // const [businessSettings, setBusinessSettings] = useState<BusinessSettings | null>(null); // Replaced by useQuery
-  const [aboutContent, setAboutContent] = useState<AboutUsContent | null>(null); // Keep for now, or convert to useQuery too
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]); // Keep for now, or convert to useQuery too
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  // const [loading, setLoading] = useState(true); // Replaced by useQuery's isLoading
 
   const { theme, toggleTheme } = useTheme();
   const backgroundImageUrl = useBackgroundImage();
   useSEO('/');
 
-  const { data: businessSettings, isLoading: isLoadingBusinessSettings, error: businessSettingsError } = useQuery<BusinessSettings, Error>({
+  const { data: businessSettings, isLoading: isLoadingBusinessSettings } = useQuery<BusinessSettings, Error>({
     queryKey: ['businessSettings'],
     queryFn: getBusinessSettings,
   });
 
-  // For AboutContent and Testimonials, you might want to convert them to useQuery as well for consistency
-  // For now, keeping their existing useEffect-based loading.
-  // A combined loading state would be: isLoadingBusinessSettings || loadingAbout || loadingTestimonials
-  const [loadingCombined, setLoadingCombined] = useState(true);
+  const { data: aboutContent, isLoading: isLoadingAbout } = useQuery<AboutUsContent | null, Error>({
+    queryKey: ['aboutUs'],
+    queryFn: getAboutUsContent,
+  });
 
+  const { data: testimonials = [], isLoading: isLoadingTestimonials } = useQuery<Testimonial[], Error>({
+    queryKey: ['testimonials'],
+    queryFn: getTestimonials,
+  });
 
-  useEffect(() => {
-    const loadOtherData = async () => {
-      // setLoading(true); // isLoadingBusinessSettings handles its part
-      try {
-                // Only fetch AboutContent and Testimonials here
-        const [aboutData, testimonialsData] = await Promise.all([
-          getAboutUsContent().catch(err => {
-            console.warn('About Us content not available:', err);
-            return null;
-          }),
-          getTestimonials().catch(err => {
-            console.warn('Testimonials not available:', err);
-            return [];
-          })
-        ]);
-        setAboutContent(aboutData);
-        setTestimonials(testimonialsData || []);
-            } catch (error) {
-        console.error('Error loading page data for Index (About/Testimonials):', error);
-        console.error('Error details:', error instanceof Error ? error.message : 'Unknown error');
-        setAboutContent(null);
-        setTestimonials([]); // Set default/empty states if necessary
-      } finally {
-        // setLoading(false); // isLoadingBusinessSettings handles its part
-        setLoadingCombined(false); // Update combined loading state
-      }
-    };
-    loadOtherData();
-  }, []);
-
+  const isLoadingCombined = isLoadingBusinessSettings || isLoadingAbout || isLoadingTestimonials;
 
   useEffect(() => {
-    if (testimonials.length > 0) {
+    if (testimonials && testimonials.length > 0) {
       const interval = setInterval(() => {
         setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
       }, 5000); // Auto-scroll every 5 seconds
       return () => clearInterval(interval);
     }
-  }, [testimonials.length]);
+  }, [testimonials?.length]);
 
   const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    if (testimonials) {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }
   };
 
   const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    if (testimonials) {
+      setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    }
   };
 
   const backgroundStyle = businessSettings?.background_image_url ? {
@@ -128,11 +102,9 @@ const Index = () => {
       )}
 
       {/* Header */}
-      {/* Standardized Header like About.tsx - Note: businessSettings are used for logo/name, which is fine */}
       <header className="relative z-20 p-4 md:p-6 bg-black/10 backdrop-blur-md border-b border-white/10">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
           <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer">
-            {/* Logo and Business Name from businessSettings - this part is good and specific to Index.tsx */}
             {businessSettings?.logo_url ? (
               <img
                 src={businessSettings.logo_url}
@@ -145,33 +117,31 @@ const Index = () => {
               </div>
             )}
             <div>
-              {/* Site title (not H1 on homepage) */}
               <div className={`text-xl md:text-2xl font-bold ${theme === 'light' ? 'text-gray-900' : 'text-emerald-400'}`}>
                 {businessSettings?.business_name || 'Energy Palace'}
               </div>
-              {/* Tagline can remain if desired, or be removed for closer match to About.tsx header style */}
               <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 {businessSettings?.business_tagline || 'EV Charging, Restaurant & Coffee Shop'}
               </p>
             </div>
           </a>
 
-          {/* Desktop Navigation - Standardized */}
+          {/* Desktop Navigation */}
           <div className={`hidden md:flex items-center space-x-6 ${theme === 'light' ? 'text-gray-800' : 'text-white'}`}>
             <a href="/about" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
               <Info className="h-4 w-4" />
               <span>About</span>
             </a>
             <a href="/blog" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
-              <BookOpen className="h-4 w-4" /> {/* Changed from Users to BookOpen for Blog */}
+              <BookOpen className="h-4 w-4" />
               <span>Blog</span>
             </a>
             <a href="/contacts" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
-              <Phone className="h-4 w-4" /> {/* Changed from Users to Phone for Contacts */}
+              <Phone className="h-4 w-4" />
               <span>Contact</span>
             </a>
             <a href="/media" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
-              <Zap className="h-4 w-4" /> {/* Placeholder icon, can be changed */}
+              <Zap className="h-4 w-4" />
               <span>Media</span>
             </a>
             <button
@@ -182,7 +152,7 @@ const Index = () => {
             </button>
           </div>
 
-          {/* Mobile Menu Button - Standardized */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
             className={`md:hidden p-2 rounded-lg ${theme === 'light' ? 'bg-white/20 hover:bg-white/30' : 'bg-white/10 hover:bg-white/20'} transition-all duration-300`}
@@ -191,7 +161,7 @@ const Index = () => {
           </button>
         </nav>
 
-        {/* Mobile Menu - Standardized */}
+        {/* Mobile Menu */}
         {showMobileMenu && (
           <div className={`md:hidden absolute top-full left-0 right-0 ${theme === 'light' ? 'bg-white/95' : 'bg-black/95'} backdrop-blur-md shadow-lg border-t border-white/10 z-50`}>
             <nav className="py-4">
@@ -208,7 +178,7 @@ const Index = () => {
                 <span>Contact</span>
               </a>
               <a href="/media" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
-                <Zap className="h-4 w-4" /> {/* Placeholder icon */}
+                <Zap className="h-4 w-4" />
                 <span>Media</span>
               </a>
               <button
@@ -364,7 +334,6 @@ const Index = () => {
                 Our Location
               </h4>
               <LocationDisplay />
-              {/* Thematic description for the card, can be adjusted if needed */}
               <p className={`text-sm mt-3 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>Accessible & Convenient Charging</p>
             </div>
            
@@ -390,8 +359,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials Section - Copied and Adapted from About.tsx */}
-      {testimonials.length > 0 && !loadingCombined && (
+      {/* Testimonials Section */}
+      {testimonials && testimonials.length > 0 && !isLoadingCombined && (
         <section id="testimonials" className={`relative z-10 py-20 ${theme === 'light' ? 'bg-gray-50/50' : 'bg-black/30'} backdrop-blur-sm`}>
           <div className="max-w-7xl mx-auto px-4">
             <div className="text-center mb-12 md:mb-16">
@@ -408,7 +377,7 @@ const Index = () => {
                 <CardContent className="p-8 md:p-12 text-center relative">
                   <Quote className={`h-10 w-10 md:h-12 md:w-12 mx-auto mb-6 ${theme === 'light' ? 'text-emerald-500' : 'text-emerald-400'} opacity-75`} />
 
-                  <div className="min-h-[150px] md:min-h-[200px] flex items-center justify-center"> {/* Adjusted min-height */}
+                  <div className="min-h-[150px] md:min-h-[200px] flex items-center justify-center">
                     <div className="space-y-4 md:space-y-6">
                       <p className={`text-md md:text-xl italic leading-relaxed ${theme === 'light' ? 'text-gray-700' : 'text-white/90'}`}>
                         "{testimonials[currentTestimonial]?.content}"
@@ -440,7 +409,7 @@ const Index = () => {
                         <Button
                           onClick={prevTestimonial}
                           variant="outline"
-                          size="icon" // Changed to icon size
+                          size="icon"
                           className={`rounded-full w-8 h-8 md:w-10 md:h-10 p-0 ${theme === 'light' ? 'bg-white/50 hover:bg-gray-100 border-gray-300' : 'bg-white/10 border-white/20 hover:bg-white/20 text-white'}`}
                         >
                           <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" />
@@ -451,7 +420,7 @@ const Index = () => {
                         <Button
                           onClick={nextTestimonial}
                           variant="outline"
-                          size="icon" // Changed to icon size
+                          size="icon"
                           className={`rounded-full w-8 h-8 md:w-10 md:h-10 p-0 ${theme === 'light' ? 'bg-white/50 hover:bg-gray-100 border-gray-300' : 'bg-white/10 border-white/20 hover:bg-white/20 text-white'}`}
                         >
                           <ChevronRight className="h-4 w-4 md:h-5 md:w-5" />
@@ -545,7 +514,6 @@ const Index = () => {
                 <li><a href="/blog" className="hover:text-emerald-400 transition-colors">Blog</a></li>
                 <li><a href="/contacts" className="hover:text-emerald-400 transition-colors">Contact Us</a></li>
                 <li><a href="/media" className="hover:text-emerald-400 transition-colors">Media & Press</a></li>
-                {/* Add other important links here, e.g., Terms of Service, Privacy Policy if they exist */}
               </ul>
             </div>
           </div>

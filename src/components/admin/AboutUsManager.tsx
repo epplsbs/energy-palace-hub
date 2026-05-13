@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +18,7 @@ import {
 
 const AboutUsManager = () => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [content, setContent] = useState<AboutUsContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -87,6 +89,9 @@ const AboutUsManager = () => {
           description: "About us content has been created successfully.",
         });
       }
+
+      // Invalidate the aboutUs queries
+      queryClient.invalidateQueries({ queryKey: ['aboutUs'] });
 
       await loadData();
     } catch (error) {

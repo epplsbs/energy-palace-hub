@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,7 @@ import {
 
 const GalleryManager = () => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null);
@@ -88,6 +90,7 @@ const GalleryManager = () => {
       }
 
       await loadData();
+      queryClient.invalidateQueries({ queryKey: ['galleryItems'] });
       resetForm();
       setIsDialogOpen(false);
     } catch (error) {
@@ -122,6 +125,7 @@ const GalleryManager = () => {
         description: "Gallery item deleted successfully",
       });
       await loadData();
+      queryClient.invalidateQueries({ queryKey: ['galleryItems'] });
     } catch (error) {
       console.error('Error deleting gallery item:', error);
       toast({

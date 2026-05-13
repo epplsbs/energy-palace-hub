@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,6 +24,7 @@ interface Contact {
 
 const ContactsManager = () => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingContact, setEditingContact] = useState<Contact | null>(null);
@@ -117,6 +119,8 @@ const ContactsManager = () => {
         });
       }
 
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
+
       setFormData({
         name: '',
         position: '',
@@ -170,6 +174,7 @@ const ContactsManager = () => {
         description: "Contact deleted successfully",
       });
       fetchContacts();
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
     } catch (error: any) {
       toast({
         title: "Error",
@@ -193,6 +198,7 @@ const ContactsManager = () => {
         description: `Contact ${contact.is_active ? 'deactivated' : 'activated'} successfully`,
       });
       fetchContacts();
+      queryClient.invalidateQueries({ queryKey: ['contacts'] });
     } catch (error: any) {
       toast({
         title: "Error",

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +27,7 @@ import {
 
 const MenuManager = () => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [categories, setCategories] = useState<MenuCategory[]>([]);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -132,6 +134,10 @@ const MenuManager = () => {
         });
       }
 
+      // Invalidate menu-related queries
+      queryClient.invalidateQueries({ queryKey: ['menuItems'] });
+      queryClient.invalidateQueries({ queryKey: ['menuCategories'] });
+
       await loadData();
       resetForm();
       setIsDialogOpen(false);
@@ -169,6 +175,10 @@ const MenuManager = () => {
         title: "Success",
         description: "Menu item deleted successfully",
       });
+
+      // Invalidate menu-related queries
+      queryClient.invalidateQueries({ queryKey: ['menuItems'] });
+
       await loadData();
     } catch (error) {
       console.error('Error deleting menu item:', error);
