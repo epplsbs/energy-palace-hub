@@ -92,10 +92,15 @@ const SEOManager = () => {
 
   const pingGoogle = async () => {
     try {
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sitemap?ping=1`;
-      const r = await fetch(url);
-      const j = await r.json();
-      toast({ title: 'Sitemap ping', description: `Google responded: ${j.status ?? 'ok'}` });
+      const anon = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      const r = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sitemap?ping=1`, {
+        headers: { apikey: anon, Authorization: `Bearer ${anon}` },
+      });
+      const text = await r.text();
+      let result: any;
+      try { result = JSON.parse(text); } catch { result = { status: r.status, raw: text.slice(0, 120) }; }
+      const note = result?.note ? ` — ${result.note}` : '';
+      toast({ title: 'Sitemap ping', description: `Status: ${result?.status ?? r.status}${note}` });
     } catch (e: any) {
       toast({ title: 'Ping failed', description: e.message, variant: 'destructive' });
     }

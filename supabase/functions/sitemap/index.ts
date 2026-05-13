@@ -78,14 +78,27 @@ Deno.serve(async (req) => {
   // Ping mode: notify Google sitemap location
   if (url.searchParams.get("ping") === "1") {
     try {
-      const pingUrl = `https://www.google.com/ping?sitemap=${encodeURIComponent(`${SITE_URL}/sitemap.xml`)}`;
-      const r = await fetch(pingUrl);
-      return new Response(JSON.stringify({ ok: true, status: r.status }), {
+      const sitemapLoc = `${SITE_URL}/sitemap.xml`;
+      const pingUrl = `https://www.google.com/ping?sitemap=${encodeURIComponent(sitemapLoc)}`;
+      let status = 0;
+      let note = "";
+      try {
+        const r = await fetch(pingUrl, { method: "GET" });
+        status = r.status;
+        // Drain body to avoid leaks; ignore HTML response (Google deprecated this endpoint in 2023)
+        await r.text();
+        if (status === 404 || status === 410) {
+          note = "Google sitemap ping endpoint was deprecated (June 2023). Submit your sitemap via Google Search Console instead.";
+        }
+      } catch (err) {
+        note = `Ping request failed: ${String(err)}`;
+      }
+      return new Response(JSON.stringify({ ok: true, status, sitemap: sitemapLoc, note }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     } catch (e) {
-      return new Response(JSON.stringify({ error: String(e) }), {
-        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      return new Response(JSON.stringify({ ok: false, error: String(e) }), {
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
   }
