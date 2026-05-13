@@ -92,10 +92,21 @@ const SEOManager = () => {
 
   const pingGoogle = async () => {
     try {
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sitemap?ping=1`;
-      const r = await fetch(url);
-      const j = await r.json();
-      toast({ title: 'Sitemap ping', description: `Google responded: ${j.status ?? 'ok'}` });
+      const { data, error } = await supabase.functions.invoke('sitemap', {
+        method: 'GET',
+      } as any);
+      // invoke doesn't support query params reliably for GET; fall back to raw fetch with apikey
+      let result: any = data;
+      if (error || !data) {
+        const anon = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const r = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sitemap?ping=1`, {
+          headers: { apikey: anon, Authorization: `Bearer ${anon}` },
+        });
+        const text = await r.text();
+        try { result = JSON.parse(text); } catch { result = { status: r.status, raw: text.slice(0, 80) }; }
+      }
+      const note = result?.note ? ` — ${result.note}` : '';
+      toast({ title: 'Sitemap ping', description: `Status: ${result?.status ?? 'ok'}${note}` });
     } catch (e: any) {
       toast({ title: 'Ping failed', description: e.message, variant: 'destructive' });
     }
