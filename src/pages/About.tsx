@@ -8,13 +8,9 @@ import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useQuery } from '@tanstack/react-query';
 import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
-import Navigation from '@/components/common/Navigation';
 import { Zap, Users, Coffee, Car, Star, ChevronLeft, ChevronRight, Quote, MapPin, Calendar, Home, BookOpen, Phone, Sun, Moon, Menu, X } from 'lucide-react';
 
 const About = () => {
-  const [content, setContent] = useState<AboutUsContent | null>(null);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-    const [loading, setLoading] = useState(true);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   
@@ -27,40 +23,37 @@ const About = () => {
     queryFn: getBusinessSettings,
   });
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  const { data: content, isLoading: isLoadingAbout } = useQuery<AboutUsContent | null, Error>({
+    queryKey: ['aboutUs'],
+    queryFn: getAboutUsContent,
+  });
+
+  const { data: testimonials = [], isLoading: isLoadingTestimonials } = useQuery<Testimonial[], Error>({
+    queryKey: ['testimonials'],
+    queryFn: getTestimonials,
+  });
+
+  const loading = isLoadingAbout || isLoadingTestimonials;
 
   useEffect(() => {
-    if (testimonials.length > 0) {
+    if (testimonials && testimonials.length > 0) {
       const interval = setInterval(() => {
         setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
       }, 5000);
       return () => clearInterval(interval);
     }
-  }, [testimonials.length]);
+  }, [testimonials?.length]);
 
-  const loadData = async () => {
-    try {
-      const [aboutData, testimonialsData] = await Promise.all([
-        getAboutUsContent(),
-        getTestimonials()
-      ]);
-      setContent(aboutData);
-      setTestimonials(testimonialsData);
-    } catch (error) {
-      console.error('Error loading data:', error);
-    } finally {
-      setLoading(false);
+  const nextTestimonial = () => {
+    if (testimonials) {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
     }
   };
 
-  const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-  };
-
   const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    if (testimonials) {
+      setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    }
   };
 
   if (loading) {
@@ -292,7 +285,7 @@ const About = () => {
         </div>
 
         {/* Testimonials Slider */}
-        {testimonials.length > 0 && (
+        {testimonials && testimonials.length > 0 && (
           <div className="mb-16">
             <div className="text-center mb-8 md:mb-12">
               <h2 className={`text-2xl md:text-3xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>What Our Customers Say</h2>

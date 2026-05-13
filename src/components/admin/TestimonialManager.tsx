@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,7 @@ import {
 
 const TestimonialManager = () => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
@@ -134,6 +136,9 @@ const TestimonialManager = () => {
         });
       }
 
+      // Invalidate testimonials query
+      queryClient.invalidateQueries({ queryKey: ['testimonials'] });
+
       await loadData();
       resetForm();
       setIsDialogOpen(false);
@@ -170,6 +175,10 @@ const TestimonialManager = () => {
         title: "Success",
         description: "Testimonial deleted successfully",
       });
+
+      // Invalidate testimonials query
+      queryClient.invalidateQueries({ queryKey: ['testimonials'] });
+
       await loadData();
     } catch (error) {
       console.error('Error deleting testimonial:', error);
