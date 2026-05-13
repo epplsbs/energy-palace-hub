@@ -1,33 +1,131 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://energypalace.com.np/</loc>
-    <lastmod>2024-07-15</lastmod>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://energypalace.com.np/about</loc>
-    <lastmod>2024-07-15</lastmod>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://energypalace.com.np/contacts</loc>
-    <lastmod>2024-07-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://energypalace.com.np/blog</loc>
-    <lastmod>2024-07-15</lastmod>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://energypalace.com.np/contacts</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://energypalace.com.np/media</loc>
-    <lastmod>2024-07-16</lastmod>
+    <lastmod>2026-05-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/2e73fd01-8ddd-4e51-850c-aecbf39551b4</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751952386203.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/ce079d75-8a07-4138-9e09-9e7cd072b322</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751951832536.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/aea0a7f4-587b-4de7-988a-10a3d5911208</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751447739317.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/3c18f066-0916-4278-bed7-5a21c78966e9</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751952087950.png</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/be69c75a-1516-4d15-928d-b90e6b6163b5</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751952222768.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/2e77a167-fa8a-4978-9631-d3b72521d8bc</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751448555528.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/85c69659-2163-4f39-97bc-b46cc391e28a</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751951126721.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/e266b347-be4d-4420-87e2-e7b079fd03af</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751951314439.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/bdf662d6-1d38-4136-be6a-b4ac0f88ab89</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751951600894.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/98142155-0ba8-48a5-b38f-26ed6b53e8ac</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751955493216.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/fb5d7484-af80-4b8e-ab03-287350df5ef3</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751959015488.jpeg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/a5b8fd57-e548-4654-9e67-3db66117f356</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751959168755.jpeg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/cd563730-420f-4afb-8c47-3eade1e8a4d3</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751959603240.jpeg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://energypalace.com.np/menu/3ede8c69-0356-4936-b861-4898a59a64f8</loc>
+    <lastmod>2026-05-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image><image:loc>https://zrjrzwndjfvobxcoyspa.supabase.co/storage/v1/object/public/menu-items/1751959986282.webp</image:loc></image:image>
   </url>
 </urlset>
