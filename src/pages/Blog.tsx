@@ -8,7 +8,7 @@ import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useQuery } from '@tanstack/react-query';
 import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
-import { Zap, Calendar, Tag, BookOpen, X, Home, Phone, Info, Sun, Moon, Menu } from 'lucide-react';
+import { Zap, Calendar, Tag, BookOpen, X, Home, Phone, Info, Sun, Moon, Menu, Users } from 'lucide-react';
 
 interface GalleryItem {
   id: string;

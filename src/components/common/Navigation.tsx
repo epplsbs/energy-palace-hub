@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useQuery } from '@tanstack/react-query';
 import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
-import { Home, BookOpen, Phone, Info, Sun, Moon, Menu, X } from 'lucide-react';
+import { Home, BookOpen, Phone, Info, Sun, Moon, Menu, X, Users } from 'lucide-react';
 
 interface NavigationProps {
   currentPage: string;

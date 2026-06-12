@@ -1,7 +1,7 @@
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
-import { Zap, Home, Info, BookOpen, Phone, Sun, Moon, Menu, X, Download, Mail } from 'lucide-react'; // Added Download, Mail
+import { Zap, Home, Info, BookOpen, Phone, Sun, Moon, Menu, X, Download, Mail, Users } from 'lucide-react'; // Added Download, Mail, Users
 import { useState, useEffect } from 'react'; // Added useState, useEffect
 import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService'; // For business name
 
