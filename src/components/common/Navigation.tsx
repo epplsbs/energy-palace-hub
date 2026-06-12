@@ -21,6 +21,7 @@ const Navigation = ({ currentPage }: NavigationProps) => {
   const navigation = [
     { name: 'Home', href: '/', icon: Home },
     { name: 'About', href: '/about', icon: Info },
+    { name: 'Community', href: '/community', icon: BookOpen },
     { name: 'Media', href: '/media', icon: BookOpen },
     { name: 'Contact', href: '/contacts', icon: Phone },
   ];

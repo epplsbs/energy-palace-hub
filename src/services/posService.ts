@@ -55,6 +55,7 @@ export interface OrderSubmissionData {
   payment_method: string; // e.g., 'cash', 'card', 'qr'
   payment_status?: string; // e.g., 'pending', 'paid'
   order_status?: string; // e.g., 'pending', 'completed'
+  driver_id?: string | null;
   notes?: string | null;
   items: CartItemForSubmit[];
 }
@@ -107,6 +108,7 @@ export const submitPOSOrder = async (orderData: OrderSubmissionData): Promise<{ 
     payment_method: orderData.payment_method,
     payment_status: orderData.payment_status || 'paid', // Default to paid for POS
     order_status: orderData.order_status || 'completed', // Default to completed for POS
+    driver_id: orderData.driver_id,
     notes: orderData.notes,
     // created_at is default, completed_at can be set if status is completed
     completed_at: (orderData.order_status || 'completed') === 'completed' ? new Date().toISOString() : null,
