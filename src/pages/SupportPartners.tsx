@@ -5,10 +5,11 @@ import Navigation from "@/components/common/Navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Loader2, User, Car, Phone, UserPlus } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const Community = () => {
+const SupportPartners = () => {
   const { data: drivers, isLoading, error } = useQuery({
     queryKey: ['publicDrivers'],
     queryFn: fetchPublicDrivers
@@ -31,9 +32,9 @@ const Community = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="bg-emerald-600 pb-20">
-        <Navigation currentPage="/community" />
+        <Navigation currentPage="/support-partners" />
         <div className="max-w-7xl mx-auto px-6 pt-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Our Community</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Support Partners</h1>
           <p className="text-emerald-100 text-lg max-w-2xl mx-auto mb-8">
             Acknowledging our supportive partners who drive the future of sustainable transportation.
           </p>
@@ -120,4 +121,4 @@ const Community = () => {
   );
 };
 
-export default Community;
+export default SupportPartners;

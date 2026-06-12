@@ -12,7 +12,7 @@ import Contacts from "./pages/Contacts";
 import POS from "./pages/POS";
 import AboutPage from "./pages/About"; // Corrected import for the About page
 import Media from "./pages/Media"; // Import the new Media page
-import Community from "./pages/Community";
+ import SupportPartners from "./pages/SupportPartners";
 import DriverRegistration from "./pages/DriverRegistration";
 import NotFound from "./pages/NotFound";
 import POSLayout from "./pages/pos/POSLayout"; // Import new POS Layout
@@ -35,7 +35,7 @@ const App = () => (
             <Route path="/pos" element={<POS />} />
             <Route path="/about" element={<AboutPage />} /> {/* Corrected element for About page */}
             <Route path="/media" element={<Media />} /> {/* Added route for Media page */}
-            <Route path="/community" element={<Community />} />
+             <Route path="/support-partners" element={<SupportPartners />} />
             <Route path="/driver-registration" element={<DriverRegistration />} />
             <Route path="/sales/*" element={<POSLayout />} /> {/* Added POS route */}
             <Route path="/charger-status" element={<ChargerStatus />} />

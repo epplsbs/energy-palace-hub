@@ -67,7 +67,7 @@ const DriverRegistration = () => {
         title: "Registration Successful",
         description: "Your profile has been submitted for approval. We will contact you soon.",
       });
-      navigate("/community");
+      navigate("/support-partners");
     } catch (error: any) {
       toast({
         title: "Registration Failed",
