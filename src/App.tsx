@@ -15,6 +15,7 @@ import Media from "./pages/Media"; // Import the new Media page
 import SupportPartners from "./pages/SupportPartners";
 import SupportPartnerDetail from "./pages/SupportPartnerDetail";
 import DriverRegistration from "./pages/DriverRegistration";
+import Feedback from "./pages/Feedback";
 import NotFound from "./pages/NotFound";
 import POSLayout from "./pages/pos/POSLayout"; // Import new POS Layout
 import ChargerStatus from "./pages/ChargerStatus";
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/support-partners" element={<SupportPartners />} />
             <Route path="/support-partners/:id" element={<SupportPartnerDetail />} />
             <Route path="/driver-registration" element={<DriverRegistration />} />
+            <Route path="/feedback" element={<Feedback />} />
             <Route path="/sales/*" element={<POSLayout />} /> {/* Added POS route */}
             <Route path="/charger-status" element={<ChargerStatus />} />
             <Route path="*" element={<NotFound />} />

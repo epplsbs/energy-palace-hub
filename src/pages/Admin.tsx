@@ -35,6 +35,7 @@ import BusinessSettingsManager from '@/components/admin/BusinessSettingsManager'
 import SEOManager from '@/components/admin/SEOManager';
 import DriverManager from '@/components/admin/DriverManager';
 import DriverLeaderboard from '@/components/admin/DriverLeaderboard';
+import FeedbackManager from '@/components/admin/FeedbackManager';
 
 const Admin = () => {
   const { toast } = useToast();
@@ -136,6 +137,7 @@ const Admin = () => {
     { id: 'seo', label: 'SEO', icon: BarChart3 },
     { id: 'drivers', label: 'Drivers', icon: UserIcon },
     { id: 'driver-leaderboard', label: 'Leaderboard', icon: Trophy },
+    { id: 'feedback', label: 'Feedback', icon: Bell },
   ];
 
   if (loading) {
@@ -366,6 +368,10 @@ const Admin = () => {
 
               <TabsContent value="driver-leaderboard" className="p-6 m-0">
                 <DriverLeaderboard />
+              </TabsContent>
+
+              <TabsContent value="feedback" className="p-6 m-0">
+                <FeedbackManager />
               </TabsContent>
             </Tabs>
           </div>
