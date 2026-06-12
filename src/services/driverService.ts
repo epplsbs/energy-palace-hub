@@ -8,7 +8,7 @@ export type DriverUpdate = Database['public']['Tables']['drivers']['Update'];
 export type DriverCommission = Database['public']['Tables']['driver_commissions']['Row'];
 
 export const fetchPublicDrivers = async (): Promise<any[]> => {
-  // Use the public view to get masked data
+  // Use the public view to get driver data
   const { data, error } = await supabase
     .from('public_support_partners' as any)
     .select('*')

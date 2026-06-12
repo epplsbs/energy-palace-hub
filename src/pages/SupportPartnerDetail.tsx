@@ -115,7 +115,7 @@ const SupportPartnerDetail = () => {
                     <Phone className="h-5 w-5 mr-3 text-emerald-600" />
                     <div>
                       <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Contact</p>
-                      <p className="font-medium">{driver.masked_phone}</p>
+                      <p className="font-medium">{driver.phone}</p>
                     </div>
                   </div>
                 </div>
