@@ -3,9 +3,8 @@
 // Image loading optimization
 export const optimizeImageLoading = () => {
   // Preload critical images
-  const criticalImages = [
-    '/logo.png',
-    '/hero-bg.jpg'
+  const criticalImages: string[] = [
+    // Add critical image paths here
   ];
   
   criticalImages.forEach(src => {
@@ -86,8 +85,8 @@ export const optimizeForSlowConnection = () => {
 
 // Preload critical resources
 export const preloadCriticalResources = () => {
-  const criticalResources = [
-    { href: '/fonts/inter.woff2', as: 'font', type: 'font/woff2', crossorigin: 'anonymous' },
+  const criticalResources: any[] = [
+    // Add critical resource paths here (e.g. fonts)
   ];
   
   criticalResources.forEach(resource => {
