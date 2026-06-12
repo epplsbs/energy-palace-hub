@@ -7,17 +7,19 @@ import { registerDriver, uploadDriverAsset } from "@/services/driverService";
 import Navigation from "@/components/common/Navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, User, Car, Phone, Upload } from "lucide-react";
+import { Loader2, User, Car, Phone, Upload, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   full_name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   vehicle_number: z.string().min(4, "Vehicle number is required"),
+  description: z.string().optional(),
   is_public: z.boolean().default(false),
 });
 
@@ -27,6 +29,7 @@ const DriverRegistration = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [driverPhoto, setDriverPhoto] = useState<File | null>(null);
   const [vehiclePhoto, setVehiclePhoto] = useState<File | null>(null);
+  const [additionalVehiclePhotos, setAdditionalVehiclePhotos] = useState<File[]>([]);
 
   const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,6 +45,7 @@ const DriverRegistration = () => {
     try {
       let driverPhotoUrl = "";
       let vehiclePhotoUrl = "";
+      const vehiclePhotoUrls: string[] = [];
 
       if (driverPhoto) {
         const path = `drivers/${Date.now()}_${driverPhoto.name}`;
@@ -53,10 +57,17 @@ const DriverRegistration = () => {
         vehiclePhotoUrl = await uploadDriverAsset(vehiclePhoto, path);
       }
 
+      for (const file of additionalVehiclePhotos) {
+        const path = `vehicles/gallery/${Date.now()}_${file.name}`;
+        const url = await uploadDriverAsset(file, path);
+        vehiclePhotoUrls.push(url);
+      }
+
       await registerDriver({
         ...values,
         driver_photo_url: driverPhotoUrl,
         vehicle_photo_url: vehiclePhotoUrl,
+        vehicle_photo_urls: vehiclePhotoUrls,
         status: 'pending',
         tier: 'none',
         visit_count: 0,
@@ -126,6 +137,16 @@ const DriverRegistration = () => {
                 {errors.vehicle_number && <p className="text-sm text-red-500">{errors.vehicle_number.message}</p>}
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="description">Description (e.g. your regular routes)</Label>
+                <Textarea
+                  id="description"
+                  placeholder="I drive primarily from Sindhuli to Kathmandu..."
+                  className="min-h-[100px]"
+                  {...register("description")}
+                />
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label>Driver Photo</Label>
@@ -148,7 +169,7 @@ const DriverRegistration = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Vehicle Photo</Label>
+                  <Label>Main Vehicle Photo</Label>
                   <div className="border-2 border-dashed rounded-lg p-4 text-center hover:bg-gray-50 cursor-pointer transition-colors relative">
                     <input
                       type="file"
@@ -164,6 +185,38 @@ const DriverRegistration = () => {
                         <span className="text-xs text-gray-500">Upload Photo</span>
                       </div>
                     )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <Label>Additional Vehicle Photos (Gallery)</Label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {additionalVehiclePhotos.map((file, index) => (
+                    <div key={index} className="relative aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border">
+                      <img src={URL.createObjectURL(file)} alt="Preview" className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setAdditionalVehiclePhotos(prev => prev.filter((_, i) => i !== index))}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                  <div className="border-2 border-dashed rounded-lg flex flex-col items-center justify-center aspect-video hover:bg-gray-50 cursor-pointer transition-colors relative">
+                    <input
+                      type="file"
+                      multiple
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files || []);
+                        setAdditionalVehiclePhotos(prev => [...prev, ...files]);
+                      }}
+                    />
+                    <Upload className="h-6 w-6 text-gray-400 mb-1" />
+                    <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Add More</span>
                   </div>
                 </div>
               </div>

@@ -7,19 +7,61 @@ export type DriverInsert = Database['public']['Tables']['drivers']['Insert'];
 export type DriverUpdate = Database['public']['Tables']['drivers']['Update'];
 export type DriverCommission = Database['public']['Tables']['driver_commissions']['Row'];
 
-export const fetchPublicDrivers = async (): Promise<Driver[]> => {
+export const fetchPublicDrivers = async (): Promise<any[]> => {
+  // Use the public view to get masked data
   const { data, error } = await supabase
-    .from('drivers')
+    .from('public_support_partners' as any)
     .select('*')
-    .eq('is_public', true)
-    .eq('status', 'approved')
-    .order('visit_count', { ascending: false });
+    .order('tier', { ascending: false });
 
   if (error) {
     console.error('Error fetching public drivers:', error);
     throw error;
   }
   return data || [];
+};
+
+export const fetchDriverById = async (id: string): Promise<Driver> => {
+  const { data, error } = await supabase
+    .from('drivers')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Error fetching driver by id:', error);
+    throw error;
+  }
+  return data;
+};
+
+export const updateDriver = async (id: string, driverData: DriverUpdate): Promise<Driver> => {
+  const { data, error } = await supabase
+    .from('drivers')
+    .update({ ...driverData, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating driver:', error);
+    throw error;
+  }
+  return data;
+};
+
+export const fetchPublicDriverById = async (id: string): Promise<any> => {
+  const { data, error } = await supabase
+    .from('public_support_partners' as any)
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Error fetching public driver by id:', error);
+    throw error;
+  }
+  return data;
 };
 
 export const fetchAllDrivers = async (): Promise<Driver[]> => {

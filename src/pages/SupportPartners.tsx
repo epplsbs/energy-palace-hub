@@ -15,11 +15,6 @@ const SupportPartners = () => {
     queryFn: fetchPublicDrivers
   });
 
-  const maskPhone = (phone: string) => {
-    if (!phone) return "";
-    return phone.slice(0, 3) + "****" + phone.slice(-3);
-  };
-
   const getTierColor = (tier: string | null) => {
     switch (tier) {
       case 'platinum': return 'bg-slate-300 text-slate-900 border-slate-400';
@@ -60,8 +55,9 @@ const SupportPartners = () => {
         ) : drivers && drivers.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {drivers.map((driver) => (
-              <Card key={driver.id} className="overflow-hidden hover:shadow-2xl transition-all duration-300 border-none bg-white dark:bg-gray-800 shadow-lg group">
-                <div className="relative h-48 overflow-hidden bg-gray-100 dark:bg-gray-700">
+              <Link to={`/support-partners/${driver.id}`} key={driver.id}>
+                <Card className="h-full overflow-hidden hover:shadow-2xl transition-all duration-300 border-none bg-white dark:bg-gray-800 shadow-lg group cursor-pointer">
+                  <div className="relative h-48 overflow-hidden bg-gray-100 dark:bg-gray-700">
                   {driver.vehicle_photo_url ? (
                     <img
                       src={driver.vehicle_photo_url}
@@ -100,13 +96,14 @@ const SupportPartners = () => {
                   </div>
                 </CardHeader>
 
-                <CardContent>
-                  <div className="flex items-center text-sm text-emerald-600 dark:text-emerald-400 font-medium">
-                    <Phone className="h-4 w-4 mr-1.5" />
-                    {maskPhone(driver.phone)}
-                  </div>
-                </CardContent>
-              </Card>
+                  <CardContent>
+                    <div className="flex items-center text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+                      <Phone className="h-4 w-4 mr-1.5" />
+                      {driver.masked_phone}
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         ) : (
