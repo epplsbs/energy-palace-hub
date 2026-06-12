@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useQuery } from '@tanstack/react-query';
 import { getBusinessSettings, type BusinessSettings } from '@/services/businessSettingsService';
-import { Home, BookOpen, Phone, Info, Sun, Moon, Menu, X, Users } from 'lucide-react';
+import { Home, BookOpen, Phone, Info, Sun, Moon, Menu, X, Users, MessageSquare } from 'lucide-react';
 
 interface NavigationProps {
   currentPage: string;
@@ -23,6 +23,7 @@ const Navigation = ({ currentPage }: NavigationProps) => {
     { name: 'About', href: '/about', icon: Info },
     { name: 'Support Partners', href: '/support-partners', icon: Users },
     { name: 'Media', href: '/media', icon: BookOpen },
+    { name: 'Feedback', href: '/feedback', icon: MessageSquare },
     { name: 'Contact', href: '/contacts', icon: Phone },
   ];
 

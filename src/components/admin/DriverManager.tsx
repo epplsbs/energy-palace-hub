@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, CheckCircle, XCircle, User, Car, Plus, Edit, Upload, X } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, User, Car, Plus, Edit, Upload, X, Zap } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ const DriverManager = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [driverPhoto, setDriverPhoto] = useState<File | null>(null);
+  const [coverPhoto, setCoverPhoto] = useState<File | null>(null);
   const [vehiclePhoto, setVehiclePhoto] = useState<File | null>(null);
   const [additionalPhotos, setAdditionalPhotos] = useState<File[]>([]);
 
@@ -58,11 +59,15 @@ const DriverManager = () => {
 
     try {
       let driver_photo_url = editingDriver?.driver_photo_url || "";
+      let cover_photo_url = editingDriver?.cover_photo_url || "";
       let vehicle_photo_url = editingDriver?.vehicle_photo_url || "";
       const vehicle_photo_urls = [...(editingDriver?.vehicle_photo_urls || [])];
 
       if (driverPhoto) {
-        driver_photo_url = await uploadDriverAsset(driverPhoto, `drivers/${Date.now()}_${driverPhoto.name}`);
+        driver_photo_url = await uploadDriverAsset(driverPhoto, `drivers/profile/${Date.now()}_${driverPhoto.name}`);
+      }
+      if (coverPhoto) {
+        cover_photo_url = await uploadDriverAsset(coverPhoto, `drivers/cover/${Date.now()}_${coverPhoto.name}`);
       }
       if (vehiclePhoto) {
         vehicle_photo_url = await uploadDriverAsset(vehiclePhoto, `vehicles/${Date.now()}_${vehiclePhoto.name}`);
@@ -79,6 +84,7 @@ const DriverManager = () => {
         description: formData.get("description") as string,
         is_public: formData.get("is_public") === "on",
         driver_photo_url,
+        cover_photo_url,
         vehicle_photo_url,
         vehicle_photo_urls,
         status: editingDriver?.status || 'approved'
@@ -94,6 +100,7 @@ const DriverManager = () => {
       setIsDialogOpen(false);
       setEditingDriver(null);
       setDriverPhoto(null);
+      setCoverPhoto(null);
       setVehiclePhoto(null);
       setAdditionalPhotos([]);
       toast({ title: "Success", description: "Driver saved successfully." });
@@ -121,6 +128,7 @@ const DriverManager = () => {
           if (!open) {
             setEditingDriver(null);
             setDriverPhoto(null);
+            setCoverPhoto(null);
             setVehiclePhoto(null);
             setAdditionalPhotos([]);
           }
@@ -157,7 +165,7 @@ const DriverManager = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Driver Photo</Label>
+                  <Label>Profile Photo</Label>
                   <div className="flex items-center space-x-2">
                     {editingDriver?.driver_photo_url && !driverPhoto && (
                       <Avatar className="h-10 w-10">
@@ -165,6 +173,17 @@ const DriverManager = () => {
                       </Avatar>
                     )}
                     <Input type="file" onChange={(e) => setDriverPhoto(e.target.files?.[0] || null)} accept="image/*" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>Cover Photo</Label>
+                  <div className="flex items-center space-x-2">
+                    {editingDriver?.cover_photo_url && !coverPhoto && (
+                      <div className="h-10 w-10 bg-emerald-100 rounded flex items-center justify-center">
+                        <Zap className="h-6 w-6 text-emerald-600" />
+                      </div>
+                    )}
+                    <Input type="file" onChange={(e) => setCoverPhoto(e.target.files?.[0] || null)} accept="image/*" />
                   </div>
                 </div>
                 <div className="space-y-2">

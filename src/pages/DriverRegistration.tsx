@@ -28,6 +28,7 @@ const DriverRegistration = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [driverPhoto, setDriverPhoto] = useState<File | null>(null);
+  const [coverPhoto, setCoverPhoto] = useState<File | null>(null);
   const [vehiclePhoto, setVehiclePhoto] = useState<File | null>(null);
   const [additionalVehiclePhotos, setAdditionalVehiclePhotos] = useState<File[]>([]);
 
@@ -44,12 +45,18 @@ const DriverRegistration = () => {
     setIsSubmitting(true);
     try {
       let driverPhotoUrl = "";
+      let coverPhotoUrl = "";
       let vehiclePhotoUrl = "";
       const vehiclePhotoUrls: string[] = [];
 
       if (driverPhoto) {
-        const path = `drivers/${Date.now()}_${driverPhoto.name}`;
+        const path = `drivers/profile/${Date.now()}_${driverPhoto.name}`;
         driverPhotoUrl = await uploadDriverAsset(driverPhoto, path);
+      }
+
+      if (coverPhoto) {
+        const path = `drivers/cover/${Date.now()}_${coverPhoto.name}`;
+        coverPhotoUrl = await uploadDriverAsset(coverPhoto, path);
       }
 
       if (vehiclePhoto) {
@@ -66,6 +73,7 @@ const DriverRegistration = () => {
       await registerDriver({
         ...values,
         driver_photo_url: driverPhotoUrl,
+        cover_photo_url: coverPhotoUrl,
         vehicle_photo_url: vehiclePhotoUrl,
         vehicle_photo_urls: vehiclePhotoUrls,
         status: 'pending',
@@ -149,7 +157,7 @@ const DriverRegistration = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label>Driver Photo</Label>
+                  <Label>Profile Photo</Label>
                   <div className="border-2 border-dashed rounded-lg p-4 text-center hover:bg-gray-50 cursor-pointer transition-colors relative">
                     <input
                       type="file"
@@ -163,6 +171,26 @@ const DriverRegistration = () => {
                       <div className="flex flex-col items-center">
                         <Upload className="h-8 w-8 text-gray-400 mb-2" />
                         <span className="text-xs text-gray-500">Upload Photo</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Cover Photo</Label>
+                  <div className="border-2 border-dashed rounded-lg p-4 text-center hover:bg-gray-50 cursor-pointer transition-colors relative">
+                    <input
+                      type="file"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      accept="image/*"
+                      onChange={(e) => setCoverPhoto(e.target.files?.[0] || null)}
+                    />
+                    {coverPhoto ? (
+                      <p className="text-sm text-emerald-600 font-medium truncate">{coverPhoto.name}</p>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <Upload className="h-8 w-8 text-gray-400 mb-2" />
+                        <span className="text-xs text-gray-500">Upload Cover</span>
                       </div>
                     )}
                   </div>

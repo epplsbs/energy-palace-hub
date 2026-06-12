@@ -99,7 +99,7 @@ const SupportPartners = () => {
                   <CardContent>
                     <div className="flex items-center text-sm text-emerald-600 dark:text-emerald-400 font-medium">
                       <Phone className="h-4 w-4 mr-1.5" />
-                      {driver.masked_phone}
+                      {driver.phone}
                     </div>
                   </CardContent>
                 </Card>
