@@ -19,7 +19,8 @@ import {
   LogOut,
   User as UserIcon,
   BarChart3,
-  Bell
+  Bell,
+  Trophy
 } from 'lucide-react';
 import AdminDashboard from '@/components/admin/AdminDashboard';
 import MenuManager from '@/components/admin/MenuManager';
@@ -32,6 +33,8 @@ import ContactsManager from '@/components/admin/ContactsManager';
 import AboutUsManager from '@/components/admin/AboutUsManager';
 import BusinessSettingsManager from '@/components/admin/BusinessSettingsManager';
 import SEOManager from '@/components/admin/SEOManager';
+import DriverManager from '@/components/admin/DriverManager';
+import DriverLeaderboard from '@/components/admin/DriverLeaderboard';
 
 const Admin = () => {
   const { toast } = useToast();
@@ -131,6 +134,8 @@ const Admin = () => {
     { id: 'about', label: 'About Us', icon: Info },
     { id: 'settings', label: 'Settings', icon: Settings },
     { id: 'seo', label: 'SEO', icon: BarChart3 },
+    { id: 'drivers', label: 'Drivers', icon: UserIcon },
+    { id: 'driver-leaderboard', label: 'Leaderboard', icon: Trophy },
   ];
 
   if (loading) {
@@ -353,6 +358,14 @@ const Admin = () => {
 
               <TabsContent value="seo" className="p-6 m-0">
                 <SEOManager />
+              </TabsContent>
+
+              <TabsContent value="drivers" className="p-6 m-0">
+                <DriverManager />
+              </TabsContent>
+
+              <TabsContent value="driver-leaderboard" className="p-6 m-0">
+                <DriverLeaderboard />
               </TabsContent>
             </Tabs>
           </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { getBusinessSettings } from '@/services/businessSettingsService';
-import { Phone, Mail, MapPin, Clock, User, Building, Zap, Home, BookOpen, Info, Sun, Moon, Menu, X, Car, Navigation } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, User, Building, Zap, Home, BookOpen, Info, Sun, Moon, Menu, X, Car, Navigation, Users } from 'lucide-react';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { useSEO } from '@/hooks/useSEO';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -137,6 +137,10 @@ const Contacts = () => {
               <Info className="h-4 w-4" />
               <span>About</span>
             </a>
+            <a href="/support-partners" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
+              <Users className="h-4 w-4" />
+              <span>Support Partners</span>
+            </a>
             <a href="/blog" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
               <BookOpen className="h-4 w-4" />
               <span>Blog</span>
@@ -169,6 +173,10 @@ const Contacts = () => {
               <a href="/about" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
                 <Info className="h-4 w-4" />
                 <span>About</span>
+              </a>
+              <a href="/support-partners" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
+                <Users className="h-4 w-4" />
+                <span>Support Partners</span>
               </a>
               <a href="/blog" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
                 <BookOpen className="h-4 w-4" />

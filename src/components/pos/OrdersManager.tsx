@@ -2,25 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"; // Removed TabsContent for now
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { PlusCircle, Search, ShoppingCart, XCircle, CreditCard, Trash2 } from 'lucide-react'; // Added Trash2
+import { PlusCircle, Search, ShoppingCart, User, Car } from 'lucide-react';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { EmptyState } from '@/components/common/EmptyState';
+import { useQuery } from '@tanstack/react-query';
+import { fetchAllDrivers, type Driver } from '@/services/driverService';
 
 import {
   fetchPOSCategories,
   fetchPOSMenuItems,
-  // submitPOSOrder, // Will add back later
-  type POSMenuCategory, // Ensure this matches the one in posService.ts if not re-declared
-  type POSMenuItem,   // Ensure this matches the one in posService.ts if not re-declared
-  // type CartItemForSubmit,
-  // type OrderSubmissionData
+  submitPOSOrder,
+  type POSMenuCategory,
+  type POSMenuItem,
+  type OrderSubmissionData,
+  type CartItemForSubmit
 } from '@/services/posService';
 
-// CartItem type within OrdersManager component
 interface CartItem {
   menu_item_id: string;
   name: string;
@@ -41,7 +42,6 @@ interface OrdersManagerProps {
 
 const OrdersManager: React.FC<OrdersManagerProps> = ({ posUserId }) => {
   const { toast } = useToast();
-  console.log("OrdersManager mounted. Received posUserId:", posUserId);
 
   const [categories, setCategories] = useState<POSMenuCategory[]>([]);
   const [menuItems, setMenuItems] = useState<POSMenuItem[]>([]);
@@ -53,60 +53,53 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ posUserId }) => {
   const [ordersTabs, setOrdersTabs] = useState<Order[]>([[]]);
   const [currentOrderTabIndex, setCurrentOrderTabIndex] = useState(0);
   const [currentPaymentMode, setCurrentPaymentMode] = useState<string>('');
+  const [selectedDriverIds, setSelectedDriverIds] = useState<Record<number, string>>({});
 
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingMenuItems, setLoadingMenuItems] = useState(true);
-  const [submittingOrder, setSubmittingOrder] = useState(false); // Will use later
 
-  // Fetch Categories
+  const { data: drivers } = useQuery({
+    queryKey: ['approvedDrivers'],
+    queryFn: async () => {
+      const allDrivers = await fetchAllDrivers();
+      return allDrivers.filter(d => d.status === 'approved');
+    }
+  });
+
   useEffect(() => {
-    console.log("OrdersManager: useEffect for fetching categories triggered.");
     const loadCategories = async () => {
       setLoadingCategories(true);
       try {
         const fetchedCategories = await fetchPOSCategories();
-        console.log("OrdersManager: Fetched Categories:", fetchedCategories);
         setCategories(fetchedCategories);
         if (fetchedCategories.length > 0) {
           setSelectedCategoryId(fetchedCategories[0].id);
-          console.log("OrdersManager: Default selected category ID:", fetchedCategories[0].id);
-        } else {
-          console.log("OrdersManager: No categories fetched.");
         }
       } catch (error) {
-        console.error("OrdersManager: Error fetching categories:", error);
         toast({ title: "Error", description: "Could not load product categories.", variant: "destructive" });
       } finally {
         setLoadingCategories(false);
-        console.log("OrdersManager: Finished loading categories.");
       }
     };
     loadCategories();
   }, [toast]);
 
-  // Fetch Menu Items
   useEffect(() => {
-    console.log("OrdersManager: useEffect for fetching menu items triggered.");
     const loadMenuItems = async () => {
       setLoadingMenuItems(true);
       try {
         const fetchedItems = await fetchPOSMenuItems();
-        console.log("OrdersManager: Fetched Menu Items:", fetchedItems);
         setMenuItems(fetchedItems);
       } catch (error) {
-        console.error("OrdersManager: Error fetching menu items:", error);
         toast({ title: "Error", description: "Could not load menu items.", variant: "destructive" });
       } finally {
         setLoadingMenuItems(false);
-        console.log("OrdersManager: Finished loading menu items.");
       }
     };
     loadMenuItems();
   }, [toast]);
 
-  // Filter Menu Items
   useEffect(() => {
-    console.log("OrdersManager: useEffect for filtering menu items triggered. SelectedCategory:", selectedCategoryId, "SearchTerm:", searchTerm);
     let items = menuItems;
     if (selectedCategoryId) {
       items = items.filter(item => item.category_id === selectedCategoryId);
@@ -115,45 +108,127 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ posUserId }) => {
       items = items.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
     }
     setFilteredMenuItems(items);
-    console.log("OrdersManager: Filtered menu items count:", items.length);
   }, [menuItems, selectedCategoryId, searchTerm]);
 
+  const handleAddOrderTab = () => {
+    setOrdersTabs([...ordersTabs, []]);
+    setCurrentOrderTabIndex(ordersTabs.length);
+  };
 
-  // --- Placeholder functions for handlers - to be restored later ---
-  const handleAddOrderTab = () => console.log("Add Order Tab clicked");
-  const handleRemoveOrderTab = (index: number) => console.log("Remove Order Tab clicked for index:", index);
   const handleSelectOrderTab = (index: number) => {
-    console.log("Select Order Tab clicked for index:", index);
-    setCurrentOrderTabIndex(index); // Basic functionality
-  }
-  const handleAddItemToCart = (item: POSMenuItem) => console.log("Add to cart clicked for item:", item.name);
-  const handleUpdateQuantity = (itemIndex: number, delta: number) => console.log("Update quantity for item index:", itemIndex, "Delta:", delta);
-  const handleRemoveFromCart = (itemIndex: number) => console.log("Remove from cart for item index:", itemIndex);
-  const handleSubmitOrder = async () => console.log("Submit order clicked");
-  // --- End of placeholder functions ---
+    setCurrentOrderTabIndex(index);
+  };
+
+  const handleAddItemToCart = (item: POSMenuItem) => {
+    const updatedTabs = [...ordersTabs];
+    const currentOrder = [...updatedTabs[currentOrderTabIndex]];
+    const existingItemIndex = currentOrder.findIndex(i => i.menu_item_id === item.id);
+
+    if (existingItemIndex >= 0) {
+      currentOrder[existingItemIndex].quantity += 1;
+      currentOrder[existingItemIndex].line_total_inclusive_vat = currentOrder[existingItemIndex].quantity * currentOrder[existingItemIndex].unit_price;
+    } else {
+      currentOrder.push({
+        menu_item_id: item.id,
+        name: item.name,
+        quantity: 1,
+        unit_price: item.price,
+        vat_rate: item.vat_rate || 0,
+        vat_inclusive: item.vat_inclusive || false,
+        line_vat_amount: 0,
+        line_subtotal_exclusive_vat: item.price,
+        line_total_inclusive_vat: item.price,
+      });
+    }
+
+    updatedTabs[currentOrderTabIndex] = currentOrder;
+    setOrdersTabs(updatedTabs);
+  };
+
+  const handleDriverChange = (driverId: string) => {
+    setSelectedDriverIds({
+      ...selectedDriverIds,
+      [currentOrderTabIndex]: driverId
+    });
+  };
+
+  const handleSubmitOrder = async () => {
+    if (!currentPaymentMode) {
+      toast({ title: "Payment Mode Required", description: "Please select a payment mode before submitting.", variant: "destructive" });
+      return;
+    }
+
+    setLoadingMenuItems(true); // Reusing loading state for submission
+    try {
+      const items: CartItemForSubmit[] = currentOrder.map(item => ({
+        menu_item_id: item.menu_item_id,
+        item_name: item.name,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+        vat_rate: item.vat_rate,
+        vat_amount: item.line_vat_amount,
+        total_amount: item.line_total_inclusive_vat
+      }));
+
+      const orderData: OrderSubmissionData = {
+        cashier_id: posUserId,
+        subtotal: currentOrder.reduce((sum, item) => sum + item.line_subtotal_exclusive_vat, 0),
+        vat_amount: currentOrder.reduce((sum, item) => sum + item.line_vat_amount, 0),
+        total_amount: overallTotalAmount,
+        payment_method: currentPaymentMode.toLowerCase(),
+        order_status: 'completed',
+        payment_status: 'paid',
+        driver_id: selectedDriverIds[currentOrderTabIndex] === 'none' ? null : selectedDriverIds[currentOrderTabIndex],
+        items: items
+      };
+
+      const result = await submitPOSOrder(orderData);
+
+      if (result.success) {
+        toast({ title: "Success", description: `Order ${result.orderNumber} submitted successfully.` });
+
+        // Clear current tab
+        const updatedTabs = [...ordersTabs];
+        updatedTabs[currentOrderTabIndex] = [];
+        setOrdersTabs(updatedTabs);
+
+        // Clear selected driver for this tab
+        const updatedDrivers = { ...selectedDriverIds };
+        delete updatedDrivers[currentOrderTabIndex];
+        setSelectedDriverIds(updatedDrivers);
+
+        setCurrentPaymentMode('');
+      } else {
+        throw result.error;
+      }
+    } catch (error: any) {
+      console.error("Error submitting order:", error);
+      toast({ title: "Error", description: error.message || "Failed to submit order.", variant: "destructive" });
+    } finally {
+      setLoadingMenuItems(false);
+    }
+  };
 
   const currentOrder = ordersTabs[currentOrderTabIndex] || [];
-  const overallTotalAmount = 0; // Placeholder
+  const overallTotalAmount = currentOrder.reduce((sum, item) => sum + item.line_total_inclusive_vat, 0);
 
   if (loadingCategories || loadingMenuItems) {
     return <LoadingSpinner fullPage text="Loading POS data..." />;
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-6 h-full flex flex-col bg-slate-50"> {/* Added bg for visibility */}
+    <div className="p-4 md:p-6 space-y-6 h-full flex flex-col bg-slate-50">
       <Card className="flex-shrink-0 shadow-md">
         <CardHeader>
-          <CardTitle className="text-2xl">Point of Sale - Orders (Restored Iteration 1)</CardTitle>
+          <CardTitle className="text-2xl">Point of Sale - Orders</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* Order Tabs */}
           <div className="mb-4">
             <Tabs value={currentOrderTabIndex.toString()} onValueChange={(val) => handleSelectOrderTab(parseInt(val))}>
               <TabsList className="overflow-x-auto whitespace-nowrap">
                 {ordersTabs.map((_, index) => (
                   <TabsTrigger key={index} value={index.toString()} className="relative pr-8">
                     Order {index + 1}
-                    {/* Remove tab button will be added back later */}
                   </TabsTrigger>
                 ))}
                 <Button variant="ghost" size="sm" onClick={handleAddOrderTab} className="ml-2">
@@ -163,7 +238,6 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ posUserId }) => {
             </Tabs>
           </div>
 
-          {/* Filters: Search and Categories */}
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <div className="relative flex-grow">
               <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -191,14 +265,12 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ posUserId }) => {
       </Card>
 
       <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-hidden">
-        {/* Products Grid */}
         <Card className="lg:col-span-2 flex flex-col shadow-md">
           <CardHeader>
             <CardTitle>Products</CardTitle>
           </CardHeader>
           <CardContent className="flex-grow overflow-y-auto p-4">
-            {loadingMenuItems ? <LoadingSpinner text="Loading products..."/> :
-             filteredMenuItems.length === 0 ? (
+            {filteredMenuItems.length === 0 ? (
               <EmptyState title="No Products Found" description="Try adjusting your search or category filter." icon={<Search />} />
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
@@ -207,7 +279,7 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ posUserId }) => {
                     key={item.id}
                     variant="outline"
                     className="h-auto p-2 flex flex-col items-center justify-center text-center shadow hover:shadow-md transition-shadow"
-                    onClick={() => handleAddItemToCart(item)} // Placeholder
+                    onClick={() => handleAddItemToCart(item)}
                     disabled={!item.is_available}
                   >
                     <span className="text-xs font-medium truncate w-full">{item.name}</span>
@@ -220,7 +292,6 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ posUserId }) => {
           </CardContent>
         </Card>
 
-        {/* Cart Section */}
         <Card className="flex flex-col shadow-md">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
@@ -233,12 +304,42 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ posUserId }) => {
               <EmptyState title="Cart is Empty" description="Add products to get started." icon={<ShoppingCart />} className="m-auto"/>
             ) : (
               <div className="overflow-y-auto flex-grow space-y-2 pr-1">
-                <p className="text-sm text-muted-foreground">Cart items will show here...</p>
-                {/* Cart item rendering will be restored next */}
+                {currentOrder.map((item, idx) => (
+                  <div key={idx} className="flex justify-between text-sm py-1 border-b">
+                    <span>{item.name} x {item.quantity}</span>
+                    <span>Rs. {item.line_total_inclusive_vat.toFixed(2)}</span>
+                  </div>
+                ))}
               </div>
             )}
 
             <div className="border-t pt-4 space-y-3">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium flex items-center">
+                  <User className="h-4 w-4 mr-1.5 text-muted-foreground" />
+                  Assign Driver (Commission)
+                </Label>
+                <Select
+                  value={selectedDriverIds[currentOrderTabIndex] || "none"}
+                  onValueChange={handleDriverChange}
+                >
+                  <SelectTrigger className="bg-emerald-50/50 border-emerald-100">
+                    <SelectValue placeholder="Select Driver" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No Driver</SelectItem>
+                    {drivers?.map(driver => (
+                      <SelectItem key={driver.id} value={driver.id}>
+                        <div className="flex items-center">
+                          <Car className="h-3 w-3 mr-2" />
+                          <span>{driver.full_name} ({driver.vehicle_number})</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="flex justify-between items-center font-bold text-xl">
                 <span>Grand Total:</span>
                 <span className="tabular-nums">Rs. {overallTotalAmount.toFixed(2)}</span>
@@ -252,17 +353,18 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ posUserId }) => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Cash">Cash</SelectItem>
-                    {/* Other payment modes */}
+                    <SelectItem value="Fonepay">Fonepay</SelectItem>
+                    <SelectItem value="Esewa">Esewa</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <Button
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-lg py-3"
-                onClick={handleSubmitOrder} // Placeholder
-                disabled={true} // Disabled for now
+                onClick={handleSubmitOrder}
+                disabled={currentOrder.length === 0}
               >
-                Submit Order (Placeholder)
+                Submit Order
               </Button>
             </div>
           </CardContent>

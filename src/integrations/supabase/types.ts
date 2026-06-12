@@ -59,6 +59,109 @@ export type Database = {
         }
         Relationships: []
       }
+      driver_commissions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          driver_id: string | null
+          id: string
+          notes: string | null
+          order_id: string | null
+          status: string | null
+          type: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          driver_id?: string | null
+          id?: string
+          notes?: string | null
+          order_id?: string | null
+          status?: string | null
+          type: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          driver_id?: string | null
+          id?: string
+          notes?: string | null
+          order_id?: string | null
+          status?: string | null
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "driver_commissions_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "drivers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drivers: {
+        Row: {
+          created_at: string | null
+          driver_photo_url: string | null
+          full_name: string
+          id: string
+          is_public: boolean | null
+          phone: string
+          referral_code: string | null
+          referred_by_id: string | null
+          status: string | null
+          tier: Database["public"]["Enums"]["driver_loyalty_tier"] | null
+          total_sales_amount: number | null
+          updated_at: string | null
+          vehicle_number: string
+          vehicle_photo_url: string | null
+          visit_count: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          driver_photo_url?: string | null
+          full_name: string
+          id?: string
+          is_public?: boolean | null
+          phone: string
+          referral_code?: string | null
+          referred_by_id?: string | null
+          status?: string | null
+          tier?: Database["public"]["Enums"]["driver_loyalty_tier"] | null
+          total_sales_amount?: number | null
+          updated_at?: string | null
+          vehicle_number: string
+          vehicle_photo_url?: string | null
+          visit_count?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          driver_photo_url?: string | null
+          full_name?: string
+          id?: string
+          is_public?: boolean | null
+          phone?: string
+          referral_code?: string | null
+          referred_by_id?: string | null
+          status?: string | null
+          tier?: Database["public"]["Enums"]["driver_loyalty_tier"] | null
+          total_sales_amount?: number | null
+          updated_at?: string | null
+          vehicle_number?: string
+          vehicle_photo_url?: string | null
+          visit_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drivers_referred_by_id_fkey"
+            columns: ["referred_by_id"]
+            isOneToOne: false
+            referencedRelation: "drivers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_content_suggestions: {
         Row: {
           content: string
@@ -553,6 +656,7 @@ export type Database = {
           created_by: string | null
           customer_name: string
           customer_phone: string | null
+          driver_id: string | null
           end_time: string | null
           expected_end_time: string | null
           id: string
@@ -572,6 +676,7 @@ export type Database = {
           created_by?: string | null
           customer_name: string
           customer_phone?: string | null
+          driver_id?: string | null
           end_time?: string | null
           expected_end_time?: string | null
           id?: string
@@ -591,6 +696,7 @@ export type Database = {
           created_by?: string | null
           customer_name?: string
           customer_phone?: string | null
+          driver_id?: string | null
           end_time?: string | null
           expected_end_time?: string | null
           id?: string
@@ -605,6 +711,13 @@ export type Database = {
           vehicle_number?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "pos_charging_orders_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "drivers"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "pos_charging_orders_charging_station_id_fkey"
             columns: ["charging_station_id"]
@@ -870,6 +983,7 @@ export type Database = {
           customer_name: string | null
           customer_phone: string | null
           discount_amount: number | null
+          driver_id: string | null
           id: string
           notes: string | null
           order_number: string
@@ -891,6 +1005,7 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           discount_amount?: number | null
+          driver_id?: string | null
           id?: string
           notes?: string | null
           order_number: string
@@ -912,6 +1027,7 @@ export type Database = {
           customer_name?: string | null
           customer_phone?: string | null
           discount_amount?: number | null
+          driver_id?: string | null
           id?: string
           notes?: string | null
           order_number?: string
@@ -926,6 +1042,13 @@ export type Database = {
           waiter_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "pos_orders_driver_id_fkey"
+            columns: ["driver_id"]
+            isOneToOne: false
+            referencedRelation: "drivers"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "pos_orders_cashier_id_fkey"
             columns: ["cashier_id"]
@@ -1382,6 +1505,7 @@ export type Database = {
       }
     }
     Enums: {
+      driver_loyalty_tier: "none" | "silver" | "gold" | "platinum"
       user_role: "admin" | "cashier" | "waiter" | "charging_staff" | "manager"
     }
     CompositeTypes: {
@@ -1510,6 +1634,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      driver_loyalty_tier: ["none", "silver", "gold", "platinum"],
       user_role: ["admin", "cashier", "waiter", "charging_staff", "manager"],
     },
   },

@@ -10,9 +10,10 @@ import { getAboutUsContent, getTestimonials, type AboutUsContent, type Testimoni
 import { useTheme } from '@/contexts/ThemeContext';
 import { useBackgroundImage } from '@/hooks/useBackgroundImage';
 import { Card, CardContent } from '@/components/ui/card';
-import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, Quote, UserPlus, Heart } from 'lucide-react';
 import { useSEO } from '@/hooks/useSEO';
 import LocationDisplay from '@/components/LocationDisplay';
+import { fetchPublicDrivers } from '@/services/driverService';
 
 const Index = () => {
   const [isChargingModalOpen, setIsChargingModalOpen] = useState(false);
@@ -38,6 +39,11 @@ const Index = () => {
   const { data: testimonials = [], isLoading: isLoadingTestimonials } = useQuery<Testimonial[], Error>({
     queryKey: ['testimonials'],
     queryFn: getTestimonials,
+  });
+
+  const { data: drivers = [] } = useQuery({
+    queryKey: ['publicDrivers'],
+    queryFn: fetchPublicDrivers,
   });
 
   const isLoadingCombined = isLoadingBusinessSettings || isLoadingAbout || isLoadingTestimonials;
@@ -132,6 +138,10 @@ const Index = () => {
               <Info className="h-4 w-4" />
               <span>About</span>
             </a>
+            <a href="/support-partners" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
+              <Users className="h-4 w-4" />
+              <span>Support Partners</span>
+            </a>
             <a href="/blog" className={`${theme === 'light' ? 'hover:text-emerald-600 bg-white/20 hover:bg-white/30' : 'hover:text-emerald-400 bg-white/10 hover:bg-white/20'} transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg font-medium cursor-pointer`}>
               <BookOpen className="h-4 w-4" />
               <span>Blog</span>
@@ -168,6 +178,10 @@ const Index = () => {
               <a href="/about" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
                 <Info className="h-4 w-4" />
                 <span>About</span>
+              </a>
+              <a href="/support-partners" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
+                <Users className="h-4 w-4" />
+                <span>Support Partners</span>
               </a>
               <a href="/blog" className={`flex items-center gap-3 px-6 py-3 ${theme === 'light' ? 'text-gray-800 hover:bg-white/50' : 'text-white hover:bg-white/10'} transition-colors font-medium cursor-pointer`} onClick={() => setShowMobileMenu(false)}>
                 <BookOpen className="h-4 w-4" />
@@ -359,6 +373,65 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Support Partners Showcase */}
+      {drivers && drivers.length > 0 && (
+        <section id="support-partners" className={`relative z-10 py-20 ${theme === 'light' ? 'bg-white/20' : 'bg-black/20'} backdrop-blur-sm`}>
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-6">
+              <div className="text-center md:text-left">
+                <h2 className={`text-4xl md:text-5xl font-bold mb-4 ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>
+                  Our Support Partners
+                </h2>
+                <p className={`text-lg md:text-xl max-w-2xl ${theme === 'light' ? 'text-gray-600' : 'text-white/70'}`}>
+                  Meet the dedicated drivers who are part of our growing community.
+                </p>
+              </div>
+              <div className="flex gap-4">
+                <a href="/driver-registration">
+                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6">
+                    <UserPlus className="h-5 w-5 mr-2" />
+                    Join Us
+                  </Button>
+                </a>
+                <a href="/support-partners">
+                  <Button variant="outline" className={`${theme === 'light' ? 'border-gray-300 text-gray-700 hover:bg-gray-100' : 'border-white/20 text-white hover:bg-white/10'}`}>
+                    View All
+                  </Button>
+                </a>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {drivers.slice(0, 4).map((driver) => (
+                <div key={driver.id} className={`glass rounded-2xl overflow-hidden border ${theme === 'light' ? 'border-gray-200 bg-white/50' : 'border-white/10 bg-gray-900/50'} hover:scale-105 transition-all duration-300`}>
+                  <div className="h-40 relative overflow-hidden">
+                    {driver.vehicle_photo_url ? (
+                      <img src={driver.vehicle_photo_url} alt={driver.full_name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-emerald-100 flex items-center justify-center">
+                        <Car className="h-12 w-12 text-emerald-400" />
+                      </div>
+                    )}
+                    <div className="absolute top-3 right-3">
+                      <Heart className="h-5 w-5 text-red-500 fill-red-500" />
+                    </div>
+                  </div>
+                  <div className="p-4 text-center">
+                    <h4 className={`font-bold text-lg ${theme === 'light' ? 'text-gray-900' : 'text-white'}`}>{driver.full_name}</h4>
+                    <p className={`text-sm ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>{driver.vehicle_number}</p>
+                    {driver.tier && driver.tier !== 'none' && (
+                      <div className="mt-2 inline-block px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold capitalize">
+                        {driver.tier} Chalak
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Testimonials Section */}
       {testimonials && testimonials.length > 0 && !isLoadingCombined && (
         <section id="testimonials" className={`relative z-10 py-20 ${theme === 'light' ? 'bg-gray-50/50' : 'bg-black/30'} backdrop-blur-sm`}>
@@ -512,6 +585,7 @@ const Index = () => {
               <ul className={`space-y-2 ${theme === 'light' ? 'text-gray-600' : 'text-white/60'}`}>
                 <li><a href="/about" className="hover:text-emerald-400 transition-colors">About Us</a></li>
                 <li><a href="/blog" className="hover:text-emerald-400 transition-colors">Blog</a></li>
+                <li><a href="/support-partners" className="hover:text-emerald-400 transition-colors">Support Partners</a></li>
                 <li><a href="/contacts" className="hover:text-emerald-400 transition-colors">Contact Us</a></li>
                 <li><a href="/media" className="hover:text-emerald-400 transition-colors">Media & Press</a></li>
               </ul>
